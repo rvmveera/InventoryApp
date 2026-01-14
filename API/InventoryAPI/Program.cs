@@ -34,11 +34,6 @@ builder.Services.AddDbContext<AppDbContext>(options => {
 });
 
 
-// Services
-//builder.Services.AddScoped<IAadhaarCrypto, AadhaarCrypto>();
-//builder.Services.AddSingleton<PasswordHasher<InventoryAPI.Models.User>>();
-
-
 
 // ✅ Register Aadhaar encryption service
 builder.Services.AddScoped<IAadhaarCrypto, AadhaarCrypto>();
@@ -63,7 +58,6 @@ if (app.Environment.IsDevelopment())
 
 // Enable CORS before controllers
 app.UseCors("AllowReactApp");
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

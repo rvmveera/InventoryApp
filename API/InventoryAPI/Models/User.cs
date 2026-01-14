@@ -4,9 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace InventoryAPI.Models
 {
    
-    public enum Gender { Unknown = 0, Male, Female, Other }
     
-
     public class User
     {
         [Key]
@@ -26,7 +24,7 @@ namespace InventoryAPI.Models
         [Column("AadhaarNo")]
         public string? AadhaarEncrypted { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public Gender Gender { get; set; }
+        public string Gender { get; set; }
         //public string? ResumePath { get; set; }
         [Column("GSTNumber")]
         public string? GST { get; set; }

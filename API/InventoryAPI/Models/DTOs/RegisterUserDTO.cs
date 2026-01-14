@@ -20,7 +20,7 @@ namespace InventoryAPI.Models.DTOs
         [Column("AadhaarNo")]
         public string? Aadhaar { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public Gender Gender { get; set; }
+        public string Gender { get; set; }
         [Column("GSTNumber")]
         public string? GST { get; set; }
     }

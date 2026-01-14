@@ -23,9 +23,16 @@ namespace InventoryAPI.Controllers
             _db = db; _crypto = crypto; _hasher = hasher; _env = env;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register([FromForm] RegisterUserDto dto, IFormFile? resume)
+        //public async Task<IActionResult> Register([FromBody] RegisterUserDto dto, IFormFile? resume)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
         {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+
             if (dto.Password != dto.ConfirmPassword) return BadRequest("Passwords do not match.");
 
             
