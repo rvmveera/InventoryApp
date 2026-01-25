@@ -1,5 +1,5 @@
+
 import React, { useState } from "react";
-import "./registrationform.css"; // we'll add styles separately
 
 export default function RegistrationForm() {
   const [form, setForm] = useState({
@@ -78,6 +78,8 @@ const handleSubmit = async (e) => {
 };
 
   return (
+ 
+
     <div className="form-container">
       <h2>User Registration</h2>
       <form onSubmit={handleSubmit}>
@@ -122,5 +124,6 @@ const handleSubmit = async (e) => {
         <button type="submit">Register</button>
       </form>
     </div>
+    
   );
 }
