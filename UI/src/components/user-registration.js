@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 
+
 export default function RegistrationForm() {
   const [form, setForm] = useState({
 
@@ -80,9 +81,13 @@ const handleSubmit = async (e) => {
   return (
  
 
-    <div className="form-container">
+    
+    <div>
       <h2>User Registration</h2>
+
+
       <form onSubmit={handleSubmit}>
+<div className="form-container">
 
         <input name="FirstName" placeholder="First Name" value={form.FirstName} onChange={handleChange} />
         <input name="LastName" placeholder="Last Name" value={form.LastName} onChange={handleChange} />
@@ -120,7 +125,7 @@ const handleSubmit = async (e) => {
 
         <label>Resume Upload (optional)</label>
         <input type="file" onChange={handleFileChange} />
-
+</div>
         <button type="submit">Register</button>
       </form>
     </div>

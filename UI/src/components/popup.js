@@ -1,6 +1,7 @@
 // Popup.js
 import React from "react";
 import "../css/popup.css";
+import logo from "../images/logo.jpg";
 
 const Popup = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -8,8 +9,21 @@ const Popup = ({ isOpen, onClose, children }) => {
   return (
     <div className="overlay" onClick={onClose}>
       <div className="popup" onClick={(e) => e.stopPropagation()}>
-        <button className="closeBtn" onClick={onClose}>X</button>
+        <button className="closeBtn" onClick={onClose}>X</button>      
+<table>
+<tr>
+  <td align="left" valign="top" width="20%">
+<img src={logo} alt = "Logo"></img>
+
+  </td>
+<td valign="top" align="center">
+
         {children}
+        
+</td>
+</tr>
+
+</table>
       </div>
     </div>
   );
