@@ -23,5 +23,10 @@ namespace InventoryAPI.Models.DTOs
         public string Gender { get; set; }
         [Column("GSTNumber")]
         public string? GST { get; set; }
+        // File upload
+        [Required]
+        public IFormFile Resume { get; set; }
+
+
     }
 }

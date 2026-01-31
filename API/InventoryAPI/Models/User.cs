@@ -28,5 +28,9 @@ namespace InventoryAPI.Models
         //public string? ResumePath { get; set; }
         [Column("GSTNumber")]
         public string? GST { get; set; }
+
+
+        public byte[] Resume { get; set; }
+
     }
 }

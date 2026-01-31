@@ -25,17 +25,15 @@ namespace InventoryAPI.Controllers
 
         //public async Task<IActionResult> Register([FromBody] RegisterUserDto dto, IFormFile? resume)
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
+        public async Task<IActionResult> Register([FromForm] RegisterUserDto dto)
         {
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-
-
             if (dto.Password != dto.ConfirmPassword) return BadRequest("Passwords do not match.");
 
-            
+
             var user = new User
             {
                 FirstName = dto.FirstName,
@@ -57,17 +55,14 @@ namespace InventoryAPI.Controllers
             if (!string.IsNullOrWhiteSpace(dto.Aadhaar))
                 user.AadhaarEncrypted = _crypto.Encrypt(dto.Aadhaar);
 
-            // to test
-            /*if (resume != null && resume.Length > 0)
+
+
+            if (dto.Resume != null && dto.Resume.Length > 0)
             {
-                var uploadsDir = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads");
-                Directory.CreateDirectory(uploadsDir);
-                var safeName = $"{Guid.NewGuid()}{Path.GetExtension(resume.FileName)}";
-                var fullPath = Path.Combine(uploadsDir, safeName);
-                using var fs = System.IO.File.Create(fullPath);
-                await resume.CopyToAsync(fs);
-                user.ResumePath = $"/uploads/{safeName}";
-            }*/
+                using var memoryStream = new MemoryStream();
+                await dto.Resume.CopyToAsync(memoryStream);
+                user.Resume = memoryStream.ToArray();
+            }
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();

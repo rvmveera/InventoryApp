@@ -20,49 +20,55 @@ export default function RegistrationForm() {
     DateOfBirth: "",
     Gender: "Male",
     GST: "",
-    //resume: null
+    resume: null
   });
+  const [file, setFile] = useState(null);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    setForm((prev) => ({ ...prev, resume: e.target.files[0] }));
-  };
+  /*
+    const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };*/
 
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Build the payload to match your DTO
-  const payload = {
-    FirstName: form.FirstName,
-    LastName: form.LastName,
-    EmailId: form.EmailId,
-    PhoneNumber: form.PhoneNumber,
-    Username: form.Username,
-    Password : form.Password,
-    ConfirmPassword : form.ConfirmPassword,
-    Address1: form.Address1,
-    Address2: form.Address2,
-    Address3: form.Address3,
-    UserTypeId: form.UserTypeId,   // must be number if your DTO expects int
-    DateOfBirth: form.DateOfBirth, // e.g. "2026-01-13"
-    Gender: form.Gender,
-    GST: form.GST,
-    Aadhaar : form.Aadhaar
-  };
+  // Build FormData instead of JSON
+  const data = new FormData();
+
+  // Append all text fields
+  data.append("FirstName", form.FirstName);
+  data.append("LastName", form.LastName);
+  data.append("EmailId", form.EmailId);
+  data.append("PhoneNumber", form.PhoneNumber);
+  data.append("Username", form.Username);
+  data.append("Password", form.Password);
+  data.append("ConfirmPassword", form.ConfirmPassword);
+  data.append("Address1", form.Address1);
+  data.append("Address2", form.Address2);
+  data.append("Address3", form.Address3);
+  data.append("UserTypeId", form.UserTypeId);
+  data.append("DateOfBirth", form.DateOfBirth);
+  data.append("Gender", form.Gender);
+  data.append("GST", form.GST);
+  data.append("Aadhaar", form.Aadhaar);
+
+  // Append file (assuming you stored it in state as form.File)
+  if (file) {
+  data.append("Resume", file); // must match DTO property name
+}
+
 
   try {
     const res = await fetch("https://localhost:5001/api/Users/register", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify(payload)
-      
+      body: data
+      // ⚠️ Do NOT set Content-Type manually; browser will set it with boundary
     });
 
     if (!res.ok) {
@@ -70,13 +76,15 @@ const handleSubmit = async (e) => {
       throw new Error(`Registration failed: ${errText}`);
     }
 
-    const data = await res.json();
-    alert(`User ${data.username} registered successfully!`);
+    const result = await res.json();
+    alert(`User ${result.username} registered successfully!`);
   } catch (err) {
     console.error("Error:", err);
     alert("Error: " + err.message);
   }
 };
+
+
 
   return (
  
@@ -124,7 +132,9 @@ const handleSubmit = async (e) => {
         <input name="GST" placeholder="GST" value={form.GST} onChange={handleChange} />
 
         <label>Resume Upload (optional)</label>
-        <input type="file" onChange={handleFileChange} />
+     <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+
+
 </div>
         <button type="submit">Register</button>
       </form>
