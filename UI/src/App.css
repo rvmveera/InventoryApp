@@ -1,4 +1,4 @@
-.App {
+/*.App {
   text-align: center;
 }
 
@@ -35,4 +35,38 @@
   to {
     transform: rotate(360deg);
   }
+}*/
+
+
+/* New */
+body {
+  background: linear-gradient(to right, violet, white); /* or any solid color */
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tab-header button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.tab-header button.active {
+  background: linear-gradient(to right, violet, gold);
+  color: #fff;
+  border-radius: 6px 6px 0 0;
+}
+
+.tab-content {
+  padding: 20px;
 }

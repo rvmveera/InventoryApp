@@ -84,30 +84,22 @@ const handleSubmit = async (e) => {
   }
 };
 
-
-
-  return (
- 
-
-    
+  return (    
     <div>
       <h2>User Registration</h2>
-
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
 <div className="form-container">
-
-        <input name="FirstName" placeholder="First Name" value={form.FirstName} onChange={handleChange} />
-        <input name="LastName" placeholder="Last Name" value={form.LastName} onChange={handleChange} />
-        <input name="EmailId" type="email" placeholder="Email" value={form.EmailId} onChange={handleChange} />
-        <input name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleChange} />
-        <input name="Username" placeholder="Username" value={form.Username} onChange={handleChange} />
-        <input name="Password" type="password" placeholder="Password" value={form.Password} onChange={handleChange} />
-        <input name="ConfirmPassword" type="password" placeholder="Confirm Password" value={form.ConfirmPassword} onChange={handleChange} />
-        <input name="Address1" placeholder="Address Line 1" value={form.Address1} onChange={handleChange} />
-        <input name="Address2" placeholder="Address line 2" value={form.Address2} onChange={handleChange} />
-        <input name="Address3" placeholder="Address line 3" value={form.Address3} onChange={handleChange} />
-        <select name="UserTypeId" value={form.UserTypeId} onChange={handleChange}>
+        <input name="FirstName" placeholder="First Name" value={form.FirstName} onChange={handleChange} required />
+        <input name="LastName" placeholder="Last Name" value={form.LastName} onChange={handleChange} required />
+        <input name="EmailId" type="email" placeholder="Email" value={form.EmailId} onChange={handleChange} required />
+        <input name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleChange} required />
+        <input name="Username" placeholder="Username" value={form.Username} onChange={handleChange} required />
+        <input name="Password" type="password" placeholder="Password" value={form.Password} onChange={handleChange} required />
+        <input name="ConfirmPassword" type="password" placeholder="Confirm Password" value={form.ConfirmPassword} onChange={handleChange} required />
+        <input name="Address1" placeholder="Address Line 1" value={form.Address1} onChange={handleChange} required />
+        <input name="Address2" placeholder="Address line 2" value={form.Address2} onChange={handleChange} required />
+        <input name="Address3" placeholder="Address line 3" value={form.Address3} onChange={handleChange} required />
+        <select name="UserTypeId" value={form.UserTypeId} onChange={handleChange} required >
           <option value="0">--Select user type--</option>
           <option value="1">Admin</option>
           <option value="2">Staff</option>
@@ -120,16 +112,16 @@ const handleSubmit = async (e) => {
         </select>
 
         <input name="Aadhaar" placeholder="Aadhaar (optional)" value={form.Aadhaar} onChange={handleChange} />
-        <input name="DateOfBirth" type="date" value={form.DateOfBirth} onChange={handleChange} />
+        <input name="DateOfBirth" type="date" value={form.DateOfBirth} onChange={handleChange} required />
 
-        <select name="Gender" value={form.Gender} onChange={handleChange}>
+        <select name="Gender" value={form.Gender} onChange={handleChange} required >
           <option value="0">--Gender--</option>
           <option value="1">Male</option>
           <option value="2">Female</option>
           <option value="3">NA</option>
         </select>
 
-        <input name="GST" placeholder="GST" value={form.GST} onChange={handleChange} />
+        <input name="GST" placeholder="GST" value={form.GST} onChange={handleChange} required />
 
         <label>Resume Upload (optional)</label>
      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
