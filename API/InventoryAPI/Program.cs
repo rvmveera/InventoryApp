@@ -1,5 +1,7 @@
 ﻿using InventoryAPI.Data;
+using InventoryAPI.IRepository;
 using InventoryAPI.Models;
+using InventoryAPI.Repository;
 using InventoryAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,13 @@ builder.Services.AddScoped<IAadhaarCrypto, AadhaarCrypto>();
 
 // ✅ Register password hasher
 builder.Services.AddSingleton<PasswordHasher<User>>();
+
+
+// Repository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// JWT Service
+builder.Services.AddSingleton<JwtService>();
 
 // ✅ Add controllers
 builder.Services.AddControllers();
