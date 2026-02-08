@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 
-export default function RegistrationForm() {
+const UserRegistration = ({ onSuccess }) => {
   const [form, setForm] = useState({
 
     FirstName: "",
@@ -35,6 +35,9 @@ export default function RegistrationForm() {
     setFile(e.target.files[0]);
   };*/
 
+
+
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -61,6 +64,8 @@ const handleSubmit = async (e) => {
   // Append file (assuming you stored it in state as form.File)
   if (file) {
   data.append("Resume", file); // must match DTO property name
+}else {
+  data.append("Resume", null);
 }
 
 
@@ -78,6 +83,13 @@ const handleSubmit = async (e) => {
 
     const result = await res.json();
     alert(`User ${result.username} registered successfully!`);
+
+    // 🔥 Tell parent to close modal
+  if (onSuccess) {
+    onSuccess();
+  }
+
+    
   } catch (err) {
     console.error("Error:", err);
     alert("Error: " + err.message);
@@ -111,7 +123,7 @@ const handleSubmit = async (e) => {
 
         </select>
 
-        <input name="Aadhaar" placeholder="Aadhaar (optional)" value={form.Aadhaar} onChange={handleChange} />
+        <input name="Aadhaar" placeholder="Aadhaar" value={form.Aadhaar} onChange={handleChange} required/>
         <input name="DateOfBirth" type="date" value={form.DateOfBirth} onChange={handleChange} required />
 
         <select name="Gender" value={form.Gender} onChange={handleChange} required >
@@ -121,7 +133,7 @@ const handleSubmit = async (e) => {
           <option value="3">NA</option>
         </select>
 
-        <input name="GST" placeholder="GST" value={form.GST} onChange={handleChange} required />
+        <input name="GST" placeholder="GST (optional)" value={form.GST} onChange={handleChange} />
 
         <label>Resume Upload (optional)</label>
      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
@@ -133,4 +145,5 @@ const handleSubmit = async (e) => {
     </div>
     
   );
-}
+};
+export default UserRegistration;

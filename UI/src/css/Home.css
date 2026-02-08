@@ -167,6 +167,7 @@ button[type="submit"]:hover {
 .nav-left {
   display: flex;
   align-items: center;
+  gap : 20px;
 }
 
 .nav-logo {
