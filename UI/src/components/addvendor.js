@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import "../css/addvendor.css"; // ✅ import external stylesheet
 
 function AddVendorForm() {
   const [formData, setFormData] = useState({
     vendorName: "",
-    addressLine1: "",
-    addressLine2: "",
-    addressLine3: "",
-    gst: "",
-    contactNumber: ""
+    address1: "",
+    address2: "",
+    address3: "",
+    gstnumber: "",
+    contactno1: "",
+    contactno2: ""
   });
 
   const handleChange = (e) => {
@@ -18,14 +20,43 @@ function AddVendorForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // Here you can call an API or backend service
+    try {
+      const response = await fetch("https://localhost:5001/api/Vendors/addvendor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert("Vendor added successfully!");
+        console.log("Server Response:", data);
+        
+  setFormData({
+        vendorName: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        gstnumber: "",
+        contactno1: "",
+        contactno2: ""
+      });
+
+
+      } else {
+        alert("Failed to add vendor.");
+        console.error("Error:", response.statusText);
+      }
+    } catch (error) {
+      alert("Error connecting to API.");
+      console.error("Error:", error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
+    <form onSubmit={handleSubmit} className="vendor-form">
       <h2>Vendor Registration</h2>
 
       <label>
@@ -36,7 +67,7 @@ function AddVendorForm() {
           value={formData.vendorName}
           onChange={handleChange}
           required
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
@@ -44,11 +75,11 @@ function AddVendorForm() {
         Address Line 1:
         <input
           type="text"
-          name="addressLine1"
-          value={formData.addressLine1}
+          name="address1"
+          value={formData.address1}
           onChange={handleChange}
           required
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
@@ -56,10 +87,10 @@ function AddVendorForm() {
         Address Line 2:
         <input
           type="text"
-          name="addressLine2"
-          value={formData.addressLine2}
+          name="address2"
+          value={formData.address2}
           onChange={handleChange}
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
@@ -67,10 +98,10 @@ function AddVendorForm() {
         Address Line 3:
         <input
           type="text"
-          name="addressLine3"
-          value={formData.addressLine3}
+          name="address3"
+          value={formData.address3}
           onChange={handleChange}
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
@@ -78,58 +109,40 @@ function AddVendorForm() {
         GST Number:
         <input
           type="text"
-          name="gst"
-          value={formData.gst}
+          name="gstnumber"
+          value={formData.gstnumber}
           onChange={handleChange}
           required
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
       <label>
-        Contact Number:
+        Contact Number 1:
         <input
           type="tel"
-          name="contactNumber"
-          value={formData.contactNumber}
+          name="contactno1"
+          value={formData.contactno1}
           onChange={handleChange}
           required
-          style={styles.input}
+          className="vendor-input"
         />
       </label>
 
-      <button type="submit" style={styles.button}>Submit</button>
+      <label>
+        Contact Number 2:
+        <input
+          type="tel"
+          name="contactno2"
+          value={formData.contactno2}
+          onChange={handleChange}
+          className="vendor-input"
+        />
+      </label>
+
+      <button type="submit" className="vendor-button">Submit</button>
     </form>
   );
 }
-
-const styles = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    maxWidth: "400px",
-    margin: "20px auto",
-    padding: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    backgroundColor: "#f9f9f9"
-  },
-  input: {
-    width: "100%",
-    padding: "8px",
-    marginTop: "4px",
-    borderRadius: "4px",
-    border: "1px solid #ccc"
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer"
-  }
-};
 
 export default AddVendorForm;

@@ -8,7 +8,8 @@ namespace InventoryAPI.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users => Set<User>();
-      
+        public DbSet<Vendor> Vendors { get; set; }
+
         protected override void OnModelCreating(ModelBuilder b)
         {
 
@@ -21,6 +22,16 @@ namespace InventoryAPI.Data
                 //e.Property(x => x.ResumePath).HasMaxLength(512);
             });
 
-        }
+            b.Entity<Vendor>().ToTable("tblVendorMaster"); // DB table name
+            b.Entity<Vendor>().Property(v => v.VendorName).HasColumnName("vendorname");
+            b.Entity<Vendor>().Property(v => v.Address1).HasColumnName("address1");
+            b.Entity<Vendor>().Property(v => v.Address2).HasColumnName("address2");
+            b.Entity<Vendor>().Property(v => v.Address3).HasColumnName("address3");
+            b.Entity<Vendor>().Property(v => v.ContactNo1).HasColumnName("contactno1");
+            b.Entity<Vendor>().Property(v => v.ContactNo2).HasColumnName("contactno2");
+            b.Entity<Vendor>().Property(v => v.GstNumber).HasColumnName("gstnumber");
+        
+
     }
+}
 }
