@@ -4,7 +4,7 @@ import UserRegistration from "../components/user-registration";
 import "../css/Home.css";
 import logo from "../images/logo.jpg";
 import AddVendorForm from "./addvendor";   // ✅ your vendor form
-
+import VendorGrid  from "./vendorgrid";
 function Home() {
   const [vendorOpen, setVendorOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -12,6 +12,8 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [showVendorForm, setShowVendorForm] = useState(false);
+const [showVendorGrid, setShowVendorGrid] = useState(false);
+
 
   // Restore login state on refresh
   useEffect(() => {
@@ -76,7 +78,28 @@ function Home() {
                   >
                     Add Vendor
                   </span>
-                  <span className="dropdown-item">View Vendors</span>
+                  {isLoggedIn && (
+  <div
+    className="nav-link dropdown-parent"
+    onClick={() => setVendorOpen(!vendorOpen)}
+  >
+    {/* Vendor ▾ */}
+    {vendorOpen && (
+
+        <span
+          className="dropdown-item"
+          onClick={() => {
+            setShowVendorGrid(true);
+            setVendorOpen(false);
+          }}
+        >
+          View Vendors
+        </span>
+
+    )}
+  </div>
+)}
+
                 </div>
               )}
             </div>
@@ -144,16 +167,40 @@ function Home() {
 
       {/* AddVendorForm rendered inline */}
        {isLoggedIn && showVendorForm && (
+
+
+
         <div className="vendor-section">
-          <button
+
+<table>
+
+<tr>
+  <td>
+<AddVendorForm />
+  </td>
+  <td>
+ <VendorGrid />
+  </td>
+</tr>
+
+</table>
+          {/* <button
             className="close-btn"
             onClick={() => setShowVendorForm(false)}
           >
             ✕
-          </button>
-          <AddVendorForm />
+          </button> */}
+          
         </div>
       )}
+      {/* Vendor Grid */}
+{/* {isLoggedIn && (
+  <div className="vendor-section">
+    <button className="close-btn" onClick={() => setShowVendorGrid(false)}>✕</button>
+    <VendorGrid /> */}
+  
+
+
     </>
   );
 }

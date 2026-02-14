@@ -110,7 +110,11 @@ export default App;
 
 /*
 1. In Vendor Mgmt ->
-Vendor Name, Vendor Address, GST, Mobile.
+Vendor Name, Vendor Address, GST, Mobile, 
+ -- Goods type (can be 2 - so 1 to many), state, code, Ac no., IFSC details, A/c Name., bank, branch name, Company PAN Number, 
+ -- UPI/ GPAY number, Comments
+ -- Update/ Delete/ i icon - to details of outstanding balance product wise/ date wise to take from purchase screen against each vendor.
+-- To keep comments column in all tables.
 
 - To check once vendor completes.
 - Product, HSN, Unit
