@@ -178,3 +178,15 @@ button[type="submit"]:hover {
 .nav-logo:hover {
   opacity: 0.85;
 }
+
+/* Ensure Vendor dropdown anchors under "Vendor ▾" */
+.dropdown-parent {
+  position: relative;   /* new positioning context */
+  display: inline-block;
+}
+
+.dropdown-parent .dropdown {
+  top: 100%;            /* directly below the Vendor text */
+  left: 0;              /* align with the left edge of Vendor text */
+  right: auto;          /* override the global right:0 */
+}

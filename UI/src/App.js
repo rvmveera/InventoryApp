@@ -51,7 +51,7 @@ function App() {
 export default App;*/
 
 // App.js
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import Popup from "./components/popup";
 import RegistrationForm from "./components/user-registration";
 import LoginForm from "./components/user-login";
@@ -68,38 +68,54 @@ function App() {
 
 
       <Home></Home>
-{/*       
-<h1>Welcome</h1>
-      <button onClick={() => { setIsOpen(true); setActiveTab("login"); }}>
-        Open Login
-      </button>
-      <button onClick={() => { setIsOpen(true); setActiveTab("register"); }}>
-        Open Registration
-      </button>
-
-      <Popup isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="tab-header">
-          <button
-            className={activeTab === "login" ? "active" : ""}
-            onClick={() => setActiveTab("login")}
-          >
-            Login
-          </button>
-          <button
-            className={activeTab === "register" ? "active" : ""}
-            onClick={() => setActiveTab("register")}
-          >
-            Register
-          </button>
-        </div>
-
-        <div className="tab-content">
-          {activeTab === "login" && <LoginForm />}
-          {activeTab === "register" && <RegistrationForm />}
-        </div>
-      </Popup> */}
     </div>
   );
 }
 
 export default App;
+*/
+
+
+// App.js
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import './App.css';
+
+// Components
+import Home from './components/Home';
+import VendorForm from './components/addvendor';
+import RegistrationForm from "./components/user-registration";
+import LoginForm from "./components/user-login";
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Homepage */}
+        <Route path="/" element={<Home />} />
+
+        {/* Vendor Form */}
+        <Route path="/addvendor" element={<VendorForm />} />
+
+        {/* Optional: Login/Register routes if you want them outside modal */}
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegistrationForm />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+/*
+1. In Vendor Mgmt ->
+Vendor Name, Vendor Address, GST, Mobile.
+
+- To check once vendor completes.
+- Product, HSN, Unit
+Map Products to vendor during Vendor addition
+- Vendor Name,Product, 	HSN, 	Mobile Number
+
+
+*/

@@ -3,14 +3,15 @@ import LoginForm from "../components/user-login";
 import UserRegistration from "../components/user-registration";
 import "../css/Home.css";
 import logo from "../images/logo.jpg";
+import AddVendorForm from "./addvendor";   // ✅ your vendor form
 
 function Home() {
-  const [open, setOpen] = useState(false);
+  const [vendorOpen, setVendorOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [modal, setModal] = useState(null); // "login" | "register" | null
-
-  // 🔐 Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [showVendorForm, setShowVendorForm] = useState(false);
 
   // Restore login state on refresh
   useEffect(() => {
@@ -25,9 +26,10 @@ function Home() {
   // Called from login.js on success
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
-    setUsername(user.username || user); // depending on API return
-    setModal(null); // close modal
-    setOpen(false); // close dropdown
+    setUsername(user.username || user);
+    setModal(null);
+    setVendorOpen(false);
+    setAccountOpen(false);
   };
 
   const handleLogout = () => {
@@ -35,7 +37,8 @@ function Home() {
     localStorage.removeItem("username");
     setIsLoggedIn(false);
     setUsername("");
-    setOpen(false);
+    setVendorOpen(false);
+    setAccountOpen(false);
   };
 
   return (
@@ -50,64 +53,77 @@ function Home() {
           />
         </div>
 
-        <div className="nav-right" onClick={() => setOpen(!open)}>
-          
-          <div className="nav-left">
-           <span className="nav-link" onClick={() => window.location.href = "/"}>
-            {isLoggedIn ?  "Inventory Management" : ""}
-                      </span>                    
-          
-
-                      <span className="nav-link" onClick={() => window.location.href = "/"}>
-            {isLoggedIn ?  "Vendor Management" : ""}
-                      </span>
-<span className="nav-link" onClick={() => window.location.href = "/"}>
-            {isLoggedIn ?  "Reports" : ""}
-                      </span>
-
-          
+        <div className="nav-right">
           <span className="nav-link">
-            {isLoggedIn ? `Welcome, ${username}` : "Account ▾"}
+            {isLoggedIn ? "Inventory Management" : ""}
           </span>
-</div>
 
-
-          {open && (
-            <div className="dropdown">
-              {!isLoggedIn ? (
-                <>
+          {/* Vendor Dropdown only if logged in */}
+          {isLoggedIn && (
+            <div
+              className="nav-link dropdown-parent"
+              onClick={() => setVendorOpen(!vendorOpen)}
+            >
+              Vendor ▾
+              {vendorOpen && (
+                <div className="dropdown">
                   <span
                     className="dropdown-item"
-                    onClick={() => setModal("login")}
+                    onClick={() => {
+                      setShowVendorForm(true);
+                      setVendorOpen(false);
+                    }}
                   >
-                    Login
+                    Add Vendor
                   </span>
-                  <span
-                    className="dropdown-item"
-                    onClick={() => setModal("register")}
-                  >
-                    Register
-                  </span>
-                </>
-              ) : (
-                
-                <>
-
-                
-                  {/* Logged-in menu */}
-                  <span className="dropdown-item">My Profile</span>
-                  <span className="dropdown-item">Orders</span>
-                  <span className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </span>
-                </>
+                  <span className="dropdown-item">View Vendors</span>
+                </div>
               )}
             </div>
           )}
+
+          <span className="nav-link">
+            {isLoggedIn ? "Reports" : ""}
+          </span>
+
+          {/* Account Dropdown */}
+          <div
+            className="nav-link dropdown-parent"
+            onClick={() => setAccountOpen(!accountOpen)}
+          >
+            {isLoggedIn ? `Welcome, ${username}` : "Account ▾"}
+            {accountOpen && (
+              <div className="dropdown">
+                {!isLoggedIn ? (
+                  <>
+                    <span
+                      className="dropdown-item"
+                      onClick={() => setModal("login")}
+                    >
+                      Login
+                    </span>
+                    <span
+                      className="dropdown-item"
+                      onClick={() => setModal("register")}
+                    >
+                      Register
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="dropdown-item">Pending Approvals</span>
+                    <span className="dropdown-item" onClick={handleLogout}>
+                      Logout
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
-      {/* MODAL */}
+      {/* MODAL for Login/Register */}
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -123,6 +139,19 @@ function Home() {
               <UserRegistration onSuccess={() => setModal(null)} />
             )}
           </div>
+        </div>
+      )}
+
+      {/* AddVendorForm rendered inline */}
+       {isLoggedIn && showVendorForm && (
+        <div className="vendor-section">
+          <button
+            className="close-btn"
+            onClick={() => setShowVendorForm(false)}
+          >
+            ✕
+          </button>
+          <AddVendorForm />
         </div>
       )}
     </>
