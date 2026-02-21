@@ -170,36 +170,12 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
 
 
 
-        <div className="vendor-section">
+        <div className="vendor-section full-width">
 
-<table>
-
-<tr>
-  <td>
 <AddVendorForm />
-  </td>
-  <td>
- <VendorGrid />
-  </td>
-</tr>
-
-</table>
-          {/* <button
-            className="close-btn"
-            onClick={() => setShowVendorForm(false)}
-          >
-            ✕
-          </button> */}
-          
         </div>
       )}
-      {/* Vendor Grid */}
-{/* {isLoggedIn && (
-  <div className="vendor-section">
-    <button className="close-btn" onClick={() => setShowVendorGrid(false)}>✕</button>
-    <VendorGrid /> */}
-  
-
+    
 
     </>
   );
