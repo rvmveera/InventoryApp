@@ -9,6 +9,8 @@ namespace InventoryAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users => Set<User>();
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorGoodsType> VendorGoodsTypes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -42,6 +44,8 @@ namespace InventoryAPI.Data
             b.Entity<Vendor>().Property(v => v.upi_gpayNo).HasColumnName("upi_gpayNo");
             b.Entity<Vendor>().Property(v => v.comments).HasColumnName("comments");
 
+
+            b.Entity<VendorGoodsType>().ToTable("tblVendorGoodsType");
         }
     }
 }

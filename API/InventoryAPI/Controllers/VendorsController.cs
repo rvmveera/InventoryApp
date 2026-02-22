@@ -35,5 +35,24 @@ namespace InventoryAPI.Controllers
             var vendors = await _context.Vendors.ToListAsync();
             return Ok(vendors);
         }
+
+        [HttpPost("addVendorGoodsType")]
+        public async Task<IActionResult> AddVendorGoodsType([FromBody] VendorGoodsType model)
+        {
+            if (model == null)
+                return BadRequest("Invalid data.");
+
+            try
+            {
+                _context.VendorGoodsTypes.Add(model);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Vendor goods type added successfully", data = model });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
