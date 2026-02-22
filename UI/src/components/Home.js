@@ -87,14 +87,15 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
     {vendorOpen && (
 
         <span
-          className="dropdown-item"
-          onClick={() => {
-            setShowVendorGrid(true);
-            setVendorOpen(false);
-          }}
-        >
-          View Vendors
-        </span>
+  className="dropdown-item"
+  onClick={() => {
+    setShowVendorGrid(true);
+    setShowVendorForm(false); // ✅ hide form when viewing grid
+    setVendorOpen(false);
+  }}
+>
+  View Vendors
+</span>
 
     )}
   </div>
@@ -167,14 +168,17 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
 
       {/* AddVendorForm rendered inline */}
        {isLoggedIn && showVendorForm && (
-
-
-
         <div className="vendor-section full-width">
-
 <AddVendorForm />
-        </div>
+        </div>       
       )}
+
+       {isLoggedIn && showVendorGrid && (
+  <div className="vendor-section full-width">
+    <VendorGrid refreshTrigger={showVendorGrid}/>
+  </div>
+)}
+
     
 
     </>
