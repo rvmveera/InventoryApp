@@ -7,6 +7,8 @@ function VendorGrid({ refreshTrigger }) {
   const [selectedVendor, setSelectedVendor] = useState(null); // ✅ track vendor for popup
 const [groupTypes, setGroupTypes] = useState([]);     
 const [newGroupType, setNewGroupType] = useState("");
+const [comments, setComments] = useState("");
+
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -61,11 +63,36 @@ const [newGroupType, setNewGroupType] = useState("");
     setSelectedVendor(null);
   };
 
-   const handleAddGroupType = () => {
-    if (!newGroupType.trim()) return;
-    setGroupTypes([...groupTypes, newGroupType]);
-    setNewGroupType("");
-  };
+   const handleAddGroupType = async () => {
+  if (!newGroupType.trim() || !selectedVendor) return;
+
+  try {
+    const response = await fetch("https://localhost:5001/api/Vendors/addVendorGoodsType", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        vendorId: selectedVendor.vendorId, // ✅ use selected vendor’s ID
+        goodsType: newGroupType,           // adjust to match backend DTO
+        comments: comments,
+      }),
+    });
+
+    if (response.ok) {
+      const saved = await response.json();
+      setGroupTypes([...groupTypes, saved.groupType || newGroupType]);
+      setNewGroupType("");
+      setComments("");
+      alert("Group type added");
+    } else {
+      console.error("Failed to add group type:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error while adding group type:", error);
+  }
+};
+
 
 
   if (loading) return <p>Loading vendors...</p>;
@@ -134,22 +161,32 @@ const [newGroupType, setNewGroupType] = useState("");
 </td>
 <td valign="top">
  {/* ✅ Group Type Section */}
-            <div className="group-type">
-              <h3>Group Type</h3>
-              <input
-                type="text"
-                value={newGroupType}
-                onChange={(e) => setNewGroupType(e.target.value)}
-                placeholder="Enter group type"
-              />
-              <button onClick={handleAddGroupType}>Add</button>
+          <div className="group-type">
+  <h3>Group Type</h3>
+  <input
+    type="text"
+    value={newGroupType}
+    onChange={(e) => setNewGroupType(e.target.value)}
+    placeholder="Enter group type"
+  />
 
-              <ul>
-                {groupTypes.map((gt, index) => (
-                  <li key={index}>{gt}</li>
-                ))}
-              </ul>
-            </div>
+  <textarea
+    value={comments}
+    onChange={(e) => setComments(e.target.value)}
+    placeholder="Enter comments"
+    rows={3}
+    style={{ width: "100%", marginTop: "8px" }}
+  />
+
+  <button onClick={handleAddGroupType}>Add</button>
+
+  <ul>
+    {groupTypes.map((gt, index) => (
+      <li key={index}>{gt}</li>
+    ))}
+  </ul>
+</div>
+
 
 
 </td>
