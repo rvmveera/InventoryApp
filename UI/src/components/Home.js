@@ -5,15 +5,20 @@ import "../css/Home.css";
 import logo from "../images/logo.jpg";
 import AddVendorForm from "./addvendor";   // ✅ your vendor form
 import VendorGrid  from "./vendorgrid";
+import PurchaseForm from "./purchase";  // ✅ import your form
+
+
 function Home() {
   const [vendorOpen, setVendorOpen] = useState(false);
+   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [modal, setModal] = useState(null); // "login" | "register" | null
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [showVendorForm, setShowVendorForm] = useState(false);
 const [showVendorGrid, setShowVendorGrid] = useState(false);
-
+const [showPurchaseForm, setShowPurchaseForm] = useState(false);
+   
 
   // Restore login state on refresh
   useEffect(() => {
@@ -32,6 +37,7 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
     setModal(null);
     setVendorOpen(false);
     setAccountOpen(false);
+    setInventoryOpen(false);
   };
 
   const handleLogout = () => {
@@ -41,6 +47,7 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
     setUsername("");
     setVendorOpen(false);
     setAccountOpen(false);
+    setInventoryOpen(false);
   };
 
   return (
@@ -56,9 +63,37 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
         </div>
 
         <div className="nav-right">
-          <span className="nav-link">
-            {isLoggedIn ? "Inventory Management" : ""}
-          </span>
+         
+
+{/* Inventory management only if logged in */}
+
+   {isLoggedIn && (
+            <div
+              className="nav-link dropdown-parent"
+              onClick={() => setInventoryOpen(!inventoryOpen)}
+            >
+              Inventory Management ▾
+              {inventoryOpen && (
+                <div className="dropdown">
+                  <span
+                    className="dropdown-item"
+                    onClick={() => {
+                         setShowPurchaseForm(true);
+                        setInventoryOpen(false);                       
+                    }}
+                  >
+                    Purchase Goods/ Services
+                  </span>
+                  
+
+                </div>
+              )}
+            </div>
+          )}
+
+
+
+
 
           {/* Vendor Dropdown only if logged in */}
           {isLoggedIn && (
@@ -176,6 +211,11 @@ const [showVendorGrid, setShowVendorGrid] = useState(false);
        {isLoggedIn && showVendorGrid && (
   <div className="vendor-section full-width">
     <VendorGrid refreshTrigger={showVendorGrid}/>
+  </div>
+)}
+{isLoggedIn && showPurchaseForm && (
+  <div className="purchase-section full-width">
+    <PurchaseForm />
   </div>
 )}
 
