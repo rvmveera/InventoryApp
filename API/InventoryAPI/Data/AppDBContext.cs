@@ -10,7 +10,8 @@ namespace InventoryAPI.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<VendorGoodsType> VendorGoodsTypes { get; set; }
-
+        public DbSet<PurchaseHeader> PurchaseHeaders { get; set; }
+        public DbSet<PurchaseDetail> PurchaseDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -46,6 +47,19 @@ namespace InventoryAPI.Data
 
 
             b.Entity<VendorGoodsType>().ToTable("tblVendorGoodsType");
+
+            b.Entity<PurchaseHeader>()
+       .ToTable("tblPurchaseHeader");
+
+            b.Entity<PurchaseDetail>()
+                .ToTable("tblPurchaseDetails");
+
+            b.Entity<PurchaseDetail>()
+                .HasOne(d => d.PurchaseHeader)
+                .WithMany(h => h.PurchaseDetails)
+                .HasForeignKey(d => d.PurchaseHeaderId);
+
+
         }
     }
 }
