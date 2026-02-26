@@ -55,9 +55,25 @@ const [comments, setComments] = useState("");
     }
   };
 
-  const handleDetails = (vendor) => {
-    setSelectedVendor(vendor); // ✅ open popup with vendor details
+ const handleDetails = async (vendor) => {
+    setSelectedVendor(vendor);
+    try {
+      const response = await fetch(
+        `https://localhost:5001/api/Vendors/GetVendorGroupType?vendorId=${vendor.vendorId}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setGroupTypes(data);
+      } else {
+        console.error("Failed to fetch group types");
+        setGroupTypes([]);
+      }
+    } catch (error) {
+      console.error("Error fetching group types:", error);
+      setGroupTypes([]);
+    }
   };
+
 
   const closePopup = () => {
     setSelectedVendor(null);
@@ -67,6 +83,7 @@ const [comments, setComments] = useState("");
   if (!newGroupType.trim() || !selectedVendor) return;
 
   try {
+
     const response = await fetch("https://localhost:5001/api/Vendors/addVendorGoodsType", {
       method: "POST",
       headers: {
@@ -85,6 +102,7 @@ const [comments, setComments] = useState("");
       setNewGroupType("");
       setComments("");
       alert("Group type added");
+      handleDetails(selectedVendor)
     } else {
       console.error("Failed to add group type:", response.statusText);
     }
@@ -180,11 +198,13 @@ const [comments, setComments] = useState("");
 
   <button onClick={handleAddGroupType}>Add</button>
 
-  <ul>
-    {groupTypes.map((gt, index) => (
-      <li key={index}>{gt}</li>
-    ))}
-  </ul>
+ <ul>
+  {groupTypes.map((gt) => (
+    <li key={gt.id}>
+      <strong>{gt.goodsType}</strong>
+    </li>
+  ))}
+</ul>
 </div>
 
 

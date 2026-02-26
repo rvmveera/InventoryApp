@@ -79,7 +79,13 @@ const [showPurchaseForm, setShowPurchaseForm] = useState(false);
                     className="dropdown-item"
                     onClick={() => {
                          setShowPurchaseForm(true);
-                        setInventoryOpen(false);                       
+                      setInventoryOpen(false);
+
+            // ✅ Hide vendor forms/grids when purchase is opened
+            setShowVendorForm(false);
+            setShowVendorGrid(false);
+            setVendorOpen(false);
+             
                     }}
                   >
                     Purchase Goods/ Services
@@ -109,6 +115,7 @@ const [showPurchaseForm, setShowPurchaseForm] = useState(false);
                     onClick={() => {
                       setShowVendorForm(true);
                       setVendorOpen(false);
+                          setShowPurchaseForm(false); 
                     }}
                   >
                     Add Vendor
@@ -127,6 +134,7 @@ const [showPurchaseForm, setShowPurchaseForm] = useState(false);
     setShowVendorGrid(true);
     setShowVendorForm(false); // ✅ hide form when viewing grid
     setVendorOpen(false);
+        setShowPurchaseForm(false); 
   }}
 >
   View Vendors

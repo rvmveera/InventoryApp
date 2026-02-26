@@ -53,6 +53,20 @@ namespace InventoryAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetVendorGroupType")]
+        public async Task<IActionResult> GetVendorGroupType([FromQuery] int vendorId)
+        {
+            var vendorGroupTypes = await _context.VendorGoodsTypes
+                                                 .Where(vg => vg.vendorId == vendorId)
+                                                 .ToListAsync();
+
+            if (vendorGroupTypes == null || !vendorGroupTypes.Any())
+            {
+                return NotFound($"No group types found for vendor {vendorId}.");
+            }
+
+            return Ok(vendorGroupTypes);
+        }
 
     }
 }
