@@ -12,7 +12,7 @@ namespace InventoryAPI.Data
         public DbSet<VendorGoodsType> VendorGoodsTypes { get; set; }
         public DbSet<PurchaseHeader> PurchaseHeaders { get; set; }
         public DbSet<PurchaseDetail> PurchaseDetails { get; set; }
-
+        public DbSet<GoodsTypeGST> GoodsTypeGSTs { get; set; }
         protected override void OnModelCreating(ModelBuilder b)
         {
 
@@ -59,7 +59,7 @@ namespace InventoryAPI.Data
                 .WithMany(h => h.PurchaseDetails)
                 .HasForeignKey(d => d.PurchaseHeaderId);
 
-
+            b.Entity<GoodsTypeGST>().ToTable("tblGoodsTypeGST");
         }
     }
 }
