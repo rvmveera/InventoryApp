@@ -16,8 +16,8 @@ namespace InventoryAPI.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public IActionResult AddGoodsType([FromBody] GoodsTypeGST model)
+        [HttpPost("addGoodsGST")]
+        public IActionResult AddGoodsTypeGST([FromBody] GoodsTypeGST model)
         {
             if (model == null)
                 return BadRequest("Invalid data.");

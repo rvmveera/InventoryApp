@@ -6,6 +6,8 @@ import logo from "../images/logo.jpg";
 import AddVendorForm from "./addvendor";
 import VendorGrid from "./vendorgrid";
 import PurchaseForm from "./purchase";
+import GoodsGST from "./goodsGST";
+
 
 function Home() {
 
@@ -20,6 +22,8 @@ function Home() {
   const [showVendorForm, setShowVendorForm] = useState(false);
   const [showVendorGrid, setShowVendorGrid] = useState(false);
   const [showPurchaseForm, setShowPurchaseForm] = useState(false);
+
+  const [showGoodsGST, setShowGoodsGST] = useState(false);
 
   /* Restore login */
   useEffect(() => {
@@ -133,6 +137,19 @@ function Home() {
               <span
                 className="dropdown-item"
                 onClick={() => {
+                  
+                  resetSections();
+                  setShowGoodsGST(true);                  
+                }}
+              >
+                Goods Type GST
+              </span>
+            </div>
+
+            <div className="dropdown">
+              <span
+                className="dropdown-item"
+                onClick={() => {
                   resetSections();
                   setShowPurchaseForm(true);
                   setInventoryOpen(false);
@@ -195,6 +212,9 @@ function Home() {
         {isLoggedIn && showVendorForm && <AddVendorForm />}
         {isLoggedIn && showVendorGrid && <VendorGrid refreshTrigger={showVendorGrid} />}
         {isLoggedIn && showPurchaseForm && <PurchaseForm />}
+
+        {showGoodsGST && <GoodsGST />}
+
 
       </div>
 
