@@ -1,47 +1,150 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: violet; 
-  padding: 12px 24px;
-  color: #333;
-  
+/* ===============================
+   RESET
+=================================*/
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.nav-link {
-  color: black;
-  text-decoration: none;
-  font-size: 16px;
+/* ===============================
+   TOP HEADER (SLIM)
+=================================*/
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: violet;
+  z-index: 1000;
+}
+
+/* Hide old top-right menu */
+.nav-right {
+  display: none;
+}
+
+/* Logo */
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  height: 40px;
   cursor: pointer;
 }
+.nav-logo:hover {
+  opacity: 0.85;
+}
 
-.nav-link:hover {
+/* ===============================
+   LEFT SIDEBAR MENU
+=================================*/
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 230px;
+  height: calc(100vh - 60px);
+  background: violet;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+/* Sidebar Links */
+.sidebar .nav-link {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  border-radius: 6px;
+  transition: 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(0, 0, 0, 0.08);
   color: #00bcd4;
 }
 
-.nav-right {
+/* Active link (optional if you add class="active") */
+.sidebar .active {
+  background: linear-gradient(to right, violet, gold);
+  color: white;
+}
+
+/* ===============================
+   SIDEBAR DROPDOWN (SUBMENU)
+=================================*/
+.dropdown-parent {
   position: relative;
 }
 
-.dropdown {
-  position: absolute;
-  top: 35px;
-  right: 0;
-  background-color: white;
-  border-radius: 4px;
-  min-width: 120px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+.sidebar .dropdown {
+  position: relative;
+  top: 0;
+  left: 0;
+  background: transparent;
+  box-shadow: none;
+  margin-left: 10px;
+  margin-top: 5px;
+  display: none;   /* hidden by default */
 }
 
-.dropdown-item {
+/* Show dropdown when parent has .open class */
+.dropdown-parent.open .dropdown {
   display: block;
-  padding: 10px;
+}
+
+.sidebar .dropdown-item {
+  display: block;
+  padding: 8px 12px;
+  font-size: 14px;
   color: #333;
   text-decoration: none;
+  border-radius: 4px;
 }
 
-.dropdown-item:hover {
-  background-color: #f0f0f0;
+.sidebar .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #00bcd4;
+}
+
+/* ===============================
+   MAIN CONTENT AREA
+=================================*/
+.main-content {
+  margin-left: 230px;
+  margin-top: 60px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ===============================
+   MODAL
+=================================*/
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
 }
 
 .modal-content {
@@ -49,28 +152,32 @@
   padding: 25px;
   border-radius: 6px;
   width: 60%;
-  max-width: 800px;   /* optional safety cap */
-  min-width: 350px;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
-  max-height: 90vh; 
-  overflow-y: auto;        
-}
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-
-  display: flex;
-  align-items: center;      /* vertical center */
-  justify-content: center;  /* horizontal center */
-
-  z-index: 999;
+  box-sizing: border-box;
 }
 
-/* FORM WRAPPER */
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+.close-btn:hover {
+  color: #e53935;
+}
+
+/* ===============================
+   FORM GRID
+=================================*/
 .form-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -78,13 +185,6 @@
   margin-top: 20px;
 }
 
-/* HEADLINE */
-h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* INPUTS & SELECT */
 .form-container input,
 .form-container select {
   padding: 8px;
@@ -92,6 +192,7 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .form-container input:focus,
@@ -101,25 +202,18 @@ h2 {
   box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
 }
 
-/* FILE INPUT & LABEL */
 .form-container label {
   grid-column: span 2;
   font-size: 14px;
   margin-top: 10px;
 }
 
-.form-container input[type="file"] {
-  grid-column: span 2;
-  padding: 6px;
-  border: none;
-}
-
-/* FULL-WIDTH FIELDS (Address lines if you want) */
+.form-container input[type="file"],
 .form-container input[name^="Address"] {
   grid-column: span 2;
 }
 
-/* SUBMIT BUTTON */
+/* Submit button */
 button[type="submit"] {
   margin: 25px auto 0;
   display: block;
@@ -131,13 +225,25 @@ button[type="submit"] {
   border-radius: 4px;
   cursor: pointer;
 }
-
 button[type="submit"]:hover {
   background-color: #0097a7;
 }
 
-/* MOBILE RESPONSIVE */
+/* ===============================
+   RESPONSIVE
+=================================*/
+
+/* Tablet */
 @media (max-width: 768px) {
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
+
   .form-container {
     grid-template-columns: 1fr;
   }
@@ -147,46 +253,53 @@ button[type="submit"]:hover {
   .form-container input[name^="Address"] {
     grid-column: span 1;
   }
+
+  .modal-content {
+    width: 90%;
+    max-width: 600px;
+  }
 }
 
-.close-btn {
-  position: absolute;      /* 🔑 */
-  top: 10px;
-  right: 10px;
+/* Mobile */
+@media (max-width: 480px) {
 
-  background: none;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #333;
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .nav-logo {
+    height: 35px;
+  }
+
+  .sidebar .nav-link {
+    font-size: 14px;
+  }
+
+  .dropdown-item {
+    font-size: 13px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+  }
 }
-.close-btn:hover {
-  color: #e53935;
+.nav-top-right {
+  margin-left: auto;
+  position: relative;
 }
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap : 20px;
+/* Hide all dropdowns by default */
+.dropdown {
+  display: none;
 }
 
-.nav-logo {
-  height: 75px;      /* adjust as needed */
-  cursor: pointer;
-}
-
-.nav-logo:hover {
-  opacity: 0.85;
-}
-
-/* Ensure Vendor dropdown anchors under "Vendor ▾" */
-.dropdown-parent {
-  position: relative;   /* new positioning context */
-  display: inline-block;
-}
-
-.dropdown-parent .dropdown {
-  top: 100%;            /* directly below the Vendor text */
-  left: 0;              /* align with the left edge of Vendor text */
-  right: auto;          /* override the global right:0 */
+/* Show dropdown only when parent has .open */
+.dropdown-parent.open > .dropdown {
+  display: block;
 }

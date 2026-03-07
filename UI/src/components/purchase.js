@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-
+import "../css/purchase.css"
 function PurchaseForm() {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
@@ -266,7 +266,7 @@ function PurchaseForm() {
 
       {/* Purchase Details Grid */}
       <h2>Purchase Details</h2>
-      <table border="1">
+      <table border="1" class="purchase-table">
         <thead>
           <tr>
             <th>Description</th>
