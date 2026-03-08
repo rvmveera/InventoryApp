@@ -91,23 +91,82 @@ function PurchaseForm() {
     setDetails(details.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const payload = { ...header, consignee, purchaseDetails: details };
-    console.log("Submitting payload:", payload);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    fetch("/api/purchase/save", {
+  // Build payload according to API contract
+  const payload = {
+    id: 0, // new purchase
+    vendorId: header.vendorId,
+    consigneeId: consignee ? consignee.id : 1, // adjust based on your consignee model
+    buyerName: header.buyerName,
+    buyerAddress: header.buyerAddress,
+    buyerGST: header.buyerGST,
+    buyerEmail: header.buyerEmail,
+    buyerState: header.buyerState,
+    buyerCode: header.buyerCode,
+    buyerPlaceofsupply: header.buyerPlaceofsupply,
+    buyerContactName: header.buyerContactName,
+    buyerMobileNo: header.buyerMobileNo,
+
+    // Add other header fields you need (invoiceNo, ewayBillNo, etc.)
+    invoiceNo: "INV001",
+    ewayBillNo: "EWAY001",
+    invoiceDate: new Date().toISOString(),
+    deliveryNote: "string",
+    termsOfPayment: "string",
+    supplierRef: "string",
+    otherReference: "string",
+    buyerOrderNo: "string",
+    buyerOrderDate: new Date().toISOString(),
+    despatchDocNo: "string",
+    deliveryNoteDate: new Date().toISOString(),
+    despatchedThrough: "string",
+    destination: "string",
+    billOfLadingNo: "string",
+    vehicleNo: "string",
+    termsOfDelivery: "string",
+
+    // Details array
+    purchaseDetails: details.map(d => ({
+      id: 0,
+      purchaseHeaderId: 0, // API will assign actual headerId
+      goods_ServiceDesc: d.goods_ServiceDesc,
+      hsnSac: d.hsnSac,
+      quantity: Number(d.quantity),
+      rate: Number(d.rate),
+      uomPer: d.uomPer,
+      discountPercent: Number(d.discountPercent) || 0,
+      amount: Number(d.amount),
+      gst: Number(d.gst),
+      total: Number(d.total)
+    }))
+  };
+
+  console.log("Submitting payload:", payload);
+
+  try {
+    const response = await fetch("https://localhost:5001/api/Purchase/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        alert("Saved successfully!");
-        console.log(data);
-      })
-      .catch((err) => console.error(err));
-  };
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      alert(`Purchase #${data.id} saved successfully!`);
+      console.log("Saved purchase:", data);
+    } else {
+      const errorData = await response.json();
+      console.error("Failed to save purchase:", errorData);
+      alert("Error saving purchase. Check console for details.");
+    }
+  } catch (err) {
+    console.error("Error submitting purchase:", err);
+    alert("Unexpected error occurred.");
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit}>

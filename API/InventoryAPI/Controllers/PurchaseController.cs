@@ -29,3 +29,53 @@ namespace InventoryAPI.Controllers
         }
     }
 }
+
+
+
+/*
+{
+  "id": 0,
+  "vendorId": 1,
+  "consigneeId": 1,
+  "buyerName": "buyer1",
+  "buyerAddress": "Buyer Addr1",
+  "buyerGST": "GST234",
+  "buyerEmail": "test@test.com",
+  "buyerState": "Tamil Nadu",
+  "buyerCode": "33",
+  "buyerPlaceofsupply": "Chennai",
+  "buyerContactName": "Contact1",
+  "buyerMobileNo": "1234567890",
+  "invoiceNo": "INV001",
+  "ewayBillNo": "EWAY001",
+  "invoiceDate": "2026-03-08T15:27:30.412Z",
+  "deliveryNote": "string",
+  "termsOfPayment": "string",
+  "supplierRef": "string",
+  "otherReference": "string",
+  "buyerOrderNo": "string",
+  "buyerOrderDate": "2026-03-08T15:27:30.412Z",
+  "despatchDocNo": "string",
+  "deliveryNoteDate": "2026-03-08T15:27:30.412Z",
+  "despatchedThrough": "string",
+  "destination": "string",
+  "billOfLadingNo": "string",
+  "vehicleNo": "string",
+  "termsOfDelivery": "string",
+  "purchaseDetails": [
+    {
+      "id": 0,
+      "purchaseHeaderId": 0,
+      "goods_ServiceDesc": "Bed",
+      "hsnSac": "HSN001",
+      "quantity": 10,
+      "rate": 100,
+      "uomPer": "pc",
+      "discountPercent": 0,
+      "amount": 20000,
+      "gst": 5,
+      "total": 20000
+    }
+  ]
+}
+*/
