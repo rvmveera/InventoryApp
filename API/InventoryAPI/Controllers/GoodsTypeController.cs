@@ -27,5 +27,20 @@ namespace InventoryAPI.Controllers
 
             return Ok("Record saved successfully");
         }
+
+        [HttpGet("GetAllGoodsType")]
+        public ActionResult<IEnumerable<GoodsTypeGST>> GetAllGoodsTypes()
+        {
+            var goodsTypes = _context.GoodsTypeGSTs
+                                 .OrderBy(g => g.GoodsType) // sort alphabetically
+                                 .ToList();
+
+            if (goodsTypes == null || !goodsTypes.Any())
+            {
+                return NotFound("No goods types found.");
+            }
+            return Ok(goodsTypes);
+        }
+
     }
 }

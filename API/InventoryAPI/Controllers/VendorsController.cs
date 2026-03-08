@@ -36,29 +36,44 @@ namespace InventoryAPI.Controllers
             return Ok(vendors);
         }
 
-        [HttpPost("addVendorGoodsType")]
-        public async Task<IActionResult> AddVendorGoodsType([FromBody] VendorGoodsType model)
+        [HttpPost("addVendorGoodsType")]        
+        public async Task<IActionResult> AddVendorGoodsType([FromBody] List<VendorGoodsType> models)
         {
-            if (model == null)
-                return BadRequest("Invalid data.");
+            if (models == null || !models.Any())
+                return BadRequest("Invalid data. Must provide at least one group type.");
 
             try
             {
-                _context.VendorGoodsTypes.Add(model);
+                _context.VendorGoodsTypes.AddRange(models);   // ✅ Add multiple records
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Vendor goods type added successfully", data = model });
+
+                return Ok(new
+                {
+                    message = "Vendor goods types added successfully",
+                    data = models
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
         [HttpGet("GetVendorGroupType")]
         public async Task<IActionResult> GetVendorGroupType([FromQuery] int vendorId)
         {
-            var vendorGroupTypes = await _context.VendorGoodsTypes
-                                                 .Where(vg => vg.vendorId == vendorId)
-                                                 .ToListAsync();
+            var vendorGroupTypes = await (from vg in _context.VendorGoodsTypes
+                                          join gt in _context.GoodsTypeGSTs
+                                          on vg.goodsTypeId equals gt.Id
+                                          where vg.vendorId == vendorId
+                                          select new
+                                          {
+                                              vg.Id,
+                                              vg.vendorId,
+                                              vg.comments,
+                                              GoodsTypeName = gt.GoodsType,   // ✅ fetch name from tblGoodsTypeGST
+                                              GSTpercent = gt.GSTpercent                                            
+                                          }).ToListAsync();
 
             if (vendorGroupTypes == null || !vendorGroupTypes.Any())
             {
@@ -67,6 +82,5 @@ namespace InventoryAPI.Controllers
 
             return Ok(vendorGroupTypes);
         }
-
     }
 }
