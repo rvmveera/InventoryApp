@@ -22,9 +22,4 @@
         public string upi_gpayNo { get; set; }
         public string comments { get; set; }
     }
-
-  /*  public class VendorGoodsRequest
-    {
-        public int VendorId { get; set; }
-    }*/
 }

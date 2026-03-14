@@ -71,8 +71,35 @@ const [goodsTypes, setGoodsTypes] = useState([]);
     const { name, value } = e.target;
     setHeader({ ...header, [name]: value });
   };
+const calculateRowValues = (detail) => {
+  const quantity = parseFloat(detail.quantity) || 0;
+  const rate = parseFloat(detail.rate) || 0;
+  const discountPercent = parseFloat(detail.discountPercent) || 0;
+  const gstPercent = parseFloat(detail.gst) || 0; // GST comes from goodsType
 
-  const handleDetailChange = (index, e) => {
+  // Base amount
+  let amount = quantity * rate;
+
+  // Apply discount
+  amount = amount - (amount * discountPercent) / 100;
+
+  // GST amount
+  const gstAmount = (amount * gstPercent) / 100;
+
+  // Total
+  const total = amount + gstAmount;
+
+  return {
+    ...detail,
+    amount: amount.toFixed(2),
+    total: total.toFixed(2),
+  };
+};
+
+
+
+
+const handleDetailChange = (index, e) => {
   const { name, value } = e.target;
   const updatedDetails = [...details];   // ✅ create a copy first
 
@@ -87,8 +114,12 @@ const [goodsTypes, setGoodsTypes] = useState([]);
     updatedDetails[index][name] = value;
   }
 
+  // Run calculation after updating values
+  updatedDetails[index] = calculateRowValues(updatedDetails[index]);
+
   setDetails(updatedDetails);
 };
+
 
   const addDetailRow = () => {
     setDetails([
