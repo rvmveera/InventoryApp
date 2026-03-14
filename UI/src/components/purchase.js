@@ -5,6 +5,8 @@ function PurchaseForm() {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [consignee, setConsignee] = useState(null);
+const [goodsTypes, setGoodsTypes] = useState([]);
+
 
   const [header, setHeader] = useState({
     vendorId: "",
@@ -55,6 +57,13 @@ function PurchaseForm() {
     if (vendor) {
       setHeader({ ...header, vendorId: vendor.vendorId });
       setSelectedVendor(vendor);
+      fetch(`https://localhost:5001/api/Vendors/GetVendorGroupType?vendorId=${vendorId}`)
+      .then(res => res.json())
+      .then(data => {
+        setGoodsTypes(data); // [{Id, GoodsType, GSTpercent}, ...]
+      })
+      .catch(err => console.error("Error fetching goods types:", err));
+
     }
   };
 
@@ -64,11 +73,22 @@ function PurchaseForm() {
   };
 
   const handleDetailChange = (index, e) => {
-    const { name, value } = e.target;
-    const newDetails = [...details];
-    newDetails[index][name] = value;
-    setDetails(newDetails);
-  };
+  const { name, value } = e.target;
+  const updatedDetails = [...details];   // ✅ create a copy first
+
+  if (name === "goodsTypeId") {
+    updatedDetails[index][name] = value;
+
+    const selected = goodsTypes.find(gt => gt.id == value);
+    if (selected) {
+      updatedDetails[index].gst = selected.gsTpercent;
+    }
+  } else {
+    updatedDetails[index][name] = value;
+  }
+
+  setDetails(updatedDetails);
+};
 
   const addDetailRow = () => {
     setDetails([
@@ -166,6 +186,8 @@ function PurchaseForm() {
     alert("Unexpected error occurred.");
   }
 };
+
+
 
 
   return (
@@ -328,6 +350,7 @@ function PurchaseForm() {
       <table border="1" class="purchase-table">
         <thead>
           <tr>
+           <th>Goods Type</th>
             <th>Description</th>
             <th>HSN/SAC</th>
             <th>Quantity</th>
@@ -335,7 +358,7 @@ function PurchaseForm() {
             <th>UOM</th>
             <th>Discount %</th>
             <th>Amount</th>
-            <th>GST</th>
+            <th>GST %</th>
             <th>Total</th>
             <th>Actions</th>
           </tr>
@@ -343,6 +366,22 @@ function PurchaseForm() {
         <tbody>
           {details.map((detail, index) => (
             <tr key={index}>
+             {/* Goods Type Dropdown */}
+              <td>
+                <select
+                  name="goodsTypeId"
+                  value={detail.goodsTypeId}
+                  onChange={(e) => handleDetailChange(index, e)}
+                >
+                  <option value="">-- Select --</option>
+                  {goodsTypes.map(gt => (
+                    <option key={gt.id} value={gt.id}>
+                      {gt.goodsTypeName}
+                    </option>
+                  ))}
+                </select>
+              </td>
+
               <td><input type="text" name="goods_ServiceDesc" value={detail.goods_ServiceDesc} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="text" name="hsnSac" value={detail.hsnSac} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="quantity" value={detail.quantity} onChange={(e) => handleDetailChange(index, e)} /></td>
@@ -350,7 +389,7 @@ function PurchaseForm() {
               <td><input type="text" name="uomPer" value={detail.uomPer} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="discountPercent" value={detail.discountPercent} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="amount" value={detail.amount} onChange={(e) => handleDetailChange(index, e)} /></td>
-              <td><input type="number" name="gst" value={detail.gst} onChange={(e) => handleDetailChange(index, e)} /></td>
+              <td><input type="number" name="gst" value={detail.gst} onChange={(e) => handleDetailChange(index, e)} readOnly /></td>
               <td><input type="number" name="total" value={detail.total} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><button type="button" onClick={() => removeDetailRow(index)}>Remove</button></td>
             </tr>

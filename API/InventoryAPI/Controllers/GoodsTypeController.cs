@@ -42,5 +42,26 @@ namespace InventoryAPI.Controllers
             return Ok(goodsTypes);
         }
 
+
+       
+
+       /* [HttpPost("vendor/goods")]
+        public async Task<IActionResult> GetVendorGoods([FromBody] VendorGoodsRequest request)
+        {
+           
+                var result = (from vg in _context.VendorGoodsTypes
+                                    join gt in _context.GoodsTypeGSTs
+                                    on vg.goodsTypeId equals gt.Id
+                                    where vg.vendorId == request.VendorId
+                                    select new
+                                    {
+                                        Id = vg.Id,
+                                        GoodsType = gt.GoodsType,
+                                        GSTpercent = gt.GSTpercent
+                                    }).ToList();
+
+                return Ok(result);
+            }
+        }*/
     }
 }
