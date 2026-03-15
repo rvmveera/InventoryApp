@@ -34,7 +34,8 @@ despatchedThrough: "",
 destination: "",
 billOfLadingNo: "",
 vehicleNo: "",
-termsOfDelivery: ""
+termsOfDelivery: "",
+totalBillAmount : ""
   });
 
   const [details, setDetails] = useState([
@@ -177,22 +178,23 @@ const handleDetailChange = (index, e) => {
     buyerMobileNo: header.buyerMobileNo,
 
     // Add other header fields you need (invoiceNo, ewayBillNo, etc.)
-    invoiceNo: "INV001",
-    ewayBillNo: "EWAY001",
-    invoiceDate: new Date().toISOString(),
-    deliveryNote: "string",
-    termsOfPayment: "string",
-    supplierRef: "string",
-    otherReference: "string",
-    buyerOrderNo: "string",
-    buyerOrderDate: new Date().toISOString(),
-    despatchDocNo: "string",
-    deliveryNoteDate: new Date().toISOString(),
-    despatchedThrough: "string",
-    destination: "string",
-    billOfLadingNo: "string",
-    vehicleNo: "string",
-    termsOfDelivery: "string",
+    invoiceNo: header.invoiceNo,
+    ewayBillNo: header.ewayBillNo,
+    invoiceDate: header.invoiceDate,
+    deliveryNote: header.deliveryNote,
+    termsOfPayment: header.termsOfPayment,
+    supplierRef: header.supplierRef,
+    otherReference: header.otherReference,
+    buyerOrderNo: header.buyerOrderNo,
+    buyerOrderDate: header.buyerOrderDate,
+    despatchDocNo: header.despatchDocNo,
+    deliveryNoteDate: header.deliveryNoteDate,
+    despatchedThrough: header.despatchedThrough,
+    destination: header.destination,
+    billOfLadingNo: header.billOfLadingNo,
+    vehicleNo: header.vehicleNo,
+    termsOfDelivery: header.termsOfDelivery,
+totalBillAmount : header.totalBillAmount,
 
     // Details array
     purchaseDetails: details.map(d => ({
@@ -234,10 +236,11 @@ const handleDetailChange = (index, e) => {
   }
 };
 const getBillAmount = () => {
-  return details.reduce((sum, row) => {
+  header.totalBillAmount = details.reduce((sum, row) => {
     const rowTotal = parseFloat(row.total) || 0;
     return sum + rowTotal;
   }, 0).toFixed(2);
+  return header.totalBillAmount;
 };
 
 
@@ -406,7 +409,8 @@ const getBillAmount = () => {
                   </tr>
                   <tr>
                 <td><label>Buyer Order No:</label></td>
-                <td><input type="text" value={header.buyerOrderNo} /></td>
+                <td><input type="text" value={header.buyerOrderNo} 
+                onChange={(e) => setHeader({ ...header, buyerOrderNo: e.target.value })} /></td>
               </tr>
                 </>
               )}
@@ -421,23 +425,28 @@ const getBillAmount = () => {
               
               <tr>
                 <td><label>Buyer Order Date:</label></td>
-                <td><input type="date" value={header.buyerOrderDate} /></td>
+                <td><input type="date" value={header.buyerOrderDate} 
+               onChange={(e) => setHeader({ ...header, buyerOrderDate: e.target.value })}  /></td>
               </tr>
               <tr>
                 <td><label>Despatch Doc No:</label></td>
-                <td><input type="text" value={header.despatchDocNo} /></td>
+                <td><input type="text" value={header.despatchDocNo}
+                 onChange={(e) => setHeader({ ...header, despatchDocNo: e.target.value })}  /></td>
               </tr>
               <tr>
                 <td><label>Delivery Note Date:</label></td>
-                <td><input type="date" value={header.deliveryNoteDate} /></td>
+                <td><input type="date" value={header.deliveryNoteDate} 
+                 onChange={(e) => setHeader({ ...header, deliveryNoteDate: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Despatched Through:</label></td>
-                <td><input type="text" value={header.despatchedThrough} /></td>
+                <td><input type="text" value={header.despatchedThrough} 
+                 onChange={(e) => setHeader({ ...header, despatchedThrough: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Destination:</label></td>
-                <td><input type="text" value={header.destination} /></td>
+                <td><input type="text" value={header.destination} 
+                 onChange={(e) => setHeader({ ...header, destination: e.target.value })} /></td>
               </tr>
             </tbody>
           </table>
@@ -450,7 +459,7 @@ const getBillAmount = () => {
       {/* Buyer Block */}
     
 <fieldset>
-  <legend>Buyer Details</legend>
+  <legend><strong>Buyer Details</strong></legend>
   <table style={{ width: "100%", borderCollapse: "collapse" }}>
     <tbody>
       <tr>
@@ -467,40 +476,35 @@ const getBillAmount = () => {
             <tbody>
               <tr>
                 <td><label>Buyer Name:</label></td>
-                <td><input type="text" name="buyerName" value={header.buyerName} /></td>
+                <td><input type="text" name="buyerName" value={header.buyerName}
+                 onChange={(e) => setHeader({ ...header, buyerName: e.target.value })}  /></td>
               </tr>
               <tr>
                 <td><label>Buyer Address:</label></td>
-                <td><textarea name="buyerAddress" value={header.buyerAddress}></textarea></td>
+                <td><textarea name="buyerAddress" value={header.buyerAddress}
+                 onChange={(e) => setHeader({ ...header, buyerAddress: e.target.value })} ></textarea></td>
               </tr>
               <tr>
                 <td><label>GSTIN:</label></td>
-                <td><input type="text" name="buyerGST" value={header.buyerGST} /></td>
+                <td><input type="text" name="buyerGST" value={header.buyerGST} 
+                 onChange={(e) => setHeader({ ...header, buyerGST: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>State:</label></td>
-                <td><input type="text" name="buyerState" value={header.buyerState} /></td>
+                <td><input type="text" name="buyerState" value={header.buyerState} 
+                 onChange={(e) => setHeader({ ...header, buyerState: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Code:</label></td>
-                <td><input type="text" name="buyerCode" value={header.buyerCode} /></td>
+                <td><input type="text" name="buyerCode" value={header.buyerCode} 
+                 onChange={(e) => setHeader({ ...header, buyerCode: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Place of Supply:</label></td>
-                <td><input type="text" name="buyerPlaceofsupply" value={header.buyerPlaceofsupply} /></td>
+                <td><input type="text" name="buyerPlaceofsupply" value={header.buyerPlaceofsupply} 
+                 onChange={(e) => setHeader({ ...header, buyerPlaceofsupply: e.target.value })} /></td>
               </tr>
-              <tr>
-                <td><label>Contact Name:</label></td>
-                <td><input type="text" name="buyerContactName" value={header.buyerContactName} /></td>
-              </tr>
-              <tr>
-                <td><label>Email:</label></td>
-                <td><input type="text" name="buyerEmail" value={header.buyerEmail} /></td>
-              </tr>
-              <tr>
-                <td><label>Mobile No:</label></td>
-                <td><input type="text" name="buyerMobileNo" value={header.buyerMobileNo} /></td>
-              </tr>
+             
             </tbody>
           </table>
         </td>
@@ -509,17 +513,35 @@ const getBillAmount = () => {
         <td style={{ verticalAlign: "top", width: "50%", paddingLeft: "20px" }}>
           <table style={{ width: "100%" }}>
             <tbody>
+               <tr>
+                <td><label>Contact Name:</label></td>
+                <td><input type="text" name="buyerContactName" value={header.buyerContactName} 
+                  onChange={(e) => setHeader({ ...header, buyerContactName: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Email:</label></td>
+                <td><input type="text" name="buyerEmail" value={header.buyerEmail} 
+                  onChange={(e) => setHeader({ ...header, buyerEmail: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Mobile No:</label></td>
+                <td><input type="text" name="buyerMobileNo" value={header.buyerMobileNo} 
+                  onChange={(e) => setHeader({ ...header, buyerMobileNo: e.target.value })} /></td>
+              </tr>
               <tr>
                 <td><label>Bill of Lading No:</label></td>
-                <td><input type="text" name="billOfLadingNo" value={header.billOfLadingNo} /></td>
+                <td><input type="text" name="billOfLadingNo" value={header.billOfLadingNo} 
+                  onChange={(e) => setHeader({ ...header, billOfLadingNo: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Vehicle No:</label></td>
-                <td><input type="text" name="vehicleNo" value={header.vehicleNo} /></td>
+                <td><input type="text" name="vehicleNo" value={header.vehicleNo} 
+                  onChange={(e) => setHeader({ ...header, vehicleNo: e.target.value })} /></td>
               </tr>
               <tr>
                 <td><label>Terms of Delivery:</label></td>
-                <td><input type="text" name="termsOfDelivery" value={header.termsOfDelivery} /></td>
+                <td><input type="text" name="termsOfDelivery" value={header.termsOfDelivery} 
+                  onChange={(e) => setHeader({ ...header, termsOfDelivery: e.target.value })} /></td>
               </tr>
             </tbody>
           </table>

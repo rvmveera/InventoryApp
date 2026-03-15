@@ -25,6 +25,21 @@ namespace InventoryAPI.Controllers
             _context.PurchaseHeaders.Add(purchaseHeader);
             await _context.SaveChangesAsync();
 
+
+            var vendorPayment = new VendorPayments
+            {
+                VendorId = purchaseHeader.VendorId,       // assuming PurchaseHeader has VendorId
+                BillAmount = purchaseHeader.totalBillAmount,  // or whichever field represents bill amount
+                OutstandingAmount = purchaseHeader.totalBillAmount, // initially equal to bill amount
+                PurchaseId = purchaseHeader.Id,           // link to the saved purchase
+                //CreatedBy = purchaseHeader.create,     // or current user context
+                //PaymentHistories = new List<VendorPaymentHistory>() // optional, can be left null
+            };
+
+            _context.VendorPayments.Add(vendorPayment);
+            await _context.SaveChangesAsync();
+
+
             return Ok(new { purchaseHeader.Id, Message = "Purchase saved successfully" });
         }
     }

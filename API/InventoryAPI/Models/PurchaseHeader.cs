@@ -31,6 +31,7 @@
         public string VehicleNo { get; set; }
         public string TermsOfDelivery { get; set; }       
 
+        public decimal totalBillAmount { get; set; }
         public ICollection<PurchaseDetail> PurchaseDetails { get; set; }
     }
 

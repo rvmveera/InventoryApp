@@ -13,6 +13,12 @@ namespace InventoryAPI.Data
         public DbSet<PurchaseHeader> PurchaseHeaders { get; set; }
         public DbSet<PurchaseDetail> PurchaseDetails { get; set; }
         public DbSet<GoodsTypeGST> GoodsTypeGSTs { get; set; }
+
+        // New DbSets for your vendor payment entities
+        public DbSet<VendorPayments> VendorPayments { get; set; }
+        public DbSet<VendorPaymentHistory> VendorPaymentHistories { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder b)
         {
 
@@ -60,6 +66,18 @@ namespace InventoryAPI.Data
                 .HasForeignKey(d => d.PurchaseHeaderId);
 
             b.Entity<GoodsTypeGST>().ToTable("tblGoodsTypeGST");
+
+
+            // New mappings
+            b.Entity<VendorPayments>().ToTable("tblVendorPayments");
+            b.Entity<VendorPaymentHistory>().ToTable("tblVendorPaymentHistory");
+
+
+            b.Entity<VendorPayments>()
+           .HasMany(v => v.PaymentHistories)
+           .WithOne() // no navigation back in your class, but you can add if needed
+           .HasForeignKey(h => h.VendorPaymentId);
+
         }
     }
 }
