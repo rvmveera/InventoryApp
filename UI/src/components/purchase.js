@@ -18,7 +18,23 @@ const [goodsTypes, setGoodsTypes] = useState([]);
     buyerCode: "",
     buyerPlaceofsupply: "",
     buyerContactName: "",
-    buyerMobileNo: ""
+    buyerMobileNo: "",
+    invoiceNo : "",
+ewayBillNo: "",
+invoiceDate: "",
+deliveryNote: "",
+termsOfPayment: "",
+supplierRef: "",
+otherReference: "",
+buyerOrderNo: "",
+buyerOrderDate: "",
+despatchDocNo: "",
+deliveryNoteDate: "",
+despatchedThrough: "",
+destination: "",
+billOfLadingNo: "",
+vehicleNo: "",
+termsOfDelivery: ""
   });
 
   const [details, setDetails] = useState([
@@ -229,151 +245,284 @@ const getBillAmount = () => {
     <form onSubmit={handleSubmit}>
       <h2>Purchase Header</h2>
 
-      {/* Vendor Block */}
-      <fieldset>
-        <legend>Vendor Details</legend>
-        <div>
-          <label>Select Vendor:</label>
-          <select value={header.vendorId} onChange={handleVendorChange}>
-            <option value="">-- Choose Vendor --</option>
-            {vendors.map((vendor) => (
-              <option key={vendor.vendorId} value={vendor.vendorId}>
-                {vendor.vendorName}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedVendor && (
-          <div className="vendor-info">
-            <p><strong>Address:</strong> {`${selectedVendor.address1}, ${selectedVendor.address2}, ${selectedVendor.address3}`}</p>
-            <p><strong>GST:</strong> {selectedVendor.gstNumber}</p>
-            <p><strong>State:</strong> {selectedVendor.state}</p>
-            <p><strong>Code:</strong> {selectedVendor.code}</p>
-          </div>
-        )}
-      </fieldset>
+     
+{/* Vendor Block */}
 
-      {/* Consignee Block */}
-      <fieldset>
-        <legend>Consignee Details</legend>
-        {consignee ? (
-          <div className="consignee-info">
-            <p><strong>Name:</strong> {consignee.name}</p>
-            <p><strong>Address:</strong> {`${consignee.address1}, ${consignee.address2}, ${consignee.address3}`}</p>
-            <p><strong>GSTIN:</strong> {consignee.gstin}</p>
-            <p><strong>State:</strong> {consignee.state}</p>
-            <p><strong>Code:</strong> {consignee.code}</p>
-          </div>
-        ) : (
-            <div>
-          <p>Veera Enterprises</p>
-         <p>Address 1 </p>
-         <p>GST : 1234</p>
-         </div>
-        )}
-      </fieldset>
-
-      {/* Buyer Block */}
-     <fieldset>
-  <legend>Buyer Details</legend>
-  <table className="buyer-details-table">
+<fieldset>
+  <legend> <strong>Vendor Details</strong></legend>
+  <table style={{ width: "100%", borderCollapse: "collapse" }}>
     <tbody>
       <tr>
-        <td><label>Buyer Name:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerName"
-            value={header.buyerName}
-            onChange={handleBuyerChange}
-          />
+        {/* Left side: Vendor selection and info */}
+        <td
+          style={{
+            verticalAlign: "top",
+            width: "50%",
+            paddingRight: "20px",
+            borderRight: "2px solid #ccc" // vertical line
+          }}
+        >
+          <table style={{ width: "100%" }}>
+            <tbody>
+              <tr>
+                <td style={{ width: "40%" }}><label>Select Vendor:</label></td>
+                <td style={{ width: "60%" }}>
+                  <select value={header.vendorId} onChange={handleVendorChange}>
+                    <option value="">-- Choose Vendor --</option>
+                    {vendors.map((vendor) => (
+                      <option key={vendor.vendorId} value={vendor.vendorId}>
+                        {vendor.vendorName}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+              {selectedVendor && (
+                <>
+                  <tr>
+                    <td>Address:</td>
+                    <td>{`${selectedVendor.address1}, ${selectedVendor.address2}, ${selectedVendor.address3}`}</td>
+                  </tr>
+                  <tr>
+                    <td>GST:</td>
+                    <td>{selectedVendor.gstNumber}</td>
+                  </tr>
+                  <tr>
+                    <td>State:</td>
+                    <td>{selectedVendor.state}</td>
+                  </tr>
+                  <tr>
+                    <td>Code:</td>
+                    <td>{selectedVendor.code}</td>
+                  </tr>
+                  <tr>
+                <td style={{ width: "40%" }}><label>Invoice No:</label></td>
+                <td><input type="text" value={header.invoiceNo}
+                  onChange={(e) => setHeader({ ...header, invoiceNo: e.target.value })} /></td>
+              </tr>
+                </>
+              )}
+            </tbody>
+          </table>
+        </td>
+
+        {/* Right side: Invoice and other fields */}
+        <td style={{ verticalAlign: "top", width: "50%", paddingLeft: "20px" }}>
+          <table style={{ width: "100%" }}>
+            <tbody>
+              
+              <tr>
+                <td><label>E-way Bill No:</label></td>
+                <td><input type="text" value={header.ewayBillNo}
+                  onChange={(e) => setHeader({ ...header, ewayBillNo: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Invoice Date:</label></td>
+                <td><input type="date" value={header.invoiceDate}
+                  onChange={(e) => setHeader({ ...header, invoiceDate: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Delivery Note:</label></td>
+                <td><input type="text" value={header.deliveryNote}
+                  onChange={(e) => setHeader({ ...header, deliveryNote: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Terms of Payment:</label></td>
+                <td><input type="text" value={header.termsOfPayment}
+                  onChange={(e) => setHeader({ ...header, termsOfPayment: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Supplier Ref:</label></td>
+                <td><input type="text" value={header.supplierRef}
+                  onChange={(e) => setHeader({ ...header, supplierRef: e.target.value })} /></td>
+              </tr>
+              <tr>
+                <td><label>Other Reference:</label></td>
+                <td><input type="text" value={header.otherReference}
+                  onChange={(e) => setHeader({ ...header, otherReference: e.target.value })} /></td>
+              </tr>
+            </tbody>
+          </table>
         </td>
       </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+
+      {/* Consignee Block */}
+<fieldset>
+  <legend><strong>Consignee Details</strong></legend>
+  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    <tbody>
       <tr>
-        <td><label>Buyer Address:</label></td>
-        <td>
-          <textarea
-            name="buyerAddress"
-            value={header.buyerAddress}
-            onChange={handleBuyerChange}
-          ></textarea>
+        {/* Left side: Consignee info */}
+        <td
+          style={{
+            verticalAlign: "top",
+            width: "50%",
+            paddingRight: "20px",
+            borderRight: "2px solid #ccc"
+          }}
+        >
+          <table style={{ width: "100%" }}>
+            <tbody>
+              {consignee ? (
+                <>
+                  <tr>
+                    <td style={{ width: "40%" }}><label>Name:</label></td>
+                    <td style={{ width: "60%" }}>{consignee.name}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Address:</label></td>
+                    <td>{`${consignee.address1}, ${consignee.address2}, ${consignee.address3}`}</td>
+                  </tr>
+                  <tr>
+                    <td><label>GSTIN:</label></td>
+                    <td>{consignee.gstin}</td>
+                  </tr>
+                  <tr>
+                    <td><label>State:</label></td>
+                    <td>{consignee.state}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Code:</label></td>
+                    <td>{consignee.code}</td>
+                  </tr>
+                </>
+              ) : (
+                <>
+                  <tr>
+                    <td>Name:</td>
+                    <td>Veera Enterprises</td>
+                  </tr>
+                  <tr>
+                    <td>Address:</td>
+                    <td>Address 1</td>
+                  </tr>
+                  <tr>
+                    <td>GST:</td>
+                    <td>1234</td>
+                  </tr>
+                  <tr>
+                <td><label>Buyer Order No:</label></td>
+                <td><input type="text" value={header.buyerOrderNo} /></td>
+              </tr>
+                </>
+              )}
+            </tbody>
+          </table>
+        </td>
+
+        {/* Right side: Dispatch-related fields bound to header */}
+        <td style={{ verticalAlign: "top", width: "50%", paddingLeft: "20px" }}>
+          <table style={{ width: "100%" }}>
+            <tbody>
+              
+              <tr>
+                <td><label>Buyer Order Date:</label></td>
+                <td><input type="date" value={header.buyerOrderDate} /></td>
+              </tr>
+              <tr>
+                <td><label>Despatch Doc No:</label></td>
+                <td><input type="text" value={header.despatchDocNo} /></td>
+              </tr>
+              <tr>
+                <td><label>Delivery Note Date:</label></td>
+                <td><input type="date" value={header.deliveryNoteDate} /></td>
+              </tr>
+              <tr>
+                <td><label>Despatched Through:</label></td>
+                <td><input type="text" value={header.despatchedThrough} /></td>
+              </tr>
+              <tr>
+                <td><label>Destination:</label></td>
+                <td><input type="text" value={header.destination} /></td>
+              </tr>
+            </tbody>
+          </table>
         </td>
       </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+      {/* Buyer Block */}
+    
+<fieldset>
+  <legend>Buyer Details</legend>
+  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    <tbody>
       <tr>
-        <td><label>GSTIN:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerGST"
-            value={header.buyerGST}
-            onChange={handleBuyerChange}
-          />
+        {/* Left side: Buyer info */}
+        <td
+          style={{
+            verticalAlign: "top",
+            width: "50%",
+            paddingRight: "20px",
+            borderRight: "2px solid #ccc" // vertical line
+          }}
+        >
+          <table style={{ width: "100%" }}>
+            <tbody>
+              <tr>
+                <td><label>Buyer Name:</label></td>
+                <td><input type="text" name="buyerName" value={header.buyerName} /></td>
+              </tr>
+              <tr>
+                <td><label>Buyer Address:</label></td>
+                <td><textarea name="buyerAddress" value={header.buyerAddress}></textarea></td>
+              </tr>
+              <tr>
+                <td><label>GSTIN:</label></td>
+                <td><input type="text" name="buyerGST" value={header.buyerGST} /></td>
+              </tr>
+              <tr>
+                <td><label>State:</label></td>
+                <td><input type="text" name="buyerState" value={header.buyerState} /></td>
+              </tr>
+              <tr>
+                <td><label>Code:</label></td>
+                <td><input type="text" name="buyerCode" value={header.buyerCode} /></td>
+              </tr>
+              <tr>
+                <td><label>Place of Supply:</label></td>
+                <td><input type="text" name="buyerPlaceofsupply" value={header.buyerPlaceofsupply} /></td>
+              </tr>
+              <tr>
+                <td><label>Contact Name:</label></td>
+                <td><input type="text" name="buyerContactName" value={header.buyerContactName} /></td>
+              </tr>
+              <tr>
+                <td><label>Email:</label></td>
+                <td><input type="text" name="buyerEmail" value={header.buyerEmail} /></td>
+              </tr>
+              <tr>
+                <td><label>Mobile No:</label></td>
+                <td><input type="text" name="buyerMobileNo" value={header.buyerMobileNo} /></td>
+              </tr>
+            </tbody>
+          </table>
         </td>
-      </tr>
-      <tr>
-        <td><label>State:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerState"
-            value={header.buyerState}
-            onChange={handleBuyerChange}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><label>Code:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerCode"
-            value={header.buyerCode}
-            onChange={handleBuyerChange}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><label>Place of Supply:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerPlaceofsupply"
-            value={header.buyerPlaceofsupply}
-            onChange={handleBuyerChange}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><label>Contact Name:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerContactName"
-            value={header.buyerContactName}
-            onChange={handleBuyerChange}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><label>Email:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerEmail"
-            value={header.buyerEmail}
-            onChange={handleBuyerChange}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><label>Mobile No:</label></td>
-        <td>
-          <input
-            type="text"
-            name="buyerMobileNo"
-            value={header.buyerMobileNo}
-            onChange={handleBuyerChange}
-          />
+
+        {/* Right side: New fields */}
+        <td style={{ verticalAlign: "top", width: "50%", paddingLeft: "20px" }}>
+          <table style={{ width: "100%" }}>
+            <tbody>
+              <tr>
+                <td><label>Bill of Lading No:</label></td>
+                <td><input type="text" name="billOfLadingNo" value={header.billOfLadingNo} /></td>
+              </tr>
+              <tr>
+                <td><label>Vehicle No:</label></td>
+                <td><input type="text" name="vehicleNo" value={header.vehicleNo} /></td>
+              </tr>
+              <tr>
+                <td><label>Terms of Delivery:</label></td>
+                <td><input type="text" name="termsOfDelivery" value={header.termsOfDelivery} /></td>
+              </tr>
+            </tbody>
+          </table>
         </td>
       </tr>
     </tbody>
