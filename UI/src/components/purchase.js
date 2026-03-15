@@ -217,8 +217,12 @@ const handleDetailChange = (index, e) => {
     alert("Unexpected error occurred.");
   }
 };
-
-
+const getBillAmount = () => {
+  return details.reduce((sum, row) => {
+    const rowTotal = parseFloat(row.total) || 0;
+    return sum + rowTotal;
+  }, 0).toFixed(2);
+};
 
 
   return (
@@ -378,6 +382,10 @@ const handleDetailChange = (index, e) => {
 
       {/* Purchase Details Grid */}
       <h2>Purchase Details</h2>
+      <div style={{ marginBottom: "10px" }}>
+  <strong>Bill Amount: </strong> {getBillAmount()}
+</div>
+
       <table border="1" class="purchase-table">
         <thead>
           <tr>
@@ -419,9 +427,9 @@ const handleDetailChange = (index, e) => {
               <td><input type="number" name="rate" value={detail.rate} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="text" name="uomPer" value={detail.uomPer} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="discountPercent" value={detail.discountPercent} onChange={(e) => handleDetailChange(index, e)} /></td>
-              <td><input type="number" name="amount" value={detail.amount} onChange={(e) => handleDetailChange(index, e)} /></td>
+              <td><input type="number" name="amount" value={detail.amount} onChange={(e) => handleDetailChange(index, e)} readOnly/></td>
               <td><input type="number" name="gst" value={detail.gst} onChange={(e) => handleDetailChange(index, e)} readOnly /></td>
-              <td><input type="number" name="total" value={detail.total} onChange={(e) => handleDetailChange(index, e)} /></td>
+              <td><input type="number" name="total" value={detail.total} onChange={(e) => handleDetailChange(index, e)} readOnly /></td>
               <td><button type="button" onClick={() => removeDetailRow(index)}>Remove</button></td>
             </tr>
           ))}
