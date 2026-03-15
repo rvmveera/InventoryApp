@@ -36,7 +36,7 @@ namespace InventoryAPI.Controllers
             return Ok(vendors);
         }
 
-        [HttpPost("addVendorGoodsType")]        
+        [HttpPost("addVendorGoodsType")]
         public async Task<IActionResult> AddVendorGoodsType([FromBody] List<VendorGoodsType> models)
         {
             if (models == null || !models.Any())
@@ -72,7 +72,7 @@ namespace InventoryAPI.Controllers
                                               vg.vendorId,
                                               vg.comments,
                                               GoodsTypeName = gt.GoodsType,   // ✅ fetch name from tblGoodsTypeGST
-                                              GSTpercent = gt.GSTpercent                                            
+                                              GSTpercent = gt.GSTpercent
                                           }).ToListAsync();
 
             if (vendorGroupTypes == null || !vendorGroupTypes.Any())
@@ -81,6 +81,6 @@ namespace InventoryAPI.Controllers
             }
 
             return Ok(vendorGroupTypes);
-        }
+        }      
     }
 }

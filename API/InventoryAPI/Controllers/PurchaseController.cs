@@ -38,8 +38,6 @@ namespace InventoryAPI.Controllers
 
             _context.VendorPayments.Add(vendorPayment);
             await _context.SaveChangesAsync();
-
-
             return Ok(new { purchaseHeader.Id, Message = "Purchase saved successfully" });
         }
     }

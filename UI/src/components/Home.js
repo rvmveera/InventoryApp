@@ -7,7 +7,7 @@ import AddVendorForm from "./addvendor";
 import VendorGrid from "./vendorgrid";
 import PurchaseForm from "./purchase";
 import GoodsGST from "./goodsGST";
-
+import VendorPayments from "./vendorpayment";
 
 function Home() {
 
@@ -25,6 +25,7 @@ function Home() {
 
   const [showGoodsGST, setShowGoodsGST] = useState(false);
 
+  const [showVendorPayments, setShowVendorPayments] = useState(false);
   /* Restore login */
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -195,6 +196,18 @@ function Home() {
               >
                 View Vendors
               </span>
+
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowVendorForm(false);
+                  setVendorOpen(false);
+setShowVendorPayments(true);
+
+                }}
+              >Make Payments
+              </span>
             </div>
           </div>
         )}
@@ -212,7 +225,7 @@ function Home() {
         {isLoggedIn && showVendorForm && <AddVendorForm />}
         {isLoggedIn && showVendorGrid && <VendorGrid refreshTrigger={showVendorGrid} />}
         {isLoggedIn && showPurchaseForm && <PurchaseForm />}
-
+{isLoggedIn && showVendorPayments && <VendorPayments />}
         {showGoodsGST && <GoodsGST />}
 
 
