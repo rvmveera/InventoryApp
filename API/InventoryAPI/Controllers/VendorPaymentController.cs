@@ -31,6 +31,7 @@ namespace InventoryAPI.Controllers
                     PurchaseId = vp.PurchaseId,
                     BillAmount = vp.BillAmount,
                     OutstandingAmount = vp.OutstandingAmount
+                   // id = vp.Id
                 })
                 .ToListAsync();
 
@@ -39,5 +40,32 @@ namespace InventoryAPI.Controllers
 
             return Ok(billDetails);
         }
+
+        [HttpPost("payVendor")]
+        public async Task<IActionResult> SubmitVendorPayment([FromBody] VendorPaymentRequest request)
+        {
+            if (request == null || request.VendorPaymentId <= 0 || request.PaymentAmount <= 0 || request.PaymentDate == default)
+                return BadRequest("Invalid payment history request");
+
+            var history = new VendorPaymentHistory
+            {
+                VendorPaymentId = request.VendorPaymentId,
+                PaymentAmount = request.PaymentAmount,
+                PaymentDate = request.PaymentDate
+            };
+
+            _context.VendorPaymentHistories.Add(history);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Payment history recorded successfully",
+                historyId = history.Id,
+                vendorPaymentId = history.VendorPaymentId,
+                paymentAmount = history.PaymentAmount,
+                paymentDate = history.PaymentDate
+            });
+        }
+
     }
 }

@@ -4,6 +4,9 @@ const VendorPayments = () => {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState("");
   const [billDetails, setBillDetails] = useState([]);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState("");
+const [paymentDate, setPaymentDate] = useState("");
 
   // Load vendors on mount
   useEffect(() => {
@@ -16,16 +19,41 @@ const VendorPayments = () => {
   // Load bill details when vendor changes
   useEffect(() => {
     if (!selectedVendor) return;
+    setBillDetails([]);
+    setSelectedPayment(null);
 
     fetch("https://localhost:5001/api/VendorPayment/billdetails", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vendorId: parseInt(selectedVendor) })
+      body: JSON.stringify({ vendorId: parseInt(selectedVendor) }),
     })
       .then((res) => res.json())
       .then((data) => setBillDetails(data))
       .catch((err) => console.error("Error fetching bill details:", err));
   }, [selectedVendor]);
+
+  // Handle payment submission
+  const handlePaymentSubmit = () => {
+    if (!selectedPayment || !paymentAmount) return;
+
+    fetch("https://localhost:5001/api/VendorPayment/makepayment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        purchaseId: selectedPayment.purchaseId,
+        paymentAmount: parseFloat(paymentAmount),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(`Payment successful! Remaining outstanding: ${data.remainingOutstanding}`);
+        // Refresh bill details
+        setSelectedPayment(null);
+        setPaymentAmount("");
+        setSelectedVendor(selectedVendor); // triggers reload
+      })
+      .catch((err) => console.error("Error making payment:", err));
+  };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -45,31 +73,116 @@ const VendorPayments = () => {
         ))}
       </select>
 
-      {/* Bill details grid */}
+      {/* Two-column layout */}
       {selectedVendor && billDetails.length > 0 && (
-        <table
-          style={{
-            marginTop: "20px",
-            width: "100%",
-            borderCollapse: "collapse",
-            border: "1px solid #ccc",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Purchase ID</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Bill Amount</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Outstanding Amount</th>
-            </tr>
-          </thead>
+        <table style={{ width: "100%", marginTop: "20px" }}>
           <tbody>
-            {billDetails.map((item, index) => (
-              <tr key={index}>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.purchaseId}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.billAmount}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.outstandingAmount}</td>
-              </tr>
-            ))}
+            <tr>
+              {/* Left column: bill details grid */}
+              <td style={{ verticalAlign: "top", width: "70%" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Purchase ID</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Bill Amount</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Outstanding Amount</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>View Details</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>View History</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Make Payment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {billDetails.map((item, index) => (
+                      <tr key={index}>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.purchaseId}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.billAmount}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.outstandingAmount}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px", textAlign: "center" }}>
+                          <button style={{ backgroundColor: "#4CAF50", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}>
+                            View
+                          </button>
+                        </td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px", textAlign: "center" }}>
+                          <button style={{ backgroundColor: "#2196F3", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}>
+                            History
+                          </button>
+                        </td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px", textAlign: "center" }}>
+                          <button
+                            style={{ backgroundColor: "#f44336", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}
+                            onClick={() => setSelectedPayment(item)}
+                          >
+                            Pay
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </td>
+
+              {/* Right column: payment form */}
+              <td style={{ verticalAlign: "top", width: "30%", padding: "20px" }}>
+                {selectedPayment ? (
+                  <div
+                    style={{
+                      border: "1px solid #ccc",
+                      padding: "15px",
+                      borderRadius: "6px",
+                      backgroundColor: "#f9f9f9",
+                    }}
+                  >
+                    <h3>Make Payment</h3>
+                    <p><strong>Purchase ID:</strong> {selectedPayment.purchaseId}</p>
+                    <p><strong>Bill Amount:</strong> {selectedPayment.billAmount}</p>
+                    <p><strong>Outstanding Amount:</strong> {selectedPayment.outstandingAmount}</p>
+
+                    <label>
+                      Payment Amount:
+                      <input
+                        type="number"
+                        min="0"
+                        max={selectedPayment.outstandingAmount}
+                        value={paymentAmount}
+                        onChange={(e) => setPaymentAmount(e.target.value)}
+                        style={{ padding: "6px", marginTop: "8px", width: "100%" }}
+                      />
+                    </label>
+<label style={{ display: "block", marginTop: "12px" }}>
+        Payment Date:
+        <input
+          type="date"
+          value={paymentDate}
+          onChange={(e) => setPaymentDate(e.target.value)}
+          style={{ padding: "6px", marginTop: "8px", width: "100%" }}
+        />
+      </label>
+
+                    <button
+                      style={{
+                        marginTop: "12px",
+                        backgroundColor: "#4CAF50",
+                        color: "white",
+                        padding: "8px 16px",
+                        border: "none",
+                        borderRadius: "4px",
+                      }}
+                      onClick={handlePaymentSubmit}
+                    >
+                      Submit Payment
+                    </button>
+                  </div>
+                ) : (
+                  <p style={{ color: "#888" }}>Select a row and click Pay to make a payment.</p>
+                )}
+              </td>
+            </tr>
           </tbody>
         </table>
       )}
