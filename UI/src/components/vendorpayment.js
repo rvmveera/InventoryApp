@@ -8,6 +8,26 @@ const VendorPayments = () => {
   const [paymentAmount, setPaymentAmount] = useState("");
 const [paymentDate, setPaymentDate] = useState("");
 const [comments, setComments] = useState("");
+// State for payment history
+const [paymentHistory, setPaymentHistory] = useState([]);
+const [showHistoryFor, setShowHistoryFor] = useState(null);
+
+
+// Function to fetch history
+const fetchPaymentHistory = (vendorPaymentId) => {
+  fetch("https://localhost:5001/api/VendorPayment/paymenthistory", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ vendorPaymentId }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setPaymentHistory(data);
+      setShowHistoryFor(vendorPaymentId);
+    })
+    .catch((err) => console.error("Error fetching payment history:", err));
+};
+
 
   // Load vendors on mount
   useEffect(() => {
@@ -119,7 +139,8 @@ const handlePaymentSubmit = () => {
                           </button>
                         </td>
                         <td style={{ border: "1px solid #ccc", padding: "8px", textAlign: "center" }}>
-                          <button style={{ backgroundColor: "#2196F3", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}>
+                          <button style={{ backgroundColor: "#2196F3", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}
+                          onClick={() => fetchPaymentHistory(item.id)}>
                             History
                           </button>
                         </td>
@@ -212,6 +233,38 @@ const handlePaymentSubmit = () => {
       {selectedVendor && billDetails.length === 0 && (
         <p style={{ marginTop: "20px" }}>No bill details found for this vendor.</p>
       )}
+
+
+{showHistoryFor && paymentHistory.length > 0 && (
+  <div style={{ marginTop: "20px" }}>
+    <h3>Payment History</h3>
+    <table
+      style={{
+        width: "40%",
+        borderCollapse: "collapse",
+        border: "1px solid #ccc",
+      }}
+    >
+      <thead>
+        <tr>          
+          <th style={{ border: "1px solid #ccc", padding: "8px" }}>Date</th>
+          <th style={{ border: "1px solid #ccc", padding: "8px" }}>Amount</th>
+          <th style={{ border: "1px solid #ccc", padding: "8px" }}>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        {paymentHistory.map((h, idx) => (
+          <tr key={idx}>
+            <td style={{ border: "1px solid #ccc", padding: "8px" }}>{h.paymentDate}</td>
+            <td style={{ border: "1px solid #ccc", padding: "8px" }}>{h.paymentAmount}</td>            
+            <td style={{ border: "1px solid #ccc", padding: "8px" }}>{h.comments}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
     </div>
   );
 };

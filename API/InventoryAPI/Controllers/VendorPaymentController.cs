@@ -73,8 +73,6 @@ namespace InventoryAPI.Controllers
                             v => (v.OutstandingAmount - request.PaymentAmount)));
 
                 await transaction.CommitAsync();
-
-
                 return Ok(new
                 {
                     message = "Payment history recorded successfully",
@@ -90,6 +88,29 @@ namespace InventoryAPI.Controllers
                 await transaction.RollbackAsync();
                 return StatusCode(500, $"An error occurred while processing payment: {ex.Message}");
             }
+        }
+
+        [HttpPost("paymenthistory")]
+        public async Task<IActionResult> GetPaymentHistory([FromBody] PaymentHistoryRequest request)
+        {
+            if (request == null || request.VendorPaymentId <= 0)
+                return BadRequest("Invalid request");
+
+            var history = await _context.VendorPaymentHistories
+                .Where(h => h.VendorPaymentId == request.VendorPaymentId)
+                .OrderByDescending(h => h.PaymentDate)
+                .Select(h => new
+                {
+                    h.PaymentAmount,
+                    PaymentDate = h.PaymentDate.ToString("dd/MMM/yyyy"), // formatted date
+                    h.Comments
+                })
+                .ToListAsync();
+
+            if (history == null || history.Count == 0)
+                return NotFound("No payment history found for this vendor payment");
+
+            return Ok(history);
         }
     }
 }
