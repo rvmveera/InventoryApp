@@ -6,6 +6,11 @@ function PurchaseForm() {
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [consignee, setConsignee] = useState(null);
 const [goodsTypes, setGoodsTypes] = useState([]);
+const [isChecked, setIsChecked] = useState(false);
+
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
 
 
   const [header, setHeader] = useState({
@@ -462,6 +467,19 @@ const getBillAmount = () => {
   <legend><strong>Buyer Details</strong></legend>
   <table style={{ width: "100%", borderCollapse: "collapse" }}>
     <tbody>
+
+      <tr>
+        <td>
+            <input 
+          type="checkbox" 
+          checked={isChecked} 
+          onChange={handleChange} 
+        />
+        Same as Consignee
+    
+
+        </td>
+      </tr>
       <tr>
         {/* Left side: Buyer info */}
         <td

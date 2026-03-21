@@ -7,6 +7,7 @@ const VendorPayments = () => {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState("");
 const [paymentDate, setPaymentDate] = useState("");
+const [comments, setComments] = useState("");
 
   // Load vendors on mount
   useEffect(() => {
@@ -16,44 +17,53 @@ const [paymentDate, setPaymentDate] = useState("");
       .catch((err) => console.error("Error fetching vendors:", err));
   }, []);
 
-  // Load bill details when vendor changes
-  useEffect(() => {
-    if (!selectedVendor) return;
-    setBillDetails([]);
-    setSelectedPayment(null);
+// Load bill details when vendor changes
+ 
+const fetchBillDetails = (vendorId) => {
+  fetch("https://localhost:5001/api/VendorPayment/billdetails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ vendorId: parseInt(vendorId) }),
+  })
+    .then((res) => res.json())
+    .then((data) => setBillDetails(data))
+    .catch((err) => console.error("Error fetching bill details:", err));
+};
 
-    fetch("https://localhost:5001/api/VendorPayment/billdetails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vendorId: parseInt(selectedVendor) }),
+// useEffect calls it when vendor changes
+useEffect(() => {
+  if (!selectedVendor) return;
+  setBillDetails([]);
+  setSelectedPayment(null);
+  fetchBillDetails(selectedVendor);
+}, [selectedVendor]);
+
+// handlePaymentSubmit calls it after success
+const handlePaymentSubmit = () => {
+  if (!selectedPayment || !paymentAmount) return;
+
+  fetch("https://localhost:5001/api/VendorPayment/makepayment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      purchaseId: selectedPayment.purchaseId,
+      paymentAmount: parseFloat(paymentAmount),
+      vendorPaymentId: selectedPayment.id,
+      paymentDate: paymentDate,
+      comments: comments
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert("Payment recorded successfully");
+      setSelectedPayment(null);
+      setPaymentAmount("");
+
+      // refresh bill details explicitly
+      fetchBillDetails(selectedVendor);
     })
-      .then((res) => res.json())
-      .then((data) => setBillDetails(data))
-      .catch((err) => console.error("Error fetching bill details:", err));
-  }, [selectedVendor]);
-
-  // Handle payment submission
-  const handlePaymentSubmit = () => {
-    if (!selectedPayment || !paymentAmount) return;
-
-    fetch("https://localhost:5001/api/VendorPayment/makepayment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        purchaseId: selectedPayment.purchaseId,
-        paymentAmount: parseFloat(paymentAmount),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        alert(`Payment successful! Remaining outstanding: ${data.remainingOutstanding}`);
-        // Refresh bill details
-        setSelectedPayment(null);
-        setPaymentAmount("");
-        setSelectedVendor(selectedVendor); // triggers reload
-      })
-      .catch((err) => console.error("Error making payment:", err));
-  };
+    .catch((err) => console.error("Error making payment:", err));
+};
 
   return (
     <div style={{ padding: "20px" }}>
@@ -92,8 +102,8 @@ const [paymentDate, setPaymentDate] = useState("");
                       <th style={{ border: "1px solid #ccc", padding: "8px" }}>Purchase ID</th>
                       <th style={{ border: "1px solid #ccc", padding: "8px" }}>Bill Amount</th>
                       <th style={{ border: "1px solid #ccc", padding: "8px" }}>Outstanding Amount</th>
-                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>View Details</th>
-                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>View History</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Purchase Details</th>
+                      <th style={{ border: "1px solid #ccc", padding: "8px" }}>Payment History</th>
                       <th style={{ border: "1px solid #ccc", padding: "8px" }}>Make Payment</th>
                     </tr>
                   </thead>
@@ -163,6 +173,18 @@ const [paymentDate, setPaymentDate] = useState("");
           style={{ padding: "6px", marginTop: "8px", width: "100%" }}
         />
       </label>
+
+      <label style={{ display: "block", marginTop: "12px" }}>
+  Comments:
+  <textarea
+    value={comments}
+    onChange={(e) => setComments(e.target.value)}
+    style={{ padding: "6px", marginTop: "8px", width: "100%" }}
+    rows={3}
+    placeholder="Enter any remarks about this payment"
+  />
+</label>
+
 
                     <button
                       style={{

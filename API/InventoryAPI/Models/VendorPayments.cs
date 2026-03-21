@@ -20,6 +20,7 @@
         public decimal PaymentAmount { get; set; }
         public DateTime PaymentDate { get; set; }
         public string CreatedBy { get; set; }
+        public string Comments { get; set; }
 
 
     }

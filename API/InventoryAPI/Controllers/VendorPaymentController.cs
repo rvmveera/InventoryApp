@@ -30,8 +30,8 @@ namespace InventoryAPI.Controllers
                 {
                     PurchaseId = vp.PurchaseId,
                     BillAmount = vp.BillAmount,
-                    OutstandingAmount = vp.OutstandingAmount
-                   // id = vp.Id
+                    OutstandingAmount = vp.OutstandingAmount,
+                    Id = vp.Id
                 })
                 .ToListAsync();
 
@@ -41,31 +41,55 @@ namespace InventoryAPI.Controllers
             return Ok(billDetails);
         }
 
-        [HttpPost("payVendor")]
+        [HttpPost("makepayment")]
         public async Task<IActionResult> SubmitVendorPayment([FromBody] VendorPaymentRequest request)
         {
             if (request == null || request.VendorPaymentId <= 0 || request.PaymentAmount <= 0 || request.PaymentDate == default)
                 return BadRequest("Invalid payment history request");
 
-            var history = new VendorPaymentHistory
-            {
-                VendorPaymentId = request.VendorPaymentId,
-                PaymentAmount = request.PaymentAmount,
-                PaymentDate = request.PaymentDate
-            };
+            // Start a transaction
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            _context.VendorPaymentHistories.Add(history);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
+            try
             {
-                message = "Payment history recorded successfully",
-                historyId = history.Id,
-                vendorPaymentId = history.VendorPaymentId,
-                paymentAmount = history.PaymentAmount,
-                paymentDate = history.PaymentDate
-            });
+                // Step 1: Insert into VendorPaymentHistories
+                var history = new VendorPaymentHistory
+                {
+                    VendorPaymentId = request.VendorPaymentId,
+                    PaymentAmount = request.PaymentAmount,
+                    PaymentDate = request.PaymentDate,
+                    Comments = request.Comments
+                };
+
+                _context.VendorPaymentHistories.Add(history);
+                await _context.SaveChangesAsync();
+
+                
+                // Update outstanding directly
+                await _context.VendorPayments
+                    .Where(v => v.Id == request.VendorPaymentId)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(v => v.OutstandingAmount,
+                            v => (v.OutstandingAmount - request.PaymentAmount)));
+
+                await transaction.CommitAsync();
+
+
+                return Ok(new
+                {
+                    message = "Payment history recorded successfully",
+                    historyId = history.Id,
+                    vendorPaymentId = history.VendorPaymentId,
+                    paymentAmount = history.PaymentAmount,
+                    paymentDate = history.PaymentDate
+                });
+            }
+            catch (Exception ex)
+            {
+                // Rollback if anything fails
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"An error occurred while processing payment: {ex.Message}");
+            }
         }
-
     }
 }
