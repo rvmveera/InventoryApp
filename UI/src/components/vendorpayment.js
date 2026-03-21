@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import PurchaseDetails from "./purchasedetails"; // import your separate file
+
+
 
 const VendorPayments = () => {
   const [vendors, setVendors] = useState([]);
@@ -11,6 +14,18 @@ const [comments, setComments] = useState("");
 // State for payment history
 const [paymentHistory, setPaymentHistory] = useState([]);
 const [showHistoryFor, setShowHistoryFor] = useState(null);
+const [purchaseDetails, setPurchaseDetails] = useState(null);
+
+const fetchPurchaseDetails = (purchaseId) => {
+  fetch("https://localhost:5001/api/VendorPayment/purchasedetails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ purchaseId }),
+  })
+    .then((res) => res.json())
+    .then((data) => setPurchaseDetails(data))   // <-- sets state
+    .catch((err) => console.error("Error fetching purchase details:", err));
+};
 
 
 // Function to fetch history
@@ -134,7 +149,9 @@ const handlePaymentSubmit = () => {
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.billAmount}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.outstandingAmount}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px", textAlign: "center" }}>
-                          <button style={{ backgroundColor: "#4CAF50", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}>
+                          <button style={{ backgroundColor: "#4CAF50", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}
+                          onClick={() => fetchPurchaseDetails(item.purchaseId)}
+                          >
                             View
                           </button>
                         </td>
@@ -263,6 +280,12 @@ const handlePaymentSubmit = () => {
       </tbody>
     </table>
   </div>
+)}
+{purchaseDetails && (
+  <PurchaseDetails
+    details={purchaseDetails}
+    onClose={() => setPurchaseDetails(null)}
+  />
 )}
 
     </div>

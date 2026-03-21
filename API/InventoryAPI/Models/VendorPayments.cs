@@ -27,4 +27,9 @@
     {
         public int VendorPaymentId { get; set; }
     }
+
+    public class PurchaseDetailsRequest
+    {
+        public int purchaseId { get; set; }
+    }
 }

@@ -112,5 +112,34 @@ namespace InventoryAPI.Controllers
 
             return Ok(history);
         }
+
+        [HttpPost("purchasedetails")]
+        public async Task<IActionResult> GetPurchaseDetails([FromBody] PurchaseDetailsRequest request)
+        {
+            if (request == null || request.purchaseId <= 0)
+                return BadRequest("Invalid request");
+
+            var purchaseDetails = await _context.PurchaseDetails
+           .Where(i => i.PurchaseHeaderId == request.purchaseId)
+           .Select(i => new
+           {
+               Goods_ServiceDesc = i.Goods_ServiceDesc,
+               amount = i.Amount,
+               gst = i.Gst,
+               total = i.Total
+           })
+           .ToListAsync();
+
+            return Ok(new
+            {
+
+                purchaseDetails = purchaseDetails
+            });
+
+
+
+        }
+
+
     }
-}
+    }
