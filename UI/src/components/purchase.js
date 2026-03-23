@@ -9,6 +9,7 @@ function PurchaseForm() {
   const [consignee, setConsignee] = useState(null);
 const [goodsTypes, setGoodsTypes] = useState([]);
 const [isChecked, setIsChecked] = useState(false);
+const [goodsTypeId, setGoodsTypeId] = useState("");
 
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
@@ -55,7 +56,8 @@ totalBillAmount : ""
       discountPercent: "",
       amount: "",
       gst: "",
-      total: ""
+      total: "",
+      goodsTypeId : ""
     }
   ]);
 
@@ -215,7 +217,8 @@ totalBillAmount : header.totalBillAmount,
       discountPercent: Number(d.discountPercent) || 0,
       amount: Number(d.amount),
       gst: Number(d.gst),
-      total: Number(d.total)
+      total: Number(d.total),
+      goodsTypeId : d.goodsTypeId
     }))
   };
 

@@ -65,6 +65,11 @@ namespace InventoryAPI.Data
                 .WithMany(h => h.PurchaseDetails)
                 .HasForeignKey(d => d.PurchaseHeaderId);
 
+            // Tell EF Core that tblPurchaseDetails has triggers
+            b.Entity<PurchaseDetail>()
+                .ToTable("tblPurchaseDetails", tb => tb.HasTrigger("trg_AfterInsert_PurchaseDetails"));
+
+
             b.Entity<GoodsTypeGST>().ToTable("tblGoodsTypeGST");
 
 

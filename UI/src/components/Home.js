@@ -171,6 +171,46 @@ function Home() {
                 setInventoryOpen(false);
               }}
             >
+              Sales ▾
+            </div>
+
+            <div className="dropdown">
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowVendorForm(true);
+                  setVendorOpen(false);
+                }}
+              >
+                Estimation
+              </span>
+
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowVendorGrid(true);
+                  setVendorOpen(false);
+                }}
+              >
+                Invoice
+              </span>
+
+              
+            </div>
+          </div>
+        )}
+
+        {isLoggedIn && (
+          <div className={`dropdown-parent ${vendorOpen ? "open" : ""}`}>
+            <div
+              className="nav-link"
+              onClick={() => {
+                setVendorOpen(!vendorOpen);
+                setInventoryOpen(false);
+              }}
+            >
               Vendor ▾
             </div>
 
@@ -211,6 +251,9 @@ setShowVendorPayments(true);
             </div>
           </div>
         )}
+
+
+        
 
         {isLoggedIn && (
           <div className="nav-link">
