@@ -68,7 +68,8 @@ namespace InventoryAPI.Controllers
                                           where vg.vendorId == vendorId
                                           select new
                                           {
-                                              vg.Id,
+                                              gt.Id,
+                                              vg.goodsTypeId,
                                               vg.vendorId,
                                               vg.comments,
                                               GoodsTypeName = gt.GoodsType,   // ✅ fetch name from tblGoodsTypeGST

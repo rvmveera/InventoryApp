@@ -8,9 +8,10 @@ import VendorGrid from "./vendorgrid";
 import PurchaseForm from "./purchase";
 import GoodsGST from "./goodsGST";
 import VendorPayments from "./vendorpayment";
+import Estimate from "./estimate";
+import Invoice from "./invoice";
 
 function Home() {
-
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [vendorOpen, setVendorOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -22,10 +23,12 @@ function Home() {
   const [showVendorForm, setShowVendorForm] = useState(false);
   const [showVendorGrid, setShowVendorGrid] = useState(false);
   const [showPurchaseForm, setShowPurchaseForm] = useState(false);
-
   const [showGoodsGST, setShowGoodsGST] = useState(false);
-
   const [showVendorPayments, setShowVendorPayments] = useState(false);
+
+  const [showEstimate, setShowEstimate] = useState(false);
+  const [showInvoice, setShowInvoice] = useState(false);
+
   /* Restore login */
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,22 +53,23 @@ function Home() {
     setIsLoggedIn(false);
     setUsername("");
 
-    setShowVendorForm(false);
-    setShowVendorGrid(false);
-    setShowPurchaseForm(false);
+    resetSections();
   };
 
   const resetSections = () => {
     setShowVendorForm(false);
     setShowVendorGrid(false);
     setShowPurchaseForm(false);
+    setShowGoodsGST(false);
+    setShowVendorPayments(false);
+    setShowEstimate(false);
+    setShowInvoice(false);
   };
 
   return (
     <>
       {/* ================= TOP NAVBAR ================= */}
       <nav className="navbar">
-
         <div className="nav-left">
           <img
             src={logo}
@@ -103,13 +107,8 @@ function Home() {
                 </>
               ) : (
                 <>
-                  <span className="dropdown-item">
-                    Pending Approvals
-                  </span>
-                  <span
-                    className="dropdown-item"
-                    onClick={handleLogout}
-                  >
+                  <span className="dropdown-item">Pending Approvals</span>
+                  <span className="dropdown-item" onClick={handleLogout}>
                     Logout
                   </span>
                 </>
@@ -121,7 +120,6 @@ function Home() {
 
       {/* ================= SIDEBAR ================= */}
       <div className="sidebar">
-
         {isLoggedIn && (
           <div className={`dropdown-parent ${inventoryOpen ? "open" : ""}`}>
             <div
@@ -138,9 +136,8 @@ function Home() {
               <span
                 className="dropdown-item"
                 onClick={() => {
-                  
                   resetSections();
-                  setShowGoodsGST(true);                  
+                  setShowGoodsGST(true);
                 }}
               >
                 Goods Type GST
@@ -179,8 +176,7 @@ function Home() {
                 className="dropdown-item"
                 onClick={() => {
                   resetSections();
-                  setShowVendorForm(true);
-                  setVendorOpen(false);
+                  setShowEstimate(true);
                 }}
               >
                 Estimation
@@ -190,14 +186,11 @@ function Home() {
                 className="dropdown-item"
                 onClick={() => {
                   resetSections();
-                  setShowVendorGrid(true);
-                  setVendorOpen(false);
+                  setShowInvoice(true);
                 }}
               >
                 Invoice
               </span>
-
-              
             </div>
           </div>
         )}
@@ -243,48 +236,36 @@ function Home() {
                   resetSections();
                   setShowVendorForm(false);
                   setVendorOpen(false);
-setShowVendorPayments(true);
-
+                  setShowVendorPayments(true);
                 }}
-              >Make Payments
+              >
+                Make Payments
               </span>
             </div>
           </div>
         )}
 
-
-        
-
-        {isLoggedIn && (
-          <div className="nav-link">
-            Reports
-          </div>
-        )}
+        {isLoggedIn && <div className="nav-link">Reports</div>}
       </div>
 
       {/* ================= MAIN CONTENT ================= */}
       <div className="main-content">
-
         {isLoggedIn && showVendorForm && <AddVendorForm />}
-        {isLoggedIn && showVendorGrid && <VendorGrid refreshTrigger={showVendorGrid} />}
+        {isLoggedIn && showVendorGrid && (
+          <VendorGrid refreshTrigger={showVendorGrid} />
+        )}
         {isLoggedIn && showPurchaseForm && <PurchaseForm />}
-{isLoggedIn && showVendorPayments && <VendorPayments />}
+        {isLoggedIn && showVendorPayments && <VendorPayments />}
         {showGoodsGST && <GoodsGST />}
-
-
+        {isLoggedIn && showEstimate && <Estimate />}
+        {isLoggedIn && showInvoice && <Invoice />}
       </div>
 
       {/* ================= MODAL ================= */}
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="close-btn"
-              onClick={() => setModal(null)}
-            >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setModal(null)}>
               ✕
             </button>
 

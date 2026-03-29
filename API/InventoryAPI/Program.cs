@@ -50,6 +50,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // JWT Service
 builder.Services.AddSingleton<JwtService>();
 
+// Register DbContext with DI
+builder.Services.AddDbContext<MyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 // ✅ Add controllers
 builder.Services.AddControllers();
 

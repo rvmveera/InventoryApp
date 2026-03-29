@@ -1,20 +1,21 @@
 ﻿using InventoryAPI.Data;
 using InventoryAPI.Models;
+using InventoryAPI.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
 public class InventoryController : ControllerBase
 {
-    private readonly InventoryContext _context;
+    private readonly MyDbContext _context;
 
-    public InventoryController(InventoryContext context)
+    public InventoryController(MyDbContext context)
     {
         _context = context;
     }
+
+
 
     // READ - Get all inventory items
     [HttpGet]
@@ -24,28 +25,28 @@ public class InventoryController : ControllerBase
     }
 
     // READ - Get item by ID
-    [HttpGet("{id}")]
+   /* [HttpGet("{id}")]
     public async Task<ActionResult<InventoryMaster>> GetById(string id)
     {
         var item = await _context.tblInventoryMaster.FindAsync(id);
         if (item == null) return NotFound();
         return item;
-    }
+    }*/
 
     // CREATE - Add new item
-    [HttpPost]
+    /*[HttpPost]   
     public async Task<ActionResult<InventoryMaster>> Create(InventoryMaster item)
     {
         _context.tblInventoryMaster.Add(item);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = item.InvId }, item);
+        return CreatedAtAction(nameof(GetById), new { id = item.id }, item);
     }
-
+    */
     // UPDATE - Modify item
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, InventoryMaster updatedItem)
+    public async Task<IActionResult> Update(int id, InventoryMaster updatedItem)
     {
-        if (id != updatedItem.InvId) return BadRequest();
+        if (id != updatedItem.id) return BadRequest();
 
         _context.Entry(updatedItem).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -63,4 +64,26 @@ public class InventoryController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
+    [HttpPost("GetAvailableStock")]
+    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetActiveInventory()
+    {
+        var query = from im in _context.tblInventoryMaster
+                    join gt in _context.tblGoodsTypeGST
+                        on im.goodsTypeId equals gt.Id
+                    where im.Status == "A"
+                    select new InventoryDto
+                    {
+                        GoodsTypeId = im.goodsTypeId,
+                        GoodsType = gt.GoodsType,
+                        InventoryId = im.id,
+                        Goods_ServiceDesc = im.goods_serviceDesc,
+                        AvailableQty = im.availableQty ?? 0
+                    };
+
+        var result = await query.ToListAsync();
+        return Ok(result);
+    }
+
+
 }
