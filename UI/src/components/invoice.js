@@ -134,6 +134,7 @@ function Invoice() {
                   }
                   placeholder="Select or type product..."
                   isClearable
+                  classNamePrefix="react-select"
                 />
               </td>
               <td>
@@ -189,6 +190,17 @@ function Invoice() {
       </table>
 
       <button className="add-btn" onClick={addRow}>+ Add Row</button>
+
+      <div className="submit-container">
+  <button
+    className="submit-btn"
+    onClick={() => console.log("Invoice submitted:", { invoiceFor, invoiceNumber, date, details })}
+  >
+    Submit Invoice
+  </button>
+</div>
+
+
     </div>
   );
 }

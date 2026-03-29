@@ -18,17 +18,31 @@
   width: 250px;
 }
 
+/* Scrollable table with only vertical scroll */
 .details-grid {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  font-size: 12px;       /* reduced font size */
+  display: block;        /* allow scroll */
+  max-height: 300px;     /* adjust height as needed */
+  overflow-y: auto;      /* vertical scroll only */
+  overflow-x: hidden;    /* disable horizontal scroll */
+}
+
+.details-grid thead,
+.details-grid tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .details-grid th,
 .details-grid td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 6px;          /* reduced padding for compact look */
   text-align: center;
+  font-size: 11px;       /* smaller font size for headers and cells */
 }
 
 .details-grid th {
@@ -38,10 +52,17 @@
 
 .details-grid input {
   width: 95%;
-  padding: 5px;
+  padding: 4px;          /* smaller input padding */
   box-sizing: border-box;
+  font-size: 12px;
 }
 
+.details-grid button {
+  font-size: 12px;
+  padding: 4px 8px;      /* smaller buttons */
+}
+
+/* Add Row button */
 .add-btn {
   margin-top: 10px;
   padding: 8px 12px;
@@ -55,6 +76,7 @@
   background-color: #45a049;
 }
 
+/* Remove button */
 .remove-btn {
   padding: 5px 10px;
   background-color: #e74c3c;
@@ -65,4 +87,30 @@
 
 .remove-btn:hover {
   background-color: #c0392b;
+}
+
+/* Submit button container */
+.submit-container {
+  margin-top: 30px;      /* push it further down */
+  text-align: right;     /* align to the right */
+}
+
+.submit-btn {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* React-select dropdown scroll */
+.react-select__menu {
+  max-height: 150px;     /* limit dropdown height */
+  overflow-y: auto;      /* vertical scroll */
+  font-size: 12px;
 }

@@ -85,6 +85,4 @@ public class InventoryController : ControllerBase
         var result = await query.ToListAsync();
         return Ok(result);
     }
-
-
 }
