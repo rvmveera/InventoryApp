@@ -19,6 +19,12 @@ namespace InventoryAPI.Data
         public DbSet<VendorPaymentHistory> VendorPaymentHistories { get; set; }
 
 
+        // DB Sets for Sales entities
+
+        public DbSet<InvoiceHeader> InvoiceHeaders { get; set; }
+        public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
+        
+        public DbSet<InventoryMaster> InventoryMaster { get; set; }
         protected override void OnModelCreating(ModelBuilder b)
         {
 
@@ -54,6 +60,7 @@ namespace InventoryAPI.Data
 
             b.Entity<VendorGoodsType>().ToTable("tblVendorGoodsType");
 
+            // Purchase
             b.Entity<PurchaseHeader>()
        .ToTable("tblPurchaseHeader");
 
@@ -70,6 +77,19 @@ namespace InventoryAPI.Data
                 .ToTable("tblPurchaseDetails", tb => tb.HasTrigger("trg_AfterInsert_PurchaseDetails"));
 
 
+            // Invoice
+
+            b.Entity<InvoiceHeader>()
+       .ToTable("tblInvoiceHeader");
+
+            b.Entity<InvoiceDetail>()
+                .ToTable("tblInvoiceDetail");
+
+            b.Entity<InvoiceDetail>()
+                .HasOne(d => d.InvoiceHeader)
+                .WithMany(h => h.InvoiceDetails)
+                .HasForeignKey(d => d.InvoiceHeaderId);
+
             b.Entity<GoodsTypeGST>().ToTable("tblGoodsTypeGST");
 
 
@@ -83,6 +103,12 @@ namespace InventoryAPI.Data
            .WithOne() // no navigation back in your class, but you can add if needed
            .HasForeignKey(h => h.VendorPaymentId);
 
+
+            b.Entity<InventoryMaster>().ToTable("tblInventoryMaster");
+            b.Entity<InventoryMaster>().HasKey(i => i.id);
+            
+            b.Entity<InventoryMaster>().Property(i => i.goods_serviceDesc);
+            b.Entity<InventoryMaster>().Property(i => i.Status).HasMaxLength(10);
         }
     }
 }

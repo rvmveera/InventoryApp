@@ -4,7 +4,9 @@ import "../css/invoice.css";
 
 function Invoice() {
   const [invoiceFor, setinvoiceFor] = useState("");
+  const [buyerAddress, setbuyerAddress] = useState("");
   const [invoiceNumber, setinvoiceNumber] = useState("");
+
   const [date, setDate] = useState("");
   const [details, setDetails] = useState([
     { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "" }
@@ -12,51 +14,54 @@ function Invoice() {
 
   // Fetch product options once
   const [productOptions, setProductOptions] = useState([]);
-  useEffect(() => {
-    fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({})
+  // Fetch product options
+useEffect(() => {
+  fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("API data:", data); // check actual response
+      const mappedOptions = data.map(item => ({
+        value: item.inventoryId,          // numeric ID
+        label: item.goods_ServiceDesc,    // product name
+        gstPercent: item.gstPercent
+      }));
+      setProductOptions(mappedOptions);
     })
-      .then(res => res.json())
-      .then(data => {
-        const mappedOptions = data.map(item => ({
-          value: item.inventoryId,
-          label: item.goods_ServiceDesc,
-          gstPercent: item.gstPercent
-        }));
-        setProductOptions(mappedOptions);
-      })
-      .catch(err => console.error("Error fetching products:", err));
-  }, []);
-
-  const handleDetailChange = (index, field, value, extra = {}) => {
-    const newDetails = [...details];
-    newDetails[index][field] = value;
-
-    // If product is selected, set GST
-    if (field === "product" && extra.gstPercent !== undefined) {
-      newDetails[index].gst = extra.gstPercent;
-    }
-
-   // Recalculate amount when quantity, price, or GST changes
-    const qty = parseFloat(newDetails[index].quantity) || 0;
-    const price = parseFloat(newDetails[index].priceUnit) || 0;
-    const gstPercent = parseFloat(newDetails[index].gst) || 0;
-
-    if (qty > 0 && price > 0) {
-      const baseAmount = qty * price;
-      const gstAmount = (baseAmount * gstPercent) / 100;
-      newDetails[index].amount = (baseAmount + gstAmount).toFixed(2);
-    } else {
-      newDetails[index].amount = "";
-    }
+    .catch(err => console.error("Error fetching products:", err));
+}, []);
 
 
-    setDetails(newDetails);
-  };
+const handleDetailChange = (index, field, value) => {
+  const newDetails = [...details];
+  newDetails[index][field] = value;
+
+  // If product is selected, set GST
+  if (field === "product" && value) {
+    newDetails[index].gst = value.gstPercent;
+  }
+
+  // Recalculate amount
+  const qty = parseFloat(newDetails[index].quantity) || 0;
+  const price = parseFloat(newDetails[index].priceUnit) || 0;
+  const gstPercent = parseFloat(newDetails[index].gst) || 0;
+
+  if (qty > 0 && price > 0) {
+    const baseAmount = qty * price;
+    const gstAmount = (baseAmount * gstPercent) / 100;
+    newDetails[index].amount = (baseAmount + gstAmount).toFixed(2);
+  } else {
+    newDetails[index].amount = "";
+  }
+  setDetails(newDetails);
+};  
+
+
 
   const addRow = () => {
     setDetails([
@@ -75,13 +80,22 @@ function Invoice() {
       <h2>Create Invoice</h2>
 
       <div className="form-group">
-        <label>Invoice For:</label>
+        <label>Buyer:</label>
         <input
           type="text"
           value={invoiceFor}
           onChange={(e) => setinvoiceFor(e.target.value)}
         />
       </div>
+
+<div className="form-group">
+        <label>Buyer Address:</label>
+    
+
+        <textarea name="buyerAddress" value={buyerAddress}
+                 onChange={(e) => setbuyerAddress(e.target.value)}></textarea>
+      </div>
+
 
       <div className="form-group">
         <label>Invoice Number:</label>
@@ -121,21 +135,17 @@ function Invoice() {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
-                <Select
-                  options={productOptions}
-                  value={productOptions.find(opt => opt.value === row.product) || null}
-                  onChange={(selected) =>
-                    handleDetailChange(
-                      index,
-                      "product",
-                      selected ? selected.value : "",
-                      { gstPercent: selected ? selected.gstPercent : "" }
-                    )
-                  }
-                  placeholder="Select or type product..."
-                  isClearable
-                  classNamePrefix="react-select"
-                />
+              
+<Select
+  options={productOptions}
+  value={row.product}   // now row.product is the full option object
+  onChange={(selected) =>
+    handleDetailChange(index, "product", selected)
+  }
+  placeholder="Select or type product..."
+  isClearable
+  classNamePrefix="react-select"  menuPortalTarget={document.body}
+/>
               </td>
               <td>
                 <input

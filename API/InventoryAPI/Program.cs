@@ -25,9 +25,9 @@ builder.Services.AddCors(options =>
 });
 
 //Configure EF Core with SQL Server
-builder.Services.AddDbContext<InventoryContext>(options =>
+/*builder.Services.AddDbContext<InventoryContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+*/
 
 builder.Services.AddDbContext<AppDbContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))

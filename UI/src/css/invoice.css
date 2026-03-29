@@ -25,7 +25,7 @@
   margin-top: 15px;
   font-size: 12px;       /* reduced font size */
   display: block;        /* allow scroll */
-  max-height: 300px;     /* adjust height as needed */
+  max-height: 500px;     /* adjust height as needed */
   overflow-y: auto;      /* vertical scroll only */
   overflow-x: hidden;    /* disable horizontal scroll */
 }
@@ -113,4 +113,13 @@
   max-height: 150px;     /* limit dropdown height */
   overflow-y: auto;      /* vertical scroll */
   font-size: 12px;
+}
+/* Ensure react-select dropdown menu renders above the grid */
+.react-select__menu {
+  z-index: 9999;         /* bring dropdown above table */
+  position: absolute;    /* overlay instead of being clipped */
+}
+
+.react-select__menu-portal {
+  z-index: 9999;         /* ensure portal menus are above everything */
 }
