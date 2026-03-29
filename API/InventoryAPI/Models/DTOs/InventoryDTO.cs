@@ -7,5 +7,6 @@
         public int InventoryId { get; set; }
         public string Goods_ServiceDesc { get; set; }
         public int AvailableQty { get; set; }
+        public decimal GSTPercent { get; set; }
     }
 }
