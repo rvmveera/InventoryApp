@@ -9,7 +9,7 @@ function Invoice() {
 
   const [date, setDate] = useState("");
   const [details, setDetails] = useState([
-    { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "" }
+    { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", availableQty : "" }
   ]);
 
   // Fetch product options once
@@ -29,7 +29,8 @@ useEffect(() => {
       const mappedOptions = data.map(item => ({
         value: item.inventoryId,          // numeric ID
         label: item.goods_ServiceDesc,    // product name
-        gstPercent: item.gstPercent
+        gstPercent: item.gstPercent,
+        availableQty: item.availableQty 
       }));
       setProductOptions(mappedOptions);
     })
@@ -44,6 +45,7 @@ const handleDetailChange = (index, field, value) => {
   // If product is selected, set GST
   if (field === "product" && value) {
     newDetails[index].gst = value.gstPercent;
+    newDetails[index].availableQty = value.availableQty;
   }
 
   // Recalculate amount
@@ -122,7 +124,8 @@ const handleDetailChange = (index, field, value) => {
             <th>S.No</th>
             <th>Product</th>
             <th>HSN Number</th>
-            <th>Quantity</th>
+            <th>Available Qty</th>
+            <th>Required Qty</th>
             <th>Unit</th>
             <th>Price/Unit</th>
             <th>GST %</th>
@@ -156,6 +159,12 @@ const handleDetailChange = (index, field, value) => {
                   }
                 />
               </td>
+              <td>
+  <span className="available-qty-label">
+    {row.availableQty}
+  </span>
+</td>
+
               <td>
                 <input
                   type="number"
