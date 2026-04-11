@@ -9,4 +9,11 @@
         public int AvailableQty { get; set; }
         public decimal GSTPercent { get; set; }
     }
+
+    public class AvailableInventoryDto {
+        public int Id { get; set; }
+        public string GoodsType { get; set; }
+        public string GoodsServiceDesc { get; set; }
+
+    }
 }

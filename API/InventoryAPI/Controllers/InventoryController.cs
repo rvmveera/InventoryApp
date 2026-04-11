@@ -3,6 +3,7 @@ using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ClosedXML.Excel;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -24,24 +25,7 @@ public class InventoryController : ControllerBase
         return await _context.tblInventoryMaster.ToListAsync();
     }
 
-    // READ - Get item by ID
-   /* [HttpGet("{id}")]
-    public async Task<ActionResult<InventoryMaster>> GetById(string id)
-    {
-        var item = await _context.tblInventoryMaster.FindAsync(id);
-        if (item == null) return NotFound();
-        return item;
-    }*/
 
-    // CREATE - Add new item
-    /*[HttpPost]   
-    public async Task<ActionResult<InventoryMaster>> Create(InventoryMaster item)
-    {
-        _context.tblInventoryMaster.Add(item);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = item.id }, item);
-    }
-    */
     // UPDATE - Modify item
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, InventoryMaster updatedItem)
@@ -84,5 +68,58 @@ public class InventoryController : ControllerBase
 
         var result = await query.ToListAsync();
         return Ok(result);
+    }
+
+
+    [HttpPost("export")]
+    public IActionResult ExportActiveInventories()
+    {
+        var query = from tim in _context.tblInventoryMaster
+                    join tg in _context.tblGoodsTypeGST
+                        on tim.goodsTypeId equals tg.Id
+                    where tim.Status == "A"
+                    orderby tim.id
+                    select new AvailableInventoryDto
+                    {
+                        Id = tim.id,
+                        GoodsType = tg.GoodsType,
+                        GoodsServiceDesc = tim.goods_serviceDesc
+                    };
+        var data = query.ToList();
+
+        using (var workbook = new XLWorkbook())
+        {
+            var worksheet = workbook.Worksheets.Add("Inventories");
+
+            // Headers
+            worksheet.Cell(1, 1).Value = "ID";
+            worksheet.Cell(1, 2).Value = "GoodsType";
+            worksheet.Cell(1, 3).Value = "GoodsServiceDesc";
+            worksheet.Cell(1, 4).Value = "Price";
+
+            int row = 2;
+            foreach (var item in data)
+            {
+                worksheet.Cell(row, 1).Value = item.Id;
+                worksheet.Cell(row, 2).Value = item.GoodsType;
+                worksheet.Cell(row, 3).Value = item.GoodsServiceDesc;
+                worksheet.Cell(row, 4).Value = ""; // editable Price column
+                row++;
+            }
+
+            // Lock all cells except Price column  // Explicitly lock first 3 columns
+            worksheet.RangeUsed().Columns(1, 3).Style.Protection.SetLocked(true);
+            worksheet.Column(4).Cells().Style.Protection.SetLocked(false);
+
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                var content = stream.ToArray();
+                return File(content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "ActiveInventories.xlsx");
+            }
+        }
     }
 }
