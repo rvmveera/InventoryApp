@@ -19,6 +19,13 @@ namespace InventoryAPI.Models
 
         public DbSet<InventoryMaster> tblInventoryMaster { get; set; }
         public DbSet<GoodsTypeGST> tblGoodsTypeGST { get; set; }
+        public DbSet<tblInventoryPrice> tblInventoryPrice { get; set; }
+    }
+    public class tblInventoryPrice
+    {
+        public int Id { get; set; }
+        public int inventoryId { get; set; }
+        public decimal price { get; set; }
     }
 
 }

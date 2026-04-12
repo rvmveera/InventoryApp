@@ -74,17 +74,24 @@ public class InventoryController : ControllerBase
     [HttpPost("export")]
     public IActionResult ExportActiveInventories()
     {
+        
         var query = from tim in _context.tblInventoryMaster
                     join tg in _context.tblGoodsTypeGST
                         on tim.goodsTypeId equals tg.Id
+                    join tip in _context.tblInventoryPrice
+                        on tim.id equals tip.inventoryId into priceGroup
+                    from tip in priceGroup.DefaultIfEmpty() // LEFT JOIN
                     where tim.Status == "A"
                     orderby tim.id
                     select new AvailableInventoryDto
                     {
                         Id = tim.id,
                         GoodsType = tg.GoodsType,
-                        GoodsServiceDesc = tim.goods_serviceDesc
+                        GoodsServiceDesc = tim.goods_serviceDesc,
+                        price = tip != null ? tip.price : 0
                     };
+
+
         var data = query.ToList();
 
         using (var workbook = new XLWorkbook())
@@ -103,7 +110,7 @@ public class InventoryController : ControllerBase
                 worksheet.Cell(row, 1).Value = item.Id;
                 worksheet.Cell(row, 2).Value = item.GoodsType;
                 worksheet.Cell(row, 3).Value = item.GoodsServiceDesc;
-                worksheet.Cell(row, 4).Value = ""; // editable Price column
+                worksheet.Cell(row, 4).Value = item.price; // editable Price column
                 row++;
             }
 
@@ -122,4 +129,5 @@ public class InventoryController : ControllerBase
             }
         }
     }
+
 }

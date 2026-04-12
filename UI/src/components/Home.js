@@ -10,6 +10,8 @@ import GoodsGST from "./goodsGST";
 import VendorPayments from "./vendorpayment";
 import Estimate from "./estimate";
 import Invoice from "./invoice";
+import AddInventoryPrice from "./addInventoryPrice";
+import ViewInventory from "./viewInventory";
 
 function Home() {
   const [inventoryOpen, setInventoryOpen] = useState(false);
@@ -28,6 +30,10 @@ function Home() {
 
   const [showEstimate, setShowEstimate] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
+
+const [showAddInventoryPrice, setShowAddInventoryPrice] = useState(false);
+const [showViewInventory, setShowViewInventory] = useState(false);
+
 
   /* Restore login */
   useEffect(() => {
@@ -64,6 +70,9 @@ function Home() {
     setShowVendorPayments(false);
     setShowEstimate(false);
     setShowInvoice(false);
+  setShowAddInventoryPrice(false);
+  setShowViewInventory(false);
+
   };
 
   return (
@@ -156,6 +165,34 @@ function Home() {
                 Purchase Goods / Services
               </span>
             </div>
+
+          <div className="dropdown">
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowAddInventoryPrice(true);
+                  setInventoryOpen(false);
+                }}
+              >
+                Add Inventory Price
+              </span>
+            </div>
+
+            <div className="dropdown">
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowViewInventory(true);
+                  setInventoryOpen(false);
+                }}
+              >
+                View Inventory List
+              
+              </span>
+            </div>
+
           </div>
         )}
 
@@ -256,6 +293,10 @@ function Home() {
         )}
         {isLoggedIn && showPurchaseForm && <PurchaseForm />}
         {isLoggedIn && showVendorPayments && <VendorPayments />}
+{isLoggedIn && showAddInventoryPrice && <AddInventoryPrice />}
+{isLoggedIn && showViewInventory && <ViewInventory />}
+
+
         {showGoodsGST && <GoodsGST />}
         {isLoggedIn && showEstimate && <Estimate />}
         {isLoggedIn && showInvoice && <Invoice />}

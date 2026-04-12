@@ -14,6 +14,8 @@
         public int Id { get; set; }
         public string GoodsType { get; set; }
         public string GoodsServiceDesc { get; set; }
+        public decimal price { get; set; }
 
     }
+    
 }
