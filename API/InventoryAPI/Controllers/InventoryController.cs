@@ -1,9 +1,10 @@
-﻿using InventoryAPI.Data;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.InkML;
+using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ClosedXML.Excel;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -15,8 +16,6 @@ public class InventoryController : ControllerBase
     {
         _context = context;
     }
-
-
 
     // READ - Get all inventory items
     [HttpGet]
@@ -130,4 +129,42 @@ public class InventoryController : ControllerBase
         }
     }
 
+    [HttpPost("uploadPrice")]
+    public async Task<IActionResult> UploadExcel(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        using var stream = new MemoryStream();
+        await file.CopyToAsync(stream);
+
+        using var workbook = new XLWorkbook(stream);
+        var worksheet = workbook.Worksheet(1); // First sheet
+        var rows = worksheet.RangeUsed().RowsUsed();
+
+        foreach (var row in rows.Skip(1)) // Skip header
+        {
+            var inventoryId = row.Cell(1).GetValue<int>();
+            var price = row.Cell(4).GetValue<decimal>();
+
+            var existing = await _context.tblInventoryPrice
+                .FirstOrDefaultAsync(x => x.inventoryId == inventoryId);
+
+            if (existing != null)
+            {
+                existing.price = price; // Update
+            }
+            else
+            {
+                _context.tblInventoryPrice.Add(new tblInventoryPrice
+                {
+                    inventoryId = inventoryId,
+                    price = price
+                });
+            }
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok("Data inserted/updated successfully.");
+    }
 }

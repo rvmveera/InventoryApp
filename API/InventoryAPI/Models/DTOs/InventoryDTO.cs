@@ -17,5 +17,9 @@
         public decimal price { get; set; }
 
     }
-    
+    public class InventoryPriceDto
+    {
+        public int InventoryId { get; set; }
+        public decimal Price { get; set; }
+    }
 }

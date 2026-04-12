@@ -36,7 +36,7 @@ const AddInventoryPrice = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://localhost:5001/api/Inventory/import", {
+      const response = await fetch("https://localhost:5001/api/Inventory/uploadPrice", {
         method: "POST",
         body: formData,
       });
