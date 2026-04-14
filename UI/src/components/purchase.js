@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "../css/purchase.css"
 
 
+
 function PurchaseForm() {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
@@ -76,6 +77,42 @@ totalBillAmount : ""
       .then((data) => setConsignee(data))
       .catch((err) => console.error("Error loading consignee:", err));
   }, []);
+
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch("https://localhost:5001/api/Purchase/downloadPurchaseTemplate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download template");
+      }
+
+      // Get the response as a Blob
+      const blob = await response.blob();
+
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a link element and trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "PurchaseTemplate.xlsx"; // filename for download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading template:", error);
+    }
+  };
+
 
   const handleVendorChange = (e) => {
     const vendorId = parseInt(e.target.value, 10);
@@ -255,7 +292,19 @@ const getBillAmount = () => {
 
 
   return (
+
+
+
     <form onSubmit={handleSubmit}>
+    
+<h2>Purchase Upload</h2>
+
+ <button onClick={handleDownload}>
+      Download Purchase Template
+    </button>
+
+
+    
       <h2>Purchase Header</h2>
 
      

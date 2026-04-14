@@ -69,11 +69,10 @@ public class InventoryController : ControllerBase
         return Ok(result);
     }
 
-
     [HttpPost("export")]
     public IActionResult ExportActiveInventories()
     {
-        
+
         var query = from tim in _context.tblInventoryMaster
                     join tg in _context.tblGoodsTypeGST
                         on tim.goodsTypeId equals tg.Id
@@ -167,4 +166,6 @@ public class InventoryController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok("Data inserted/updated successfully.");
     }
+
+
 }
