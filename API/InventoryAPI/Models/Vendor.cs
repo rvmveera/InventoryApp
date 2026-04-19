@@ -21,5 +21,6 @@
         public string companyPAN { get; set; }
         public string upi_gpayNo { get; set; }
         public string comments { get; set; }
+        public int activeStatus { get; set; }
     }
 }
