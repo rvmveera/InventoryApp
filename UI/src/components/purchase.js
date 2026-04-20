@@ -11,11 +11,41 @@ function PurchaseForm() {
 const [goodsTypes, setGoodsTypes] = useState([]);
 const [isChecked, setIsChecked] = useState(false);
 const [goodsTypeId, setGoodsTypeId] = useState("");
+ const [file, setFile] = useState(null);
 
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
+ const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
+   const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("https://localhost:5001/api/Purchase/downloadPurchaseTemplate", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert("File uploaded successfully: " + JSON.stringify(result));
+      } else {
+        alert("Upload failed.");
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Error uploading file.");
+    }
+  };
 
   const [header, setHeader] = useState({
     vendorId: "",
@@ -303,7 +333,16 @@ const getBillAmount = () => {
       Download Purchase Template
     </button>
 
-
+ <div style={{ marginTop: "20px" }}>
+        <input
+          type="file"
+          accept=".xlsx,.xls"
+          onChange={handleFileChange}
+        />
+        <button onClick={handleUpload} style={{ marginLeft: "10px" }}>
+          Upload Purchase Excel
+        </button>
+      </div>
     
       <h2>Purchase Header</h2>
 

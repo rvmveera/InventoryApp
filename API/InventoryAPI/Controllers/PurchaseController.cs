@@ -33,8 +33,7 @@ namespace InventoryAPI.Controllers
                 BillAmount = purchaseHeader.totalBillAmount,  // or whichever field represents bill amount
                 OutstandingAmount = purchaseHeader.totalBillAmount, // initially equal to bill amount
                 PurchaseId = purchaseHeader.Id,           // link to the saved purchase
-                //CreatedBy = purchaseHeader.create,     // or current user context
-                //PaymentHistories = new List<VendorPaymentHistory>() // optional, can be left null
+                
             };
 
             _context.VendorPayments.Add(vendorPayment);
@@ -164,6 +163,103 @@ namespace InventoryAPI.Controllers
                 }
             }
         }
+
+        [HttpPost("uploadPurchases")]
+        public async Task<IActionResult> SavePurchasesUpload(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var purchaseHeaders = new List<PurchaseHeader>();
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheet("PurchaseTemplate");
+                        var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // skip header row
+
+                        foreach (var row in rows)
+                        {
+                            var purchaseHeader = new PurchaseHeader
+                            {
+                                VendorId = int.Parse(row.Cell(1).GetString().Split('-')[0].Trim()), // VendorId from "ID - Name"
+                                InvoiceNo = row.Cell(2).GetString(),
+                                EwayBillNo = row.Cell(3).GetString(),
+                                InvoiceDate = row.Cell(4).GetDateTime(),
+                                DeliveryNote = row.Cell(5).GetString(),
+                                TermsOfPayment = row.Cell(6).GetString(),
+                                SupplierRef = row.Cell(7).GetString(),
+                                OtherReference = row.Cell(8).GetString(),
+                                ConsigneeId = Convert.ToInt32(row.Cell(9).GetString()),
+                                BuyerOrderNo = row.Cell(10).GetString(),
+                                BuyerOrderDate = row.Cell(11).GetDateTime(),
+                                DespatchDocNo = row.Cell(12).GetString(),
+                                DeliveryNoteDate = row.Cell(13).GetDateTime(),
+                                Destination = row.Cell(14).GetString(),
+                                BuyerName = row.Cell(15).GetString(),
+                                BuyerAddress = row.Cell(16).GetString(),
+                                BuyerGST = row.Cell(17).GetString(),
+                                BuyerState = row.Cell(18).GetString(),
+                                BuyerCode = row.Cell(19).GetString(),
+                                BuyerPlaceofsupply = row.Cell(20).GetString(),
+                                BuyerContactName = row.Cell(21).GetString(),
+                                BuyerEmail = row.Cell(22).GetString(),
+                                BuyerMobileNo = row.Cell(23).GetString(),
+                                BillOfLadingNo = row.Cell(24).GetString(),
+                                VehicleNo = row.Cell(25).GetString(),
+                                TermsOfDelivery = row.Cell(26).GetString(),
+
+                            };
+                            purchaseHeader.PurchaseDetails = new List<PurchaseDetail>();
+                            purchaseHeader.PurchaseDetails.Add(new PurchaseDetail
+                            {
+                                goodsTypeId = int.Parse(row.Cell(27).GetString().Split('-')[0].Trim()), // GoodsTypeId from "ID - Name"
+                                Goods_ServiceDesc = row.Cell(28).GetString(),
+                                HsnSac = row.Cell(29).GetString(),
+                                Quantity = Convert.ToInt32(row.Cell(30).ToString()),
+                                Rate = Convert.ToDecimal(row.Cell(31).ToString()),
+                                UomPer = row.Cell(32).GetString(),
+                                DiscountPercent = Convert.ToDecimal(row.Cell(33).GetDouble()),
+                                Amount = Convert.ToDecimal(row.Cell(34).GetDouble())
+                            });
+                            purchaseHeaders.Add(purchaseHeader);
+
+                        }
+                    }
+                }
+
+                // Save all headers
+                _context.PurchaseHeaders.AddRange(purchaseHeaders);
+                await _context.SaveChangesAsync();
+
+                // Save vendor payments for each header
+                var vendorPayments = purchaseHeaders.Select(ph => new VendorPayments
+                {
+                    VendorId = ph.VendorId,
+                    BillAmount = ph.totalBillAmount,
+                    OutstandingAmount = ph.totalBillAmount,
+                    PurchaseId = ph.Id
+                }).ToList();
+
+                _context.VendorPayments.AddRange(vendorPayments);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { Count = purchaseHeaders.Count, Message = "Purchases uploaded successfully" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error saving purchases: {ex.Message}");
+            }
+        }
+
     }
 }
 
