@@ -99,6 +99,8 @@ namespace InventoryAPI.Controllers
                 worksheet.Cell(1, 32).Value = "uomPer";
                 worksheet.Cell(1, 33).Value = "discountPercent";
                 worksheet.Cell(1, 34).Value = "amount";
+                worksheet.Cell(1, 35).Value = "GST";
+                worksheet.Cell(1, 36).Value = "total";
 
                 worksheet.Row(1).Style.Font.Bold = true;
                 worksheet.Row(1).Style.Fill.BackgroundColor = XLColor.LightGray;
@@ -122,21 +124,27 @@ namespace InventoryAPI.Controllers
                 var vendorRange = hiddenSheet.Range(1, 1, grouped.Count, 1);
                 workbook.NamedRanges.Add("VendorList", vendorRange);
 
-                // Goods lists per vendor
+                // Goods lists per vendor (two ranges: Goods only, Goods+GST)
                 int row = 1;
                 foreach (var group in grouped)
                 {
-                    string vendorKey = $"Vendor{group.Key.VendorId}"; // safe named range
+                    string vendorKey = $"Vendor{group.Key.VendorId}";
 
                     int startRow = row;
                     foreach (var g in group)
                     {
                         hiddenSheet.Cell(row, 2).Value = $"{g.GoodsTypeId} - {g.GoodsType}";
+                        hiddenSheet.Cell(row, 3).Value = g.GSTPercent;
                         row++;
                     }
 
-                    var goodsRange = hiddenSheet.Range(startRow, 2, row - 1, 2);
-                    workbook.NamedRanges.Add(vendorKey, goodsRange);
+                    // Goods only range (col 2)
+                    var goodsOnlyRange = hiddenSheet.Range(startRow, 2, row - 1, 2);
+                    workbook.NamedRanges.Add($"{vendorKey}_Goods", goodsOnlyRange);
+
+                    // Goods + GST range (col 2–3)
+                    var goodsLookupRange = hiddenSheet.Range(startRow, 2, row - 1, 3);
+                    workbook.NamedRanges.Add($"{vendorKey}_Lookup", goodsLookupRange);
                 }
 
                 hiddenSheet.Visibility = XLWorksheetVisibility.VeryHidden;
@@ -146,12 +154,17 @@ namespace InventoryAPI.Controllers
                 var dvVendor = vendorValidationRange.CreateDataValidation();
                 dvVendor.List("VendorList");
 
-                // Step 5: Goods dropdown in col 27 (AA)
+                // Step 5: Goods dropdown in col 27 (AA) – show only goods text
                 var goodsValidationRange = worksheet.Range("AA2:AA100");
                 var dvGoods = goodsValidationRange.CreateDataValidation();
+                dvGoods.List("INDIRECT(\"Vendor\" & LEFT($A2,FIND(\" \",$A2)-1) & \"_Goods\")");
 
-                // Formula: extract VendorId from "VendorId - VendorName"
-                dvGoods.List("INDIRECT(\"Vendor\" & LEFT($A2,FIND(\" \",$A2)-1))");
+                // Step 6: GST auto-fill in col AI (35) – lookup GST percent
+                for (int r = 2; r <= 100; r++)
+                {
+                    worksheet.Cell(r, 35).FormulaA1 =
+                        $"IFERROR(VLOOKUP($AA{r}, INDIRECT(\"Vendor\" & LEFT($A{r},FIND(\" \",$A{r})-1) & \"_Lookup\"), 2, FALSE), \"\")";
+                }
 
                 using (var stream = new MemoryStream())
                 {
@@ -163,6 +176,8 @@ namespace InventoryAPI.Controllers
                 }
             }
         }
+
+
 
         [HttpPost("uploadPurchases")]
         public async Task<IActionResult> SavePurchasesUpload(IFormFile file)
@@ -226,7 +241,8 @@ namespace InventoryAPI.Controllers
                                 Rate = Convert.ToDecimal(row.Cell(31).ToString()),
                                 UomPer = row.Cell(32).GetString(),
                                 DiscountPercent = Convert.ToDecimal(row.Cell(33).GetDouble()),
-                                Amount = Convert.ToDecimal(row.Cell(34).GetDouble())
+                                Amount = Convert.ToDecimal(row.Cell(34).GetDouble()),
+                                PurchaseHeaderId = purchaseHeader.Id
                             });
                             purchaseHeaders.Add(purchaseHeader);
 

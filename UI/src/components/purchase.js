@@ -329,7 +329,7 @@ const getBillAmount = () => {
     
 <h2>Purchase Upload</h2>
 
- <button onClick={handleDownload}>
+ <button type="button" onClick={handleDownload}>
       Download Purchase Template
     </button>
 
