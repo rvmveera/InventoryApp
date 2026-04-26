@@ -108,23 +108,19 @@ namespace InventoryAPI.Controllers
                 // Step 3: Hidden sheet for vendor-goods mapping
                 var hiddenSheet = workbook.Worksheets.Add("VendorGoods");
 
-                // Group goods by vendor
-                var grouped = vendorGoods
-                    .GroupBy(v => new { v.VendorId, v.VendorName })
-                    .ToList();
+                var grouped = vendorGoods.GroupBy(v => new { v.VendorId, v.VendorName }).ToList();
 
-                // Vendor list in col A (ID – Name)
+                // Vendor list in col A
                 for (int i = 0; i < grouped.Count; i++)
                 {
                     string displayName = $"{grouped[i].Key.VendorId} - {grouped[i].Key.VendorName}";
                     hiddenSheet.Cell(i + 1, 1).Value = displayName;
                 }
 
-                // Named range for vendor list
                 var vendorRange = hiddenSheet.Range(1, 1, grouped.Count, 1);
                 workbook.NamedRanges.Add("VendorList", vendorRange);
 
-                // Goods lists per vendor (two ranges: Goods only, Goods+GST)
+                // Goods lists per vendor (two ranges)
                 int row = 1;
                 foreach (var group in grouped)
                 {
@@ -138,11 +134,9 @@ namespace InventoryAPI.Controllers
                         row++;
                     }
 
-                    // Goods only range (col 2)
                     var goodsOnlyRange = hiddenSheet.Range(startRow, 2, row - 1, 2);
                     workbook.NamedRanges.Add($"{vendorKey}_Goods", goodsOnlyRange);
 
-                    // Goods + GST range (col 2–3)
                     var goodsLookupRange = hiddenSheet.Range(startRow, 2, row - 1, 3);
                     workbook.NamedRanges.Add($"{vendorKey}_Lookup", goodsLookupRange);
                 }
@@ -154,16 +148,24 @@ namespace InventoryAPI.Controllers
                 var dvVendor = vendorValidationRange.CreateDataValidation();
                 dvVendor.List("VendorList");
 
-                // Step 5: Goods dropdown in col 27 (AA) – show only goods text
+                // Step 5: Goods dropdown in col 27 (AA)
                 var goodsValidationRange = worksheet.Range("AA2:AA100");
                 var dvGoods = goodsValidationRange.CreateDataValidation();
                 dvGoods.List("INDIRECT(\"Vendor\" & LEFT($A2,FIND(\" \",$A2)-1) & \"_Goods\")");
 
-                // Step 6: GST auto-fill in col AI (35) – lookup GST percent
+                // Step 6: GST auto-fill in col AI (35)
                 for (int r = 2; r <= 100; r++)
                 {
                     worksheet.Cell(r, 35).FormulaA1 =
                         $"IFERROR(VLOOKUP($AA{r}, INDIRECT(\"Vendor\" & LEFT($A{r},FIND(\" \",$A{r})-1) & \"_Lookup\"), 2, FALSE), \"\")";
+
+                    // Step 7: Amount calculation in col AH (34)
+                    worksheet.Cell(r, 34).FormulaA1 =
+                        $"IFERROR(($AD{r}*$AE{r})*(1-$AG{r}/100),\"\")";
+
+                    // Step 8: Total calculation in col AJ (36)
+                    worksheet.Cell(r, 36).FormulaA1 =
+                        $"IFERROR($AH{r} + ($AH{r}*$AI{r}/100),\"\")";
                 }
 
                 using (var stream = new MemoryStream())
@@ -176,8 +178,6 @@ namespace InventoryAPI.Controllers
                 }
             }
         }
-
-
 
         [HttpPost("uploadPurchases")]
         public async Task<IActionResult> SavePurchasesUpload(IFormFile file)
@@ -199,58 +199,93 @@ namespace InventoryAPI.Controllers
                         var worksheet = workbook.Worksheet("PurchaseTemplate");
                         var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // skip header row
 
-                        foreach (var row in rows)
+                        // Group rows by VendorId + InvoiceNo (adjust grouping keys if needed)
+                        var groupedRows = rows.GroupBy(r =>
                         {
+                            var vendorCell = r.Cell(1).GetString().Trim();
+                            if (string.IsNullOrWhiteSpace(vendorCell))
+                            {
+                                return new { VendorId = 0, InvoiceNo = string.Empty };
+                            }
+
+                            int vendorId = int.TryParse(vendorCell.Split('-')[0].Trim(), out var vId) ? vId : 0;
+                            return new { VendorId = vendorId, InvoiceNo = r.Cell(2).GetString() };
+                        });
+
+                        foreach (var group in groupedRows)
+                        {
+                            // If vendor cell is empty, stop processing further groups
+                            if (group.Key.VendorId == 0 || string.IsNullOrWhiteSpace(group.Key.InvoiceNo))
+                                break;
+
+                            var firstRow = group.First();
+
                             var purchaseHeader = new PurchaseHeader
                             {
-                                VendorId = int.Parse(row.Cell(1).GetString().Split('-')[0].Trim()), // VendorId from "ID - Name"
-                                InvoiceNo = row.Cell(2).GetString(),
-                                EwayBillNo = row.Cell(3).GetString(),
-                                InvoiceDate = row.Cell(4).GetDateTime(),
-                                DeliveryNote = row.Cell(5).GetString(),
-                                TermsOfPayment = row.Cell(6).GetString(),
-                                SupplierRef = row.Cell(7).GetString(),
-                                OtherReference = row.Cell(8).GetString(),
-                                ConsigneeId = Convert.ToInt32(row.Cell(9).GetString()),
-                                BuyerOrderNo = row.Cell(10).GetString(),
-                                BuyerOrderDate = row.Cell(11).GetDateTime(),
-                                DespatchDocNo = row.Cell(12).GetString(),
-                                DeliveryNoteDate = row.Cell(13).GetDateTime(),
-                                Destination = row.Cell(14).GetString(),
-                                BuyerName = row.Cell(15).GetString(),
-                                BuyerAddress = row.Cell(16).GetString(),
-                                BuyerGST = row.Cell(17).GetString(),
-                                BuyerState = row.Cell(18).GetString(),
-                                BuyerCode = row.Cell(19).GetString(),
-                                BuyerPlaceofsupply = row.Cell(20).GetString(),
-                                BuyerContactName = row.Cell(21).GetString(),
-                                BuyerEmail = row.Cell(22).GetString(),
-                                BuyerMobileNo = row.Cell(23).GetString(),
-                                BillOfLadingNo = row.Cell(24).GetString(),
-                                VehicleNo = row.Cell(25).GetString(),
-                                TermsOfDelivery = row.Cell(26).GetString(),
-
+                                VendorId = group.Key.VendorId,
+                                InvoiceNo = group.Key.InvoiceNo,
+                                EwayBillNo = firstRow.Cell(3).GetString(),
+                                InvoiceDate = firstRow.Cell(4).GetDateTime(),
+                                DeliveryNote = firstRow.Cell(5).GetString(),
+                                TermsOfPayment = firstRow.Cell(6).GetString(),
+                                SupplierRef = firstRow.Cell(7).GetString(),
+                                OtherReference = firstRow.Cell(8).GetString(),
+                                ConsigneeId = int.TryParse(firstRow.Cell(9).GetString(), out var cId) ? cId : 0,
+                                BuyerOrderNo = firstRow.Cell(10).GetString(),
+                                BuyerOrderDate = firstRow.Cell(11).GetDateTime(),
+                                DespatchDocNo = firstRow.Cell(12).GetString(),
+                                DeliveryNoteDate = firstRow.Cell(13).GetDateTime(),
+                                Destination = firstRow.Cell(14).GetString(),
+                                BuyerName = firstRow.Cell(15).GetString(),
+                                BuyerAddress = firstRow.Cell(16).GetString(),
+                                BuyerGST = firstRow.Cell(17).GetString(),
+                                BuyerState = firstRow.Cell(18).GetString(),
+                                BuyerCode = firstRow.Cell(19).GetString(),
+                                BuyerPlaceofsupply = firstRow.Cell(20).GetString(),
+                                BuyerContactName = firstRow.Cell(21).GetString(),
+                                BuyerEmail = firstRow.Cell(22).GetString(),
+                                BuyerMobileNo = firstRow.Cell(23).GetString(),
+                                BillOfLadingNo = firstRow.Cell(24).GetString(),
+                                VehicleNo = firstRow.Cell(25).GetString(),
+                                TermsOfDelivery = firstRow.Cell(26).GetString(),
+                                PurchaseDetails = new List<PurchaseDetail>()
                             };
-                            purchaseHeader.PurchaseDetails = new List<PurchaseDetail>();
-                            purchaseHeader.PurchaseDetails.Add(new PurchaseDetail
-                            {
-                                goodsTypeId = int.Parse(row.Cell(27).GetString().Split('-')[0].Trim()), // GoodsTypeId from "ID - Name"
-                                Goods_ServiceDesc = row.Cell(28).GetString(),
-                                HsnSac = row.Cell(29).GetString(),
-                                Quantity = Convert.ToInt32(row.Cell(30).ToString()),
-                                Rate = Convert.ToDecimal(row.Cell(31).ToString()),
-                                UomPer = row.Cell(32).GetString(),
-                                DiscountPercent = Convert.ToDecimal(row.Cell(33).GetDouble()),
-                                Amount = Convert.ToDecimal(row.Cell(34).GetDouble()),
-                                PurchaseHeaderId = purchaseHeader.Id
-                            });
-                            purchaseHeaders.Add(purchaseHeader);
 
+                            decimal totalBillAmount = 0;
+
+                            // Add all details for this header
+                            foreach (var row in group)
+                            {
+                                var goodsCell = row.Cell(27).GetString();
+                                int goodsTypeId = int.TryParse(goodsCell.Split('-')[0].Trim(), out var gId) ? gId : 0;
+
+                                var detail = new PurchaseDetail
+                                {
+                                    goodsTypeId = goodsTypeId,
+                                    Goods_ServiceDesc = row.Cell(28).GetString(),
+                                    HsnSac = row.Cell(29).GetString(),
+                                    Quantity = row.Cell(30).GetValue<int>(),
+                                    Rate = row.Cell(31).GetValue<decimal>(),
+                                    UomPer = row.Cell(32).GetString(),
+                                    DiscountPercent = row.Cell(33).GetValue<decimal>(),
+                                    Amount = row.Cell(34).GetValue<decimal>(),
+                                    Gst = row.Cell(35).GetValue<decimal>(),
+                                    Total = row.Cell(36).GetValue<decimal>(),
+                                    PurchaseHeaderId = purchaseHeader.Id
+                                };
+
+                                purchaseHeader.PurchaseDetails.Add(detail);
+                                totalBillAmount += detail.Total; // accumulate row totals
+                            }
+
+                            // Assign grand total to header
+                            purchaseHeader.totalBillAmount = totalBillAmount;
+                            purchaseHeaders.Add(purchaseHeader);
                         }
                     }
                 }
 
-                // Save all headers
+                // Save all headers and details
                 _context.PurchaseHeaders.AddRange(purchaseHeaders);
                 await _context.SaveChangesAsync();
 
