@@ -30,7 +30,7 @@ const [goodsTypeId, setGoodsTypeId] = useState("");
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://localhost:5001/api/Purchase/downloadPurchaseTemplate", {
+      const response = await fetch("https://localhost:5001/api/Purchase/uploadPurchases", {
         method: "POST",
         body: formData,
       });
@@ -339,7 +339,7 @@ const getBillAmount = () => {
           accept=".xlsx,.xls"
           onChange={handleFileChange}
         />
-        <button onClick={handleUpload} style={{ marginLeft: "10px" }}>
+        <button type="button" onClick={handleUpload} style={{ marginLeft: "10px" }}>
           Upload Purchase Excel
         </button>
       </div>
