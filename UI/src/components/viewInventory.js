@@ -1,54 +1,45 @@
 import React, { useEffect, useState } from "react";
+import "../css/viewInventory.css"; // optional CSS file
+import noImage from "../images/noImage.jpg";
 
 const ViewInventory = () => {
-  const [inventories, setInventories] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Call your API
-        const response = await fetch("https://localhost:5001/api/Inventory/export", {
-          method: "POST", // since your export endpoint is POST
-        });
-
+    // Call your API using POST
+    fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({}) // send empty or required payload
+    })
+      .then(response => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
-        // Parse JSON response
-        const data = await response.json();
-        setInventories(data);
-      } catch (error) {
-        console.error("Error fetching inventory list:", error);
-      }
-    };
-
-    fetchData();
+        return response.json();
+      })
+      .then(data => setProducts(data))
+      .catch(error => console.error("Error fetching stock:", error));
   }, []);
 
   return (
-    <div>
-      <h2>Inventory List</h2>
-      <table border="1" cellPadding="8" style={{ borderCollapse: "collapse", width: "100%" }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Goods Type</th>
-            <th>Goods Service Desc</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventories.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.goodsType}</td>
-              <td>{item.goodsServiceDesc}</td>
-              <td>{item.price ?? "N/A"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid-container">
+      {products.map((item, index) => (
+        <div key={index} className="tile">
+          {/* Dummy image */}
+          <img
+            src={noImage}
+            className="tile-image"
+          />
+          {/* Details */}
+          <div className="tile-details">
+            <h3>Category :  {item.goodsType}</h3>
+            <p>Product : {item.goods_ServiceDesc}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
