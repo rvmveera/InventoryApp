@@ -3,6 +3,7 @@ using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Reporting.NETCore;
 
 namespace InventoryAPI.Controllers
 {
@@ -87,6 +88,26 @@ namespace InventoryAPI.Controllers
                 await transaction.RollbackAsync();
                 return StatusCode(500, $"Error saving invoice: {ex.Message}");
             }
+        }
+
+        [HttpGet("GetEstimationReport")]
+        public IActionResult GetSalesReport()
+        {
+            // Path to RDLC file
+            string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptEstimation.rdlc");
+
+            // Prepare LocalReport
+            LocalReport report = new LocalReport();
+            report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
+
+            // Example: in-memory dataset (no DB call)
+          
+
+            // Render as PDF
+            byte[] pdfBytes = report.Render("PDF");
+
+            // Return as file
+            return File(pdfBytes, "application/pdf", "estimationReport.pdf");
         }
     }
 }
