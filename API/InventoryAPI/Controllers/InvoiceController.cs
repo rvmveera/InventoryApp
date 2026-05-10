@@ -90,25 +90,57 @@ namespace InventoryAPI.Controllers
             }
         }
 
-        [HttpGet("GetEstimationReport")]
-        public IActionResult GetSalesReport()
+        [HttpPost("GetEstimationReport")]
+        public IActionResult GetEstimationReport([FromBody] EstimationReportRequest request)
         {
-            // Path to RDLC file
             string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptEstimation.rdlc");
 
-            // Prepare LocalReport
             LocalReport report = new LocalReport();
             report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
 
-            // Example: in-memory dataset (no DB call)
-          
+            // Bind the list of EstimateDetails
+            report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request.EstimateDetails));
+            //report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request));
 
-            // Render as PDF
+            request.EstimateFor = "HSC - Eswaramoorthipalayam";
+
+            // Bind single-value objects as parameters
+            var parameters = new[]
+            {
+        new ReportParameter("EstimateFor", request.EstimateFor),
+        new ReportParameter("EstimateDate", request.EstimateDate.ToString("dd-MMM-yyyy")),
+        new ReportParameter("BankName", request.BankName),
+        new ReportParameter("BankAccountNo", request.BankAccountNo),
+        new ReportParameter("BankIfscCode", request.BankIfscCode),
+        new ReportParameter("BankAccountHolderName", request.BankAccountHolderName),
+        new ReportParameter("GSTNumber", request.GSTNumber)
+    };
+            report.SetParameters(parameters);
+
             byte[] pdfBytes = report.Render("PDF");
-
-            // Return as file
             return File(pdfBytes, "application/pdf", "estimationReport.pdf");
         }
     }
 }
 
+
+
+
+/*
+ * 
+ * {
+estimateFor:
+estimateDate:
+estimateDetails :[
+{
+Sno, productName, hsn, quantity, unit, priceUnit, amount
+},
+{
+Sno, productName, hsn, quantity, unit, priceUnit, amount
+}],
+bankDetails:{
+name, accountNo, ifscCode, accountholderName, GST
+}
+}
+ * 
+ */
