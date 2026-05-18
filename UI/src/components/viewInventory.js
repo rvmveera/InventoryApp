@@ -42,6 +42,8 @@ const ViewInventory = () => {
 
   return (
     <div>
+<h2>Product Inventory</h2>
+
       {/* Dropdown on top */}
       <select
         value={selectedCategory}
