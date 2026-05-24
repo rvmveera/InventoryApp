@@ -102,20 +102,23 @@ namespace InventoryAPI.Controllers
             report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request.EstimateDetails));
             //report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request));
 
-            request.EstimateFor = "HSC - Eswaramoorthipalayam";
+           // request.EstimateFor = "HSC - Eswaramoorthipalayam";
 
             // Bind single-value objects as parameters
+           
             var parameters = new[]
-            {
-        new ReportParameter("EstimateFor", request.EstimateFor),
-        new ReportParameter("EstimateDate", request.EstimateDate.ToString("dd-MMM-yyyy")),
-        new ReportParameter("BankName", request.BankName),
-        new ReportParameter("BankAccountNo", request.BankAccountNo),
-        new ReportParameter("BankIfscCode", request.BankIfscCode),
-        new ReportParameter("BankAccountHolderName", request.BankAccountHolderName),
-        new ReportParameter("GSTNumber", request.GSTNumber)
-    };
+{
+    new ReportParameter("EstimateFor", request.EstimateFor ?? string.Empty),
+    new ReportParameter("EstimateDate", request.EstimateDate.ToString("dd-MMM-yyyy")),
+    new ReportParameter("BankName", request?.BankName ?? string.Empty),
+    new ReportParameter("BankAccountNo", request?.BankAccountNo ?? string.Empty),
+    new ReportParameter("BankIfscCode", request?.BankIfscCode ?? string.Empty),
+    new ReportParameter("BankAccountHolderName", request?.BankAccountHolderName ?? string.Empty),
+    new ReportParameter("GSTNumber", request?.GSTNumber ?? string.Empty)
+};
             report.SetParameters(parameters);
+
+           
 
             byte[] pdfBytes = report.Render("PDF");
             return File(pdfBytes, "application/pdf", "estimationReport.pdf");
