@@ -25,8 +25,19 @@ namespace InventoryAPI.Data
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         
         public DbSet<InventoryMaster> InventoryMaster { get; set; }
+        public DbSet<tblEstimateHeader> EstimateHeaders { get; set; }
+        public DbSet<tblEstimateDetails> EstimateDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder b)
         {
+            b.Entity<tblEstimateHeader>()
+        .ToTable("tblEstimateHeader");   // ✅ map to actual table
+
+            b.Entity<tblEstimateDetails>()
+                .ToTable("tblEstimateDetails");  // ✅ map to actual table
+            b.Entity<tblEstimateHeader>()
+            .HasMany(h => h.EstimateDetails)
+            .WithOne(d => d.EstimateHeader)
+            .HasForeignKey(d => d.estimateHeaderId);
 
             b.Entity<User>().ToTable("tblUserRegistration");
             b.Entity<User>(e =>

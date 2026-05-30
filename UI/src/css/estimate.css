@@ -3,21 +3,6 @@
   font-family: Arial, sans-serif;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: inline-block;
-  width: 150px;
-  font-weight: bold;
-}
-
-.form-group input {
-  padding: 5px;
-  width: 250px;
-}
-
 .details-grid {
   width: 100%;
   border-collapse: collapse;
@@ -50,7 +35,6 @@
   border: none;
   cursor: pointer;
 }
-
 .add-btn:hover {
   background-color: #45a049;
 }
@@ -62,7 +46,75 @@
   border: none;
   cursor: pointer;
 }
-
 .remove-btn:hover {
   background-color: #c0392b;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.form-group-inline {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-scroll {
+  max-height: 300px; /* adjust as needed */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+/* Base button style */
+.action-buttons button {
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Create Estimate button */
+.create-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+.create-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* Cancel button */
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+.cancel-btn:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* Print button */
+.print-btn {
+  background-color: #2196F3;
+  color: white;
+}
+.print-btn:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* Layout for buttons */
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end; /* right align */
+  gap: 15px;
 }

@@ -100,10 +100,7 @@ namespace InventoryAPI.Controllers
 
             // Bind the list of EstimateDetails
             report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request.EstimateDetails));
-            //report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request));
-
-           // request.EstimateFor = "HSC - Eswaramoorthipalayam";
-
+            
             // Bind single-value objects as parameters
            
             var parameters = new[]
@@ -145,5 +142,36 @@ bankDetails:{
 name, accountNo, ifscCode, accountholderName, GST
 }
 }
- * 
+ *
+ *
+ *{
+  "estimateFor": "HSC EswaraMoorthy",
+  "estimateDate": "2026-05-24",
+  "estimateDetails": [
+    {
+      "sno": 1,
+      "productName": "BERO",
+      "hsn": "HSN001",
+      "quantity": 1,
+      "unit": "Pc",
+      "priceUnit": 10000,
+      "amount": 10000
+    },
+    {
+      "sno": 2,
+      "productName": "TABLES",
+      "hsn": "HSN002",
+      "quantity": 2,
+      "unit": "Pc",
+      "priceUnit": 7000,
+      "amount": 14000
+    }
+  ],
+  "bankName": "string",
+  "bankAccountNo": "string",
+  "bankIfscCode": "string",
+  "bankAccountHolderName": "string",
+  "gstNumber": "string"
+}
+ *
  */
