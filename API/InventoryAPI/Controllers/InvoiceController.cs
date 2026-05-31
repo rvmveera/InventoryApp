@@ -90,36 +90,7 @@ namespace InventoryAPI.Controllers
             }
         }
 
-        [HttpPost("GetEstimationReport")]
-        public IActionResult GetEstimationReport([FromBody] EstimationReportRequest request)
-        {
-            string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptEstimation.rdlc");
-
-            LocalReport report = new LocalReport();
-            report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
-
-            // Bind the list of EstimateDetails
-            report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", request.EstimateDetails));
-            
-            // Bind single-value objects as parameters
-           
-            var parameters = new[]
-{
-    new ReportParameter("EstimateFor", request.EstimateFor ?? string.Empty),
-    new ReportParameter("EstimateDate", request.EstimateDate.ToString("dd-MMM-yyyy")),
-    new ReportParameter("BankName", request?.BankName ?? string.Empty),
-    new ReportParameter("BankAccountNo", request?.BankAccountNo ?? string.Empty),
-    new ReportParameter("BankIfscCode", request?.BankIfscCode ?? string.Empty),
-    new ReportParameter("BankAccountHolderName", request?.BankAccountHolderName ?? string.Empty),
-    new ReportParameter("GSTNumber", request?.GSTNumber ?? string.Empty)
-};
-            report.SetParameters(parameters);
-
-           
-
-            byte[] pdfBytes = report.Render("PDF");
-            return File(pdfBytes, "application/pdf", "estimationReport.pdf");
-        }
+       
     }
 }
 

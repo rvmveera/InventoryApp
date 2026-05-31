@@ -2,15 +2,7 @@
 {
     public class EstimationReportRequest
     {
-        public string EstimateFor { get; set; }
-        public DateTime EstimateDate { get; set; }
-        public List<EstimateDetail> EstimateDetails { get; set; }
-        //public BankDetails BankDetails { get; set; }
-        public string BankName { get; set; }
-        public string BankAccountNo { get; set; }
-        public string BankIfscCode { get; set; }
-        public string BankAccountHolderName { get; set; }
-        public string GSTNumber { get; set; }
+        public string EstimateNumber { get; set; }
     }
 
     public class EstimateDetail

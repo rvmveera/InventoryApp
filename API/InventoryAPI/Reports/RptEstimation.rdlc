@@ -267,7 +267,7 @@
           </Textbox>
           <Line Name="Line4">
             <Top>4.1052cm</Top>
-            <Left>7.85137cm</Left>
+            <Left>9.44598cm</Left>
             <Height>1.10067cm</Height>
             <Width>0cm</Width>
             <ZIndex>8</ZIndex>
@@ -314,7 +314,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Estimate Date: " &amp; Parameters!EstimateDate.Value</Value>
+                    <Value>=Parameters!EstimateDate.Value</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                     </Style>
@@ -1001,7 +1001,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Amount.Value)</Value>
+                                  <Value>=Parameters!EstimateTotalAmount.Value</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1073,9 +1073,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Estimation No : EST001</Value>
+                    <Value>="Estimate No: " &amp; Parameters!EstimateNumber.Value</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1086,9 +1087,9 @@
             </Paragraphs>
             <rd:DefaultName>EstimateDate</rd:DefaultName>
             <Top>4.1052cm</Top>
-            <Left>11.1252cm</Left>
+            <Left>9.62237cm</Left>
             <Height>0.2825cm</Height>
-            <Width>6.2465cm</Width>
+            <Width>7.74933cm</Width>
             <ZIndex>12</ZIndex>
             <Style>
               <Border>
@@ -1140,7 +1141,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Twenty Two Thousand only</Value>
+                    <Value>=Parameters!TotalAmountInWords.Value</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                     </Style>
@@ -1153,7 +1154,7 @@
             <Top>7.76144cm</Top>
             <Left>0.3175cm</Left>
             <Height>0.6cm</Height>
-            <Width>7.53387cm</Width>
+            <Width>17.0542cm</Width>
             <ZIndex>14</ZIndex>
             <Style>
               <Border>
@@ -1191,25 +1192,17 @@
       <DataType>DateTime</DataType>
       <Prompt>Estimate Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="BankName">
+    <ReportParameter Name="EstimateNumber">
       <DataType>String</DataType>
-      <Prompt>Bank Name</Prompt>
+      <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
-    <ReportParameter Name="BankAccountNo">
+    <ReportParameter Name="EstimateTotalAmount">
       <DataType>String</DataType>
-      <Prompt>Account Number</Prompt>
+      <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
-    <ReportParameter Name="BankIfscCode">
+    <ReportParameter Name="TotalAmountInWords">
       <DataType>String</DataType>
-      <Prompt>IFSC Code</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="BankAccountHolderName">
-      <DataType>String</DataType>
-      <Prompt>Account Holder Name</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="GSTNumber">
-      <DataType>String</DataType>
-      <Prompt>GST</Prompt>
+      <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>
   
