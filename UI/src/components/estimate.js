@@ -8,18 +8,17 @@ function Estimate() {
   ];
 
   const [estimateFor, setEstimateFor] = useState("");
-  const [estimateNumber, setEstimateNumber] = useState("EST-001"); // example default
+  const [estimateNumber, setEstimateNumber] = useState(""); // will be set after API call
   const [date, setDate] = useState("");
   const [details, setDetails] = useState(initialDetails);
+  const [showPrintButton, setShowPrintButton] = useState(false);
 
   // Fetch product options once
   const [productOptions, setProductOptions] = useState([]);
   useEffect(() => {
     fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({})
     })
       .then(res => res.json())
@@ -47,10 +46,7 @@ function Estimate() {
   };
 
   const addRow = () => {
-    setDetails([
-      ...details,
-      { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", amount: "" }
-    ]);
+    setDetails([...details, { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", amount: "" }]);
   };
 
   const removeRow = (index) => {
@@ -60,54 +56,70 @@ function Estimate() {
 
   const resetForm = () => {
     setEstimateFor("");
-    //setEstimateNumber("EST-001"); // reset to default
+    setEstimateNumber("");
     setDate("");
     setDetails(initialDetails);
+    setShowPrintButton(false);
   };
 
-  const printEstimate = () => {
-    window.print();
-  };
+  const createEstimate = async () => {
+    try {
+      const payload = {
+        estimateFor,
+        estimateDate: date,
+        estimateNumber: "", // backend auto-generates
+        estimateDetails: details.map(d => ({
+          inventoryId: d.product,
+          hsnNumber: d.hsnNumber,
+          quantity: parseInt(d.quantity) || 0,
+          uom: d.unit,
+          pricePerUnit: parseFloat(d.priceUnit) || 0,
+          amount: parseFloat(d.amount) || 0
+        }))
+      };
 
-const createEstimate = async () => {
-  try {
-    const payload = {
-      estimateFor: estimateFor,
-      estimateDate: date,
-      estimateNumber : "",
-      // estimateNumber is auto-generated in backend, so don't send it
-      estimateDetails: details.map(d => ({
-        inventoryId: d.product,   // product dropdown stores inventoryId
-        hsnNumber: d.hsnNumber,
-        quantity: parseInt(d.quantity) || 0,
-        uom: d.unit,
-        pricePerUnit: parseFloat(d.priceUnit) || 0,
-        amount: parseFloat(d.amount) || 0
-      }))
-    };
+      const response = await fetch("https://localhost:5001/api/Sales/CreateEstimate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    const response = await fetch("https://localhost:5001/api/Sales/CreateEstimate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
+      if (!response.ok) throw new Error("Failed to create estimate");
 
-    if (!response.ok) {
-      throw new Error("Failed to create estimate");
+      const result = await response.json();
+
+      // 🔹 Show popup with estimate number
+      alert(`Estimate created successfully! Number: ${result.estimateNumber}`);
+
+      // 🔹 Save estimate number in state
+      setEstimateNumber(result.estimateNumber);
+      setShowPrintButton(true);
+    } catch (error) {
+      console.error("Error creating estimate:", error);
+      alert("Error creating estimate. Please try again.");
     }
+  };
 
-    const result = await response.json();
-    alert(`Estimate created successfully! Number: ${result.estimateNumber}`);
-    resetForm(); // clear form after success
-  } catch (error) {
-    console.error("Error creating estimate:", error);
-    alert("Error creating estimate. Please try again.");
-  }
-};
+  const printEstimate = async () => {
+    try {
+      const reportResponse = await fetch("https://localhost:5001/api/Sales/GetEstimationReport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(estimateNumber)
+      });
 
+      if (!reportResponse.ok) throw new Error("Failed to generate report");
 
+      const blob = await reportResponse.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // 🔹 Open PDF in new tab for printing
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error printing estimate:", error);
+      alert("Error printing estimate. Please try again.");
+    }
+  };
 
   return (
     <div className="estimate-container">
@@ -117,29 +129,17 @@ const createEstimate = async () => {
       <div className="form-row">
         <div className="form-group-inline">
           <label>Estimate For:</label>
-          <input
-            type="text"
-            value={estimateFor}
-            onChange={(e) => setEstimateFor(e.target.value)}
-          />
+          <input type="text" value={estimateFor} onChange={(e) => setEstimateFor(e.target.value)} />
         </div>
 
         <div className="form-group-inline">
           <label>Estimate Number:</label>
-          <input
-            type="text"
-            value={estimateNumber}
-            readOnly
-          />
+          <input type="text" value={estimateNumber} readOnly />
         </div>
 
         <div className="form-group-inline">
           <label>Date:</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
       </div>
 
@@ -166,56 +166,28 @@ const createEstimate = async () => {
                   <Select
                     options={productOptions}
                     value={productOptions.find(opt => opt.value === row.product) || null}
-                    onChange={(selected) =>
-                      handleDetailChange(index, "product", selected ? selected.value : "")
-                    }
+                    onChange={(selected) => handleDetailChange(index, "product", selected ? selected.value : "")}
                     placeholder="Select or type product..."
                     isClearable
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    value={row.hsnNumber}
-                    onChange={(e) =>
-                      handleDetailChange(index, "hsnNumber", e.target.value)
-                    }
-                  />
+                  <input type="text" value={row.hsnNumber} onChange={(e) => handleDetailChange(index, "hsnNumber", e.target.value)} />
                 </td>
                 <td>
-                  <input
-                    type="number"
-                    value={row.quantity}
-                    onChange={(e) =>
-                      handleDetailChange(index, "quantity", e.target.value)
-                    }
-                  />
+                  <input type="number" value={row.quantity} onChange={(e) => handleDetailChange(index, "quantity", e.target.value)} />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    value={row.unit}
-                    onChange={(e) =>
-                      handleDetailChange(index, "unit", e.target.value)
-                    }
-                  />
+                  <input type="text" value={row.unit} onChange={(e) => handleDetailChange(index, "unit", e.target.value)} />
                 </td>
                 <td>
-                  <input
-                    type="number"
-                    value={row.priceUnit}
-                    onChange={(e) =>
-                      handleDetailChange(index, "priceUnit", e.target.value)
-                    }
-                  />
+                  <input type="number" value={row.priceUnit} onChange={(e) => handleDetailChange(index, "priceUnit", e.target.value)} />
                 </td>
                 <td>
                   <input type="text" value={row.amount} readOnly />
                 </td>
                 <td>
-                  <button className="remove-btn" onClick={() => removeRow(index)}>
-                    Remove
-                  </button>
+                  <button className="remove-btn" onClick={() => removeRow(index)}>Remove</button>
                 </td>
               </tr>
             ))}
@@ -229,7 +201,9 @@ const createEstimate = async () => {
       <div className="action-buttons">
         <button className="create-btn" onClick={createEstimate}>Create Estimate</button>
         <button className="cancel-btn" onClick={resetForm}>Cancel</button>
-        <button className="print-btn" onClick={printEstimate}>Print Estimate</button>
+        {showPrintButton && (
+          <button className="print-btn" onClick={printEstimate}>Print Estimate</button>
+        )}
       </div>
     </div>
   );
