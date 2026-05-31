@@ -60,7 +60,7 @@ function Estimate() {
 
   const resetForm = () => {
     setEstimateFor("");
-    setEstimateNumber("EST-001"); // reset to default
+    //setEstimateNumber("EST-001"); // reset to default
     setDate("");
     setDetails(initialDetails);
   };
@@ -68,6 +68,46 @@ function Estimate() {
   const printEstimate = () => {
     window.print();
   };
+
+const createEstimate = async () => {
+  try {
+    const payload = {
+      estimateFor: estimateFor,
+      estimateDate: date,
+      estimateNumber : "",
+      // estimateNumber is auto-generated in backend, so don't send it
+      estimateDetails: details.map(d => ({
+        inventoryId: d.product,   // product dropdown stores inventoryId
+        hsnNumber: d.hsnNumber,
+        quantity: parseInt(d.quantity) || 0,
+        uom: d.unit,
+        pricePerUnit: parseFloat(d.priceUnit) || 0,
+        amount: parseFloat(d.amount) || 0
+      }))
+    };
+
+    const response = await fetch("https://localhost:5001/api/Sales/CreateEstimate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create estimate");
+    }
+
+    const result = await response.json();
+    alert(`Estimate created successfully! Number: ${result.estimateNumber}`);
+    resetForm(); // clear form after success
+  } catch (error) {
+    console.error("Error creating estimate:", error);
+    alert("Error creating estimate. Please try again.");
+  }
+};
+
+
 
   return (
     <div className="estimate-container">
@@ -187,7 +227,7 @@ function Estimate() {
 
       {/* Action buttons */}
       <div className="action-buttons">
-        <button className="create-btn">Create Estimate</button>
+        <button className="create-btn" onClick={createEstimate}>Create Estimate</button>
         <button className="cancel-btn" onClick={resetForm}>Cancel</button>
         <button className="print-btn" onClick={printEstimate}>Print Estimate</button>
       </div>
