@@ -105,7 +105,7 @@ function Estimate() {
       const reportResponse = await fetch("https://localhost:5001/api/Sales/GetEstimationReport", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(estimateNumber)
+        body: JSON.stringify({ estimateNumber })
       });
 
       if (!reportResponse.ok) throw new Error("Failed to generate report");
@@ -168,7 +168,7 @@ function Estimate() {
                     value={productOptions.find(opt => opt.value === row.product) || null}
                     onChange={(selected) => handleDetailChange(index, "product", selected ? selected.value : "")}
                     placeholder="Select or type product..."
-                    isClearable
+                    isClearable menuPortalTarget={document.body}
                   />
                 </td>
                 <td>
