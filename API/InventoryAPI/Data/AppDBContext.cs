@@ -94,7 +94,7 @@ namespace InventoryAPI.Data
        .ToTable("tblInvoiceHeader");
 
             b.Entity<InvoiceDetail>()
-                .ToTable("tblInvoiceDetail");
+                .ToTable("tblInvoiceDetails");
 
             b.Entity<InvoiceDetail>()
                 .HasOne(d => d.InvoiceHeader)
