@@ -12,6 +12,7 @@ import Estimate from "./estimate";
 import Invoice from "./invoice";
 import AddInventoryPrice from "./addInventoryPrice";
 import ViewInventory from "./viewInventory";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Home() {
   const [inventoryOpen, setInventoryOpen] = useState(false);
