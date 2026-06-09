@@ -162,12 +162,29 @@ namespace InventoryAPI.Controllers
 
             try
             {
+
+                // Generate next invoice number
+                var lastInvoice = await _context.InvoiceHeaders
+                    .OrderByDescending(h => h.Id)
+                    .FirstOrDefaultAsync();
+
+                string nextInvoiceNumber;
+                if (lastInvoice == null || string.IsNullOrEmpty(lastInvoice.InvoiceNumber))
+                {
+                    nextInvoiceNumber = "INV001";
+                }
+                else
+                {
+                    // Extract numeric part
+                    var numericPart = int.Parse(lastInvoice.InvoiceNumber.Substring(3));
+                    nextInvoiceNumber = $"INV{(numericPart + 1).ToString("D3")}";
+                }
                 // Save header
                 var header = new InvoiceHeader
                 {
                     BuyerName = invoiceDto.BuyerName,
                     BuyerAddress = invoiceDto.BuyerAddress,
-                    InvoiceNumber = invoiceDto.InvoiceNumber,
+                    InvoiceNumber = nextInvoiceNumber,
                     InvoiceDate = invoiceDto.InvoiceDate,
                     ConsigneeId = invoiceDto.ConsigneeId,
                     InvoiceTotal = invoiceDto.InvoiceTotal
@@ -225,6 +242,81 @@ namespace InventoryAPI.Controllers
                 return StatusCode(500, $"Error saving invoice: {ex.Message}");
             }
         }
+
+        [HttpPost("GetInvoiceReport")]
+        public async Task<IActionResult> GetInvoiceReport([FromBody] InvoiceReportRequest request)
+        {
+            try
+            {
+                string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptInvoice.rdlc");
+
+                LocalReport report = new LocalReport();
+                report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
+
+                // 🔹 Fetch header + details from DB
+                var header = await _context.EstimateHeaders
+                    .FirstOrDefaultAsync(h => h.EstimateNumber == request.InvoiceNumber);
+
+                if (header == null)
+                    return NotFound($"Invoice {request.InvoiceNumber} not found.");
+                var detailsRaw = await (from d in _context.InvoiceDetails
+                                        join im in _context.InventoryMaster
+                                            on d.InventoryId equals im.id
+                                        where d.InvoiceNumber == request.InvoiceNumber
+                                        select new
+                                        {
+                                            d.Id,
+                                            d.InvoiceHeaderId,
+                                            d.InventoryId,
+                                            ProductName = im.goods_serviceDesc,
+                                            Hsn = d.HsnNumber,
+                                            d.Quantity,
+                                            Unit = d.Unit,
+                                            PriceUnit = d.PricePerUnit,
+                                            d.NetAmount
+                                        }).ToListAsync();
+
+                // 🔹 Add S.No sequentially
+                var details = detailsRaw.Select((x, index) => new
+                {
+                    Sno = index + 1,
+                    x.ProductName,
+                    x.Hsn,
+                    x.Quantity,
+                    x.Unit,
+                    x.PriceUnit,
+                    Amount = x.NetAmount
+                }).ToList();
+
+                // 🔹 Bind details dataset
+                report.DataSources.Add(new ReportDataSource("InvoiceDetailsDataSet", details));
+                string totalAmountInWords = NumberToWordsConverter.ConvertAmountToWords(header.EstimateTotalAmount);
+
+                // 🔹 Bind header parameters
+                var parameters = new[]
+                {
+        new ReportParameter("EstimateFor", header.EstimateFor ?? string.Empty),
+        new ReportParameter("EstimateDate", header.EstimateDate.ToString("dd-MMM-yyyy")),
+        new ReportParameter("EstimateNumber", header.EstimateNumber ?? string.Empty),
+        new ReportParameter("EstimateTotalAmount", header.EstimateTotalAmount.ToString("N2")),
+        new ReportParameter("TotalAmountInWords", totalAmountInWords)
+                };
+
+                report.SetParameters(parameters);
+
+                // 🔹 Render PDF
+                byte[] pdfBytes = report.Render("PDF");
+                return File(pdfBytes, "application/pdf", $"{request.InvoiceNumber}_Report.pdf");
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error creating estimate", error = ex.Message });
+
+            }
+        }
+
+
     }
 }
 

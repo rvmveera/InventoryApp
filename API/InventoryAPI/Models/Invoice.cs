@@ -25,7 +25,9 @@
         public decimal Gst { get; set; }
         public decimal Discount { get; set; }
         public decimal NetAmount { get; set; }
-
+        public decimal cgstPercent { get; set; }
+        public decimal sgstPercent { get; set; }
+        public string InvoiceNumber { get; set; }
         public InvoiceHeader InvoiceHeader { get; set; }
     }
 }
