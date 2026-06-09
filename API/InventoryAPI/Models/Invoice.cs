@@ -28,6 +28,7 @@
         public decimal cgstPercent { get; set; }
         public decimal sgstPercent { get; set; }
         public string InvoiceNumber { get; set; }
+        public decimal taxAmount { get; set; }
         public InvoiceHeader InvoiceHeader { get; set; }
     }
 }

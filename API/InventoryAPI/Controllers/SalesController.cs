@@ -254,8 +254,8 @@ namespace InventoryAPI.Controllers
                 report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
 
                 // 🔹 Fetch header + details from DB
-                var header = await _context.EstimateHeaders
-                    .FirstOrDefaultAsync(h => h.EstimateNumber == request.InvoiceNumber);
+                var header = await _context.InvoiceHeaders
+                    .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
 
                 if (header == null)
                     return NotFound($"Invoice {request.InvoiceNumber} not found.");
@@ -272,7 +272,9 @@ namespace InventoryAPI.Controllers
                                             Hsn = d.HsnNumber,
                                             d.Quantity,
                                             Unit = d.Unit,
+                                            d.Gst,
                                             PriceUnit = d.PricePerUnit,
+                                            d.taxAmount,
                                             d.NetAmount
                                         }).ToListAsync();
 
@@ -285,20 +287,23 @@ namespace InventoryAPI.Controllers
                     x.Quantity,
                     x.Unit,
                     x.PriceUnit,
+                    cgst = x.Gst / 2,
+                    sgst = x.Gst / 2,
+                    totalTax = x.taxAmount,
                     Amount = x.NetAmount
                 }).ToList();
 
                 // 🔹 Bind details dataset
                 report.DataSources.Add(new ReportDataSource("InvoiceDetailsDataSet", details));
-                string totalAmountInWords = NumberToWordsConverter.ConvertAmountToWords(header.EstimateTotalAmount);
+                string totalAmountInWords = NumberToWordsConverter.ConvertAmountToWords(header.InvoiceTotal);
 
                 // 🔹 Bind header parameters
                 var parameters = new[]
                 {
-        new ReportParameter("EstimateFor", header.EstimateFor ?? string.Empty),
-        new ReportParameter("EstimateDate", header.EstimateDate.ToString("dd-MMM-yyyy")),
-        new ReportParameter("EstimateNumber", header.EstimateNumber ?? string.Empty),
-        new ReportParameter("EstimateTotalAmount", header.EstimateTotalAmount.ToString("N2")),
+        new ReportParameter("InvoiceFor", header.BuyerName ?? string.Empty),
+        new ReportParameter("InvoiceDate", header.InvoiceDate.ToString("dd-MMM-yyyy")),
+        new ReportParameter("InvoiceNumber", header.InvoiceNumber ?? string.Empty),
+        new ReportParameter("InvoiceTotalAmount", header.InvoiceTotal.ToString("N2")),
         new ReportParameter("TotalAmountInWords", totalAmountInWords)
                 };
 
