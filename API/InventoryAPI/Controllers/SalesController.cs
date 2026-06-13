@@ -287,9 +287,9 @@ namespace InventoryAPI.Controllers
                     x.Quantity,
                     x.Unit,
                     x.PriceUnit,
-                    cgst = x.Gst / 2,
-                    sgst = x.Gst / 2,
-                    totalTax = x.taxAmount,
+                    CGST = x.Gst / 2 + "%",
+                    SGST = x.Gst / 2 + "%",
+                    taxAmount = x.taxAmount,
                     Amount = x.NetAmount
                 }).ToList();
 

@@ -66,13 +66,13 @@
             long rupees = (long)Math.Floor(amount);
             int paise = (int)((amount - rupees) * 100);
 
-            string words = NumberToWords(rupees) + " Rupees";
+            string words = "Rupees " + NumberToWords(rupees);
 
             if (paise > 0)
             {
                 words += " and " + NumberToWords(paise) + " Paise";
             }
-
+            words += " only";
             return words;
         }
     }

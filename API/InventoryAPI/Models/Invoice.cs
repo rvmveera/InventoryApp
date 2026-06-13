@@ -19,7 +19,7 @@
         public int InvoiceHeaderId { get; set; }
         public int InventoryId { get; set; }
         public string HsnNumber { get; set; }
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
         public string Unit { get; set; }
         public decimal PricePerUnit { get; set; }
         public decimal Gst { get; set; }
