@@ -199,6 +199,7 @@ namespace InventoryAPI.Controllers
                     var detail = new InvoiceDetail
                     {
                         InvoiceHeaderId = header.Id,
+                        InvoiceNumber = header.InvoiceNumber,
                         InventoryId = detailDto.InventoryId,
                         HsnNumber = detailDto.HsnNumber,
                         Quantity = detailDto.Quantity,
@@ -234,7 +235,7 @@ namespace InventoryAPI.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(new { InvoiceId = header.Id, Message = "Invoice created successfully" });
+                return Ok(new { InvoiceNumber = header.InvoiceNumber, Message = "Invoice created successfully" });
             }
             catch (Exception ex)
             {
@@ -350,7 +351,7 @@ namespace InventoryAPI.Controllers
   "invoiceTotal": 1000,
   "details": [
     {
-      "inventoryId": 1,
+      "inventoryId": 1, 
       "hsnNumber": "HSN001",
       "quantity": 1,
       "unit": "PC",

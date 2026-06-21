@@ -30,7 +30,8 @@ useEffect(() => {
         value: item.inventoryId,          // numeric ID
         label: item.goods_ServiceDesc,    // product name
         gstPercent: item.gstPercent,
-        availableQty: item.availableQty 
+        availableQty: item.availableQty,
+        hsnNumber : item.hsnSac
       }));
       setProductOptions(mappedOptions);
     })
@@ -46,6 +47,7 @@ const handleDetailChange = (index, field, value) => {
   if (field === "product" && value) {
     newDetails[index].gst = value.gstPercent;
     newDetails[index].availableQty = value.availableQty;
+    newDetails[index].hsnNumber = value.hsnNumber
   }
 
   // Recalculate amount
@@ -76,6 +78,71 @@ const handleDetailChange = (index, field, value) => {
     const newDetails = details.filter((_, i) => i !== index);
     setDetails(newDetails);
   };
+
+
+  const handleSubmit = async () => {
+  const payload = buildInvoicePayload();
+  console.log("Submitting invoice:", payload);
+
+  try {
+    const response = await fetch("https://localhost:5001/api/Sales/CreateInvoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const invNo = result.invoiceNumber;
+    alert(`Invoice created successfully, Invoice Number: ${invNo}`);
+
+    // Now call the report API
+    const reportResponse = await fetch("https://localhost:5001/api/Sales/GetInvoiceReport", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ invoiceNumber: invNo })
+    });
+
+    if (!reportResponse.ok) {
+      throw new Error(`Report Error: ${reportResponse.status}`);
+    }
+
+    // If API returns a PDF blob
+    const blob = await reportResponse.blob();
+    const url = window.URL.createObjectURL(blob);
+    window.open(url, "_blank"); // opens the PDF in a new tab
+
+  } catch (error) {
+    console.error("Failed:", error);
+    alert("Failed to create invoice or generate report. Please try again.");
+  }
+};
+
+
+const buildInvoicePayload = () => {
+  return {
+    buyerName: invoiceFor,
+    buyerAddress,
+    invoiceNumber,
+    invoiceDate: new Date(date).toISOString(),   // ensure ISO format
+    consigneeId: 1,                              // set if you have consignee selection
+    invoiceTotal: details.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0),
+    details: details.map(d => ({
+      inventoryId: d.product?.value || 0,        // dropdown holds full option object
+      hsnNumber: d.hsnNumber,
+      quantity: parseFloat(d.quantity) || 0,
+      unit: d.unit,
+      pricePerUnit: parseFloat(d.priceUnit) || 0,
+      gst: parseFloat(d.gst) || 0,
+      discount: 0,                               // add discount field if needed
+      netAmount: parseFloat(d.amount) || 0
+    }))
+  };
+};
+
 
   return (
     <div className="invoice-container">
@@ -211,13 +278,11 @@ const handleDetailChange = (index, field, value) => {
       <button className="add-btn" onClick={addRow}>+ Add Row</button>
 
       <div className="submit-container">
-  <button
-    className="submit-btn"
-    onClick={() => console.log("Invoice submitted:", { invoiceFor, invoiceNumber, date, details })}
-  >
+  <button className="submit-btn" onClick={handleSubmit}>
     Submit Invoice
   </button>
 </div>
+
 
 
     </div>

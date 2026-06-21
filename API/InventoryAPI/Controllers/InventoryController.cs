@@ -168,5 +168,4 @@ public class InventoryController : ControllerBase
         return Ok("Data inserted/updated successfully.");
     }
 
-
 }
