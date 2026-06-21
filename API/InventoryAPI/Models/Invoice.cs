@@ -11,6 +11,7 @@
         public decimal InvoiceTotal { get; set; }
 
         public ICollection<InvoiceDetail> InvoiceDetails { get; set; }
+        public string Status { get; set; }
     }
 
     public class InvoiceDetail
@@ -30,5 +31,6 @@
         public string InvoiceNumber { get; set; }
         public decimal taxAmount { get; set; }
         public InvoiceHeader InvoiceHeader { get; set; }
+        public string Status { get; set; }
     }
 }

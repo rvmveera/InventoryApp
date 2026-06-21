@@ -1,0 +1,120 @@
+.return-invoice-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 13px; /* 🔹 reduced overall font size */
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 900px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 16px; /* 🔹 smaller title */
+}
+
+.form-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.btn-primary {
+  background: #6c757d; /* 🔹 neutral gray instead of blue */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 13px;
+}
+
+.btn-primary:hover {
+  background: #5a6268; /* darker gray on hover */
+}
+
+.alert.error {
+  background: #f8d7da;
+  color: #842029;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 12px; /* 🔹 smaller table font */
+}
+
+.styled-table th, .styled-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.styled-table th {
+  background: #e9ecef; /* 🔹 light gray header */
+  color: #333;
+  font-weight: 600;
+}
+
+.styled-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.styled-table tr:hover {
+  background: #f1f1f1;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 13px;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d; /* neutral gray */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 13px;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}

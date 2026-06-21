@@ -1,21 +1,35 @@
 .invoice-container {
-  padding: 20px;
+  max-width: 1000px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   font-family: Arial, sans-serif;
+  font-size: 13px; /* 🔹 reduced overall font size */
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .form-group label {
   display: inline-block;
   width: 150px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #444;
+  font-size: 13px;
 }
 
-.form-group input {
-  padding: 5px;
+.form-group input,
+.form-group textarea {
+  padding: 6px;
   width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
 }
 
 /* Scrollable table with only vertical scroll */
@@ -23,11 +37,11 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  font-size: 12px;       /* reduced font size */
-  display: block;        /* allow scroll */
-  max-height: 500px;     /* adjust height as needed */
-  overflow-y: auto;      /* vertical scroll only */
-  overflow-x: hidden;    /* disable horizontal scroll */
+  font-size: 12px;
+  display: block;
+  max-height: 400px;   /* 🔹 slightly smaller height */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .details-grid thead,
@@ -39,60 +53,71 @@
 
 .details-grid th,
 .details-grid td {
-  border: 1px solid #ccc;
-  padding: 6px;          /* reduced padding for compact look */
+  border: 1px solid #ddd;
+  padding: 6px;
   text-align: center;
-  font-size: 11px;       /* smaller font size for headers and cells */
+  font-size: 11px; /* 🔹 smaller font size */
 }
 
 .details-grid th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  background-color: #e9ecef; /* 🔹 neutral gray header */
+  color: #333;
+  font-weight: 600;
+}
+
+.details-grid tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.details-grid tr:hover {
+  background: #f1f1f1;
 }
 
 .details-grid input {
   width: 95%;
-  padding: 4px;          /* smaller input padding */
+  padding: 4px;
   box-sizing: border-box;
   font-size: 12px;
 }
 
 .details-grid button {
   font-size: 12px;
-  padding: 4px 8px;      /* smaller buttons */
+  padding: 4px 8px;
 }
 
 /* Add Row button */
 .add-btn {
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: #4caf50;
+  background-color: #6c757d; /* 🔹 neutral gray */
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 .add-btn:hover {
-  background-color: #45a049;
+  background-color: #5a6268;
 }
 
 /* Remove button */
 .remove-btn {
   padding: 5px 10px;
-  background-color: #e74c3c;
+  background-color: #dc3545;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 .remove-btn:hover {
-  background-color: #c0392b;
+  background-color: #b02a37;
 }
 
 /* Submit button container */
 .submit-container {
-  margin-top: 30px;      /* push it further down */
-  text-align: right;     /* align to the right */
+  margin-top: 20px;
+  text-align: center;
 }
 
 .submit-btn {
@@ -100,8 +125,9 @@
   background-color: #007bff;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .submit-btn:hover {
@@ -110,16 +136,13 @@
 
 /* React-select dropdown scroll */
 .react-select__menu {
-  max-height: 150px;     /* limit dropdown height */
-  overflow-y: auto;      /* vertical scroll */
+  max-height: 150px;
+  overflow-y: auto;
   font-size: 12px;
-}
-/* Ensure react-select dropdown menu renders above the grid */
-.react-select__menu {
-  z-index: 9999;         /* bring dropdown above table */
-  position: absolute;    /* overlay instead of being clipped */
+  z-index: 9999;
+  position: absolute;
 }
 
 .react-select__menu-portal {
-  z-index: 9999;         /* ensure portal menus are above everything */
+  z-index: 9999;
 }

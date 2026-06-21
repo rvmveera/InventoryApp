@@ -76,7 +76,7 @@ const [showReturnInvoice, setShowReturnInvoice] = useState(false);
     setShowInvoice(false);
   setShowAddInventoryPrice(false);
   setShowViewInventory(false);
-
+setShowReturnInvoice(false);
   };
 
   return (

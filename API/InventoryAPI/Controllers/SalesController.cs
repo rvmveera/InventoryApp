@@ -1,10 +1,11 @@
-﻿using InventoryAPI.Data;
+﻿using Azure.Core;
+using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
+using InventoryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Reporting.NETCore;
-using InventoryAPI.Services;
 
 namespace InventoryAPI.Controllers
 {
@@ -247,11 +248,7 @@ namespace InventoryAPI.Controllers
             }
         }
 
-        private InvoiceHeader GetInvoiceHeader(string strInvoiceNumber)
-        {
-            InvoiceHeader invoiceHeader = new InvoiceHeader();
-            return invoiceHeader;
-        }
+      
 
       
         [HttpPost("GetInvoiceReport")]
@@ -265,7 +262,7 @@ namespace InventoryAPI.Controllers
                 report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
 
                 // 🔹 Fetch header + details from DB
-                var header = await _context.InvoiceHeaders
+                var header =  await _context.InvoiceHeaders
                     .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
 
                 if (header == null)
@@ -340,8 +337,10 @@ namespace InventoryAPI.Controllers
             {
                 // 🔹 Fetch header
                 var header = await _context.InvoiceHeaders
-                    .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
+                    .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber && 
+                    h.Status != "R");
 
+              
                 if (header == null)
                     return NotFound(new { message = $"Invoice {request.InvoiceNumber} not found." });
 
@@ -401,6 +400,68 @@ namespace InventoryAPI.Controllers
                 return StatusCode(500, new { message = "Error fetching invoice details", error = ex.Message });
             }
         }
+        [HttpPost("ReturnInvoice")]
+        public async Task<IActionResult> ReturnInvoice([FromBody] ReturnInvoiceRequest request)
+        {
+            if (string.IsNullOrEmpty(request.InvoiceNumber))
+                return BadRequest("Invoice number is required.");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // 🔹 Fetch header
+                var header = await _context.InvoiceHeaders
+                    .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
+
+                if (header == null)
+                    return NotFound($"Invoice {request.InvoiceNumber} not found.");
+
+                // 🔹 Mark header as Returned
+                header.Status = "R";
+                _context.InvoiceHeaders.Update(header);
+
+                // 🔹 Fetch details
+                var details = await _context.InvoiceDetails
+                    .Where(d => d.InvoiceNumber == request.InvoiceNumber)
+                    .ToListAsync();
+
+                if (!details.Any())
+                    return NotFound($"No details found for invoice {request.InvoiceNumber}.");
+
+                foreach (var detail in details)
+                {
+                    // Mark detail as Returned
+                    detail.Status = "R";
+                    _context.InvoiceDetails.Update(detail);
+
+                    // Update inventory qty
+                    var inventory = await _context.InventoryMaster
+                        .FirstOrDefaultAsync(i => i.id == detail.InventoryId);
+
+                    if (inventory == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return BadRequest($"Inventory item {detail.InventoryId} not found.");
+                    }
+
+                    inventory.availableQty += detail.Quantity;
+                    _context.InventoryMaster.Update(inventory);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { Message = $"Invoice {request.InvoiceNumber} returned successfully." });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, new { message = "Error returning invoice", error = ex.Message });
+            }
+        }
+
+
     }
 }
 
