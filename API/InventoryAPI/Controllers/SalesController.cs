@@ -206,8 +206,11 @@ namespace InventoryAPI.Controllers
                         Unit = detailDto.Unit,
                         PricePerUnit = detailDto.PricePerUnit,
                         Gst = detailDto.Gst,
+                        cgstPercent = detailDto.Gst / 2,
+                        sgstPercent = detailDto.Gst / 2,
                         Discount = detailDto.Discount,
-                        NetAmount = detailDto.NetAmount
+                        NetAmount = detailDto.NetAmount,
+                        taxAmount = detailDto.TaxAmount
                     };
                     _context.InvoiceDetails.Add(detail);
 
@@ -244,6 +247,13 @@ namespace InventoryAPI.Controllers
             }
         }
 
+        private InvoiceHeader GetInvoiceHeader(string strInvoiceNumber)
+        {
+            InvoiceHeader invoiceHeader = new InvoiceHeader();
+            return invoiceHeader;
+        }
+
+      
         [HttpPost("GetInvoiceReport")]
         public async Task<IActionResult> GetInvoiceReport([FromBody] InvoiceReportRequest request)
         {
@@ -323,6 +333,74 @@ namespace InventoryAPI.Controllers
         }
 
 
+        [HttpPost("GetInvoiceDetails")]
+        public async Task<IActionResult> GetInvoiceDetails([FromBody] InvoiceReportRequest request)
+        {
+            try
+            {
+                // 🔹 Fetch header
+                var header = await _context.InvoiceHeaders
+                    .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
+
+                if (header == null)
+                    return NotFound(new { message = $"Invoice {request.InvoiceNumber} not found." });
+
+                // 🔹 Fetch details
+                var detailsRaw = await (from d in _context.InvoiceDetails
+                                        join im in _context.InventoryMaster
+                                            on d.InventoryId equals im.id
+                                        where d.InvoiceNumber == request.InvoiceNumber
+                                        select new
+                                        {
+                                            d.Id,
+                                            d.InvoiceHeaderId,
+                                            d.InventoryId,
+                                            ProductName = im.goods_serviceDesc,
+                                            Hsn = d.HsnNumber,
+                                            d.Quantity,
+                                            Unit = d.Unit,
+                                            d.Gst,
+                                            PriceUnit = d.PricePerUnit,
+                                            d.taxAmount,
+                                            d.NetAmount
+                                        }).ToListAsync();
+
+                // 🔹 Add S.No sequentially
+                var details = detailsRaw.Select((x, index) => new
+                {
+                    Sno = index + 1,
+                    x.ProductName,
+                    x.Hsn,
+                    x.Quantity,
+                    x.Unit,
+                    x.PriceUnit,
+                    CGST = x.Gst / 2,
+                    SGST = x.Gst / 2,
+                    x.taxAmount,
+                    Amount = x.NetAmount
+                }).ToList();
+
+                // 🔹 Return JSON response
+                return Ok(new
+                {
+                    Header = new
+                    {
+                        header.Id,
+                        header.BuyerName,
+                        header.BuyerAddress,
+                        header.InvoiceNumber,
+                        InvoiceDate = header.InvoiceDate.ToString("dd-MMM-yyyy"),
+                        header.ConsigneeId,
+                        header.InvoiceTotal
+                    },
+                    Details = details
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error fetching invoice details", error = ex.Message });
+            }
+        }
     }
 }
 

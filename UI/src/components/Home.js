@@ -13,6 +13,8 @@ import Invoice from "./invoice";
 import AddInventoryPrice from "./addInventoryPrice";
 import ViewInventory from "./viewInventory";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReturnInvoice from "./returnInvoice";
+
 
 function Home() {
   const [inventoryOpen, setInventoryOpen] = useState(false);
@@ -35,6 +37,7 @@ function Home() {
 const [showAddInventoryPrice, setShowAddInventoryPrice] = useState(false);
 const [showViewInventory, setShowViewInventory] = useState(false);
 
+const [showReturnInvoice, setShowReturnInvoice] = useState(false);
 
   /* Restore login */
   useEffect(() => {
@@ -229,6 +232,16 @@ const [showViewInventory, setShowViewInventory] = useState(false);
               >
                 Invoice
               </span>
+
+              <span
+                className="dropdown-item"
+                onClick={() => {
+                  resetSections();
+                  setShowReturnInvoice(true);
+                }}
+              >
+                Return Invoice
+              </span>
             </div>
           </div>
         )}
@@ -301,6 +314,10 @@ const [showViewInventory, setShowViewInventory] = useState(false);
         {showGoodsGST && <GoodsGST />}
         {isLoggedIn && showEstimate && <Estimate />}
         {isLoggedIn && showInvoice && <Invoice />}
+
+{isLoggedIn && showReturnInvoice && <ReturnInvoice />}   {/* ✅ new line */}
+
+
       </div>
 
       {/* ================= MODAL ================= */}

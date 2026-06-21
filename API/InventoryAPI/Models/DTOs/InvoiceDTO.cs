@@ -20,7 +20,7 @@
         public decimal Gst { get; set; }
         public decimal Discount { get; set; }
         public decimal NetAmount { get; set; }
+        public decimal TaxAmount { get; set; }
     }
 
-    
 }

@@ -9,7 +9,7 @@ function Invoice() {
 
   const [date, setDate] = useState("");
   const [details, setDetails] = useState([
-    { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", availableQty : "" }
+    { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", availableQty : "", taxAmount : "" }
   ]);
 
   // Fetch product options once
@@ -58,9 +58,11 @@ const handleDetailChange = (index, field, value) => {
   if (qty > 0 && price > 0) {
     const baseAmount = qty * price;
     const gstAmount = (baseAmount * gstPercent) / 100;
+    newDetails[index].taxAmount = gstAmount;
     newDetails[index].amount = (baseAmount + gstAmount).toFixed(2);
   } else {
     newDetails[index].amount = "";
+    newDetails[index].taxAmount = "";
   }
   setDetails(newDetails);
 };  
@@ -70,7 +72,7 @@ const handleDetailChange = (index, field, value) => {
   const addRow = () => {
     setDetails([
       ...details,
-      { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "" }
+      { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", taxAmount : "" }
     ]);
   };
 
@@ -136,9 +138,10 @@ const buildInvoicePayload = () => {
       quantity: parseFloat(d.quantity) || 0,
       unit: d.unit,
       pricePerUnit: parseFloat(d.priceUnit) || 0,
-      gst: parseFloat(d.gst) || 0,
+      gst: parseFloat(d.gst) || 0,      
       discount: 0,                               // add discount field if needed
-      netAmount: parseFloat(d.amount) || 0
+      netAmount: parseFloat(d.amount) || 0,
+      taxAmount : parseFloat(d.taxAmount) || 0
     }))
   };
 };
@@ -282,9 +285,6 @@ const buildInvoicePayload = () => {
     Submit Invoice
   </button>
 </div>
-
-
-
     </div>
   );
 }
