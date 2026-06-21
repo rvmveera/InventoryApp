@@ -11,6 +11,7 @@ namespace InventoryAPI.Models
         public int? availableQty { get; set; }   // int NULL
         public string? comments { get; set; }
         public string? CreatedBy { get; set; }      // nvarchar(50) NULL
+        public string? hsnSac { get; set; }
      
     }
     public class MyDbContext : DbContext

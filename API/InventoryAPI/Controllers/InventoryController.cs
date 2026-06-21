@@ -62,7 +62,8 @@ public class InventoryController : ControllerBase
                         InventoryId = im.id,
                         Goods_ServiceDesc = im.goods_serviceDesc,
                         AvailableQty = im.availableQty ?? 0,
-                        GSTPercent = gt.GSTpercent
+                        GSTPercent = gt.GSTpercent,
+                        hsnSac = im.hsnSac ?? ""
                     };
 
         var result = await query.ToListAsync();

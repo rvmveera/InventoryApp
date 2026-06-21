@@ -8,6 +8,7 @@
         public string Goods_ServiceDesc { get; set; }
         public int AvailableQty { get; set; }
         public decimal GSTPercent { get; set; }
+        public string hsnSac { get; set; }
     }
 
     public class AvailableInventoryDto {

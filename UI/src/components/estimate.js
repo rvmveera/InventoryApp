@@ -25,7 +25,8 @@ function Estimate() {
       .then(data => {
         const mappedOptions = data.map(item => ({
           value: item.inventoryId,
-          label: item.goods_ServiceDesc
+          label: item.goods_ServiceDesc,
+          hsnSac : item.hsnSac
         }));
         setProductOptions(mappedOptions);
       })
@@ -41,7 +42,12 @@ function Estimate() {
       const price = parseFloat(newDetails[index].priceUnit) || 0;
       newDetails[index].amount = (qty * price).toFixed(2);
     }
-
+    else if(field == "product") {
+    const selectedProduct = productOptions.find(p => p.value === value);
+    if (selectedProduct) {
+      newDetails[index].hsnNumber = selectedProduct.hsnSac; 
+      }
+    }
     setDetails(newDetails);
   };
 
@@ -172,7 +178,7 @@ function Estimate() {
                   />
                 </td>
                 <td>
-                  <input type="text" value={row.hsnNumber} onChange={(e) => handleDetailChange(index, "hsnNumber", e.target.value)} />
+                  <input type="text" value={row.hsnNumber} readOnly onChange={(e) => handleDetailChange(index, "hsnNumber", e.target.value)} />
                 </td>
                 <td>
                   <input type="number" value={row.quantity} onChange={(e) => handleDetailChange(index, "quantity", e.target.value)} />
