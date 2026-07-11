@@ -15,6 +15,12 @@ import AddInventoryPrice from "./addInventoryPrice";
 import ViewInventory from "./viewInventory";
 import ReturnInvoice from "./returnInvoice";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Carousel, Container, Row, Col } from "react-bootstrap";
+import chair from '../images/chair.jpg'
+import sofa from  '../images/sofa.jpg'
+import processor from '../images/processor.jpg'
+import table from '../images/table.jpg'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Home() {
@@ -112,29 +118,34 @@ setShowReturnInvoice(false);
       </div>
 
       {/* Account dropdown */}
-      <div className="nav-top-right">
-        <div className={`dropdown-parent ${accountOpen ? "open" : ""}`}>
-          <div
-            className="nav-link"
-            onClick={() => setAccountOpen(!accountOpen)}
-          >
-            {isLoggedIn ? `Welcome, ${username} ▾` : "Account ▾"}
-          </div>
-          <div className="dropdown">
-            {!isLoggedIn ? (
-              <div className="dropdown-list">
-                <span className="dropdown-item" onClick={() => setModal("login")}>Login</span>
-                <span className="dropdown-item" onClick={() => setModal("register")}>Register</span>
-              </div>
-            ) : (
-              <div className="dropdown-list">
-                <span className="dropdown-item">Pending Approvals</span>
-                <span className="dropdown-item" onClick={handleLogout}>Logout</span>
-              </div>
-            )}
-          </div>
+      
+<div className="nav-top-right">
+  <div className={`dropdown-parent ${accountOpen ? "open" : ""}`}>
+    <button
+      type="button"
+      className="nav-link"
+      onClick={() => setAccountOpen(!accountOpen)}
+    >
+      {isLoggedIn ? `Welcome, ${username} ▾` : "Account ▾"}
+    </button>
+    <div className="dropdown">
+      {!isLoggedIn ? (
+        <div className="dropdown-list">
+          <span className="dropdown-item" onClick={() => setModal("login")}>Login</span>
+          <span className="dropdown-item" onClick={() => setModal("register")}>Register</span>
         </div>
-      </div>
+      ) : (
+        <div className="dropdown-list">
+          <span className="dropdown-item">Pending Approvals</span>
+          <span className="dropdown-item" onClick={handleLogout}>Logout</span>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+
+
     </nav>
 
     {/* ================= SIDEBAR (only when logged in) ================= */}
@@ -352,19 +363,78 @@ setShowReturnInvoice(false);
       {!isLoggedIn && (
         <>
           {/* HERO */}
-          <section className="hero">
-            <div>
-              <h1>Welcome to VEERA ENTERPRISES</h1>
-              <p>
-                QUALITY FURNITURE. AFFORDABLE PRICES. TRUSTED SERVICE.<br />
-                Transform your home and workspace with stylish, durable and comfortable furniture that reflects your taste and lifestyle.
-              </p>
-              <div className="hero-buttons">
-                <a href="#" className="btn">Explore Products</a>
-                <a href="#" className="btn btn-secondary">Contact Us</a>
-              </div>
-            </div>
-          </section>
+
+
+<section className="hero">
+  <div className="hero-content">
+    <div className="hero-text">
+      <h1>
+         <span className="freehand">
+        Welcome to
+        </span><br/>
+         VEERA ENTERPRISES</h1>
+      <p>
+        QUALITY FURNITURE. AFFORDABLE PRICES. TRUSTED SERVICE.<br />
+        Transform your home and workspace with stylish, durable and comfortable furniture that reflects your taste and lifestyle.
+      </p>
+      <div className="hero-buttons">
+        <a href="#" className="btn">Explore Products</a>
+        <a href="#" className="btn btn-secondary">Contact Us</a>
+      </div>
+    </div>
+
+    {/* Carousel next to text */}
+    <div className="hero-carousel">
+      
+
+<Container fluid className="p-0">
+<Row className="justify-content-center mt-5">
+  <Col md={8} lg={6}>
+    <Carousel fade interval={3000} className="custom-carousel shadow-lg rounded">
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={chair}
+          alt="First slide"
+        />
+        <Carousel.Caption>
+          <h3>Manage Your Inventory</h3>
+          <p>Track goods and services seamlessly.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={sofa}
+          alt="Second slide"
+        />
+        <Carousel.Caption>
+          <h3>Vendor Management</h3>
+          <p>Add vendors and manage payments easily.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={table}
+          alt="Third slide"
+        />
+        <Carousel.Caption>
+          <h3>Sales & Invoices</h3>
+          <p>Create estimates, invoices, and returns.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+  </Col>
+</Row>
+</Container>
+
+    </div>
+  </div>
+</section>
+
 
           {/* CATEGORIES */}
           <section className="products">
