@@ -42,3 +42,26 @@
   gap: 20px;
 }
 
+/* ===============================
+   Template Section Styling
+=================================*/
+.template-section {
+  display: flex;
+  flex-wrap: wrap;        /* ✅ wraps nicely on smaller screens */
+  gap: 12px;              /* ✅ spacing between items */
+  margin-bottom: 20px;    /* ✅ space before the form starts */
+  justify-content: center;/* ✅ center horizontally */
+}
+
+.template-section .vendor-button {
+  flex: 0 0 auto;         /* ✅ buttons keep natural size */
+}
+
+.template-section input[type="file"] {
+  flex: 1;                /* ✅ file input expands to fill space */
+  min-width: 200px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+

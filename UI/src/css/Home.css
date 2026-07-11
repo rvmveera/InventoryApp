@@ -8,10 +8,11 @@ html, body {
   overflow-x: hidden;
   box-sizing: border-box;
   font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fa;
 }
 
 /* ===============================
-   TOP HEADER (SLIM)
+   TOP NAVBAR
 =================================*/
 .navbar {
   position: fixed;
@@ -22,16 +23,12 @@ html, body {
   display: flex;
   align-items: center;
   padding: 0 20px;
-  background: violet;
+  background: linear-gradient(to right, #c471ed, #8e2de2); /* violet gradient left → right */
+  color: #fff;
   z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Hide old top-right menu */
-.nav-right {
-  display: none;
-}
-
-/* Logo */
 .nav-left {
   display: flex;
   align-items: center;
@@ -45,8 +42,55 @@ html, body {
   opacity: 0.85;
 }
 
+/* Account dropdown */
+.nav-top-right {
+  margin-left: auto;
+  position: relative;
+}
+.nav-top-right .nav-link {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+.nav-top-right .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+}
+
 /* ===============================
-   LEFT SIDEBAR MENU
+   DROPDOWN
+=================================*/
+.dropdown-parent {
+  position: relative;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+.dropdown-parent.open .dropdown {
+  display: flex;
+}
+.dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dropdown-item:hover {
+  background: #f8f9fa;
+}
+
+/* ===============================
+   SIDEBAR
 =================================*/
 .sidebar {
   position: fixed;
@@ -54,82 +98,83 @@ html, body {
   left: 0;
   width: 230px;
   height: calc(100vh - 60px);
-  background: violet;
+  background: linear-gradient(to bottom, #c471ed, #8e2de2); /* violet gradient top → bottom */
   padding: 20px 15px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  border-right: 1px solid #ddd;
 }
 
-/* Sidebar Links */
 .sidebar .nav-link {
   display: block;
   padding: 10px 12px;
   text-decoration: none;
-  color: black;
+  color: #fff; /* white text for contrast */
   font-size: 15px;
   border-radius: 6px;
-  transition: 0.3s ease;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
 }
-
 .sidebar .nav-link:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: #00bcd4;
+  background: rgba(255,255,255,0.15);
+  color: #ffd700; /* gold hover */
 }
-
-/* Active link (optional if you add class="active") */
 .sidebar .active {
-  background: linear-gradient(to right, violet, gold);
-  color: white;
+  background: linear-gradient(to right, #ffd700, #ff9a00);
+  color: #fff;
 }
 
-/* ===============================
-   SIDEBAR DROPDOWN (SUBMENU)
-=================================*/
-.dropdown-parent {
-  position: relative;
-}
-
+/* Sidebar dropdowns */
 .sidebar .dropdown {
-  position: relative;
-  top: 0;
-  left: 0;
-  background: transparent;
+  position: static;
+  border: none;
   box-shadow: none;
+  background: transparent;
   margin-left: 10px;
   margin-top: 5px;
-  display: none;   /* hidden by default */
+  display: none;
 }
-
-/* Show dropdown when parent has .open class */
 .dropdown-parent.open .dropdown {
   display: block;
 }
-
 .sidebar .dropdown-item {
-  display: block;
-  padding: 8px 12px;
+  padding: 8px 20px;
   font-size: 14px;
-  color: #333;
-  text-decoration: none;
+  color: #f1f1f1;
   border-radius: 4px;
 }
-
 .sidebar .dropdown-item:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: #00bcd4;
+  background: rgba(255,255,255,0.2);
+  color: #ffd700;
 }
 
 /* ===============================
-   MAIN CONTENT AREA
+   MAIN CONTENT
 =================================*/
 .main-content {
   margin-left: 230px;
   margin-top: 60px;
   padding: 20px;
   box-sizing: border-box;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+/* ===============================
+   CAROUSEL
+=================================*/
+.custom-carousel img {
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.carousel-caption {
+  background: rgba(0,0,0,0.5);
+  border-radius: 6px;
+  padding: 10px;
 }
 
 /* ===============================
@@ -138,32 +183,27 @@ html, body {
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
 }
-
 .modal-content {
-  background: white;
+  background: #fff;
   padding: 25px;
-  border-radius: 6px;
+  border-radius: 8px;
   width: 60%;
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-sizing: border-box;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
-
-/* Close button */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 10px; right: 10px;
   background: none;
   border: none;
   font-size: 20px;
@@ -184,7 +224,6 @@ html, body {
   gap: 15px 20px;
   margin-top: 20px;
 }
-
 .form-container input,
 .form-container select {
   padding: 8px;
@@ -194,20 +233,17 @@ html, body {
   width: 100%;
   box-sizing: border-box;
 }
-
 .form-container input:focus,
 .form-container select:focus {
   outline: none;
-  border-color: #00bcd4;
-  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
 }
-
 .form-container label {
   grid-column: span 2;
   font-size: 14px;
   margin-top: 10px;
 }
-
 .form-container input[type="file"],
 .form-container input[name^="Address"] {
   grid-column: span 2;
@@ -219,87 +255,77 @@ button[type="submit"] {
   display: block;
   padding: 10px 30px;
   font-size: 16px;
-  background-color: #00bcd4;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 button[type="submit"]:hover {
-  background-color: #0097a7;
+  background-color: #0056b3;
 }
 
 /* ===============================
    RESPONSIVE
 =================================*/
-
-/* Tablet */
 @media (max-width: 768px) {
-
   .sidebar {
     width: 200px;
   }
-
   .main-content {
     margin-left: 200px;
   }
-
   .form-container {
     grid-template-columns: 1fr;
   }
-
   .form-container label,
   .form-container input[type="file"],
   .form-container input[name^="Address"] {
     grid-column: span 1;
   }
-
   .modal-content {
     width: 90%;
     max-width: 600px;
   }
 }
-
-/* Mobile */
 @media (max-width: 480px) {
-
   .sidebar {
     position: relative;
     width: 100%;
     height: auto;
   }
-
   .main-content {
     margin-left: 0;
   }
-
   .nav-logo {
     height: 35px;
   }
-
   .sidebar .nav-link {
     font-size: 14px;
   }
-
   .dropdown-item {
     font-size: 13px;
   }
-
   button[type="submit"] {
     width: 100%;
     padding: 12px;
   }
 }
-.nav-top-right {
-  margin-left: auto;
-  position: relative;
-}
-/* Hide all dropdowns by default */
-.dropdown {
-  display: none;
+
+
+.dropdown-list {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 8px; /* adds spacing between items */
 }
 
-/* Show dropdown only when parent has .open */
-.dropdown-parent.open > .dropdown {
-  display: block;
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
 }
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+

@@ -22,6 +22,56 @@ function AddVendorForm() {
     comments: ""
   });
 
+ const [uploadFile, setUploadFile] = useState(null);
+
+  // Download template
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch("https://localhost:5001/api/vendors/downloadvendortemplate");
+      if (!response.ok) throw new Error("Failed to download template");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "VendorTemplate.xlsx";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert("Error downloading template");
+      console.error(error);
+    }
+  };
+
+  // Upload Excel
+  const handleUploadExcel = async () => {
+    if (!uploadFile) {
+      alert("Please select an Excel file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", uploadFile);
+
+    try {
+      const response = await fetch("https://localhost:5001/api/vendors/uploadvendors", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message || "Vendors uploaded successfully!");
+      } else {
+        alert("Failed to upload vendors.");
+      }
+    } catch (error) {
+      alert("Error uploading file.");
+      console.error(error);
+    }
+  };
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -76,6 +126,24 @@ function AddVendorForm() {
   return (
     <form onSubmit={handleSubmit} className="vendor-form">
       <h2>Vendor Registration</h2>
+
+ {/* Template download & upload section */}
+      <div className="template-section">
+        <button type="button" className="vendor-button" onClick={handleDownloadTemplate}>
+          Download Vendors Template
+        </button>
+
+        <input
+          type="file"
+          accept=".xlsx,.xls"
+          onChange={(e) => setUploadFile(e.target.files[0])}
+          className="vendor-input"
+        />
+        <button type="button" className="vendor-button" onClick={handleUploadExcel}>
+          Upload Vendors
+        </button>
+      </div>
+
 
       {/* Existing fields */}
       <label>

@@ -86,26 +86,31 @@ import Home from './components/Home';
 import VendorForm from './components/addvendor';
 import RegistrationForm from "./components/user-registration";
 import LoginForm from "./components/user-login";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 function App() {
+  const isLoggedIn = false; // replace with actual login state
+
   return (
     <Router>
-      <Routes>
-        {/* Homepage */}
-        <Route path="/" element={<Home />} />
+    
+        
 
-        {/* Vendor Form */}
-        <Route path="/addvendor" element={<VendorForm />} />
-
-        {/* Optional: Login/Register routes if you want them outside modal */}
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegistrationForm />} />
-      </Routes>
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/addvendor" element={<VendorForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegistrationForm />} />
+        </Routes>
     </Router>
   );
 }
 
 export default App;
+
 
 
 /*

@@ -14,6 +14,12 @@ import AddInventoryPrice from "./addInventoryPrice";
 import ViewInventory from "./viewInventory";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReturnInvoice from "./returnInvoice";
+import { Carousel, Container, Row, Col } from "react-bootstrap";
+import chair from '../images/chair.jpg'
+import sofa from  '../images/sofa.jpg'
+import processor from '../images/processor.jpg'
+import table from '../images/table.jpg'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Home() {
@@ -102,31 +108,36 @@ setShowReturnInvoice(false);
               {isLoggedIn ? `Welcome, ${username} ▾` : "Account ▾"}
             </div>
 
-            <div className="dropdown">
-              {!isLoggedIn ? (
-                <>
-                  <span
-                    className="dropdown-item"
-                    onClick={() => setModal("login")}
-                  >
-                    Login
-                  </span>
-                  <span
-                    className="dropdown-item"
-                    onClick={() => setModal("register")}
-                  >
-                    Register
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="dropdown-item">Pending Approvals</span>
-                  <span className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </span>
-                </>
-              )}
-            </div>
+<div className="dropdown">
+  {!isLoggedIn ? (
+    <div className="dropdown-list">
+      <span
+        className="dropdown-item"
+        onClick={() => setModal("login")}
+      >
+        Login
+      </span>
+      <span
+        className="dropdown-item"
+        onClick={() => setModal("register")}
+      >
+        Register
+      </span>
+    </div>
+  ) : (
+    <div className="dropdown-list">
+      <span className="dropdown-item">Pending Approvals</span>
+      <span
+        className="dropdown-item"
+        onClick={handleLogout}
+      >
+        Logout
+      </span>
+    </div>
+  )}
+</div>
+
+
           </div>
         </div>
       </nav>
@@ -316,6 +327,55 @@ setShowReturnInvoice(false);
         {isLoggedIn && showInvoice && <Invoice />}
 
 {isLoggedIn && showReturnInvoice && <ReturnInvoice />}   {/* ✅ new line */}
+
+
+{/* Show carousel only if not logged in */}
+  
+        {!isLoggedIn && (
+          <Container fluid className="p-0">
+          <Row className="justify-content-center mt-5">
+            <Col md={8} lg={6}>
+              <Carousel fade interval={3000} className="custom-carousel shadow-lg rounded">
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100"
+                    src={chair}
+                    alt="First slide"
+                  />
+                  <Carousel.Caption>
+                    <h3>Manage Your Inventory</h3>
+                    <p>Track goods and services seamlessly.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100"
+                    src={sofa}
+                    alt="Second slide"
+                  />
+                  <Carousel.Caption>
+                    <h3>Vendor Management</h3>
+                    <p>Add vendors and manage payments easily.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100"
+                    src={table}
+                    alt="Third slide"
+                  />
+                  <Carousel.Caption>
+                    <h3>Sales & Invoices</h3>
+                    <p>Create estimates, invoices, and returns.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              </Carousel>
+            </Col>
+          </Row>
+          </Container>
+        )}
 
 
       </div>

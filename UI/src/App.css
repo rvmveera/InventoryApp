@@ -247,3 +247,17 @@ button[type="submit"]:hover {
     padding: 12px;
   }
 }
+
+/* ===============================
+   Carousel Custom Styling
+=================================*/
+.custom-carousel {
+  max-width: 800px;   /* ✅ limit width */
+  margin: 0 auto;     /* ✅ center horizontally */
+}
+
+.custom-carousel img {
+  height: 300px;      /* ✅ reduce height */
+  object-fit: cover;  /* ✅ crop nicely without distortion */
+  border-radius: 8px; /* ✅ rounded corners for polish */
+}
