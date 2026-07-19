@@ -1,0 +1,92 @@
+.registration-modal {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 900px;          /* expanded width */
+  width: 90%;                /* take most of the viewport */
+  margin: 40px auto;         /* center with spacing */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  text-align: left;
+  position: relative;
+}
+
+.registration-modal h2 {
+  margin-bottom: 20px;
+  color: #6A0DAD;
+  font-size: 30px;           /* slightly larger heading */
+  font-weight: 700;
+  text-align: center;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;                 /* more breathing space */
+}
+
+.form-row {
+  display: flex;
+  gap: 18px;
+}
+
+.form-container input,
+.form-container select {
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #6A0DAD;
+  box-shadow: 0 0 8px rgba(106,13,173,0.3);
+  outline: none;
+}
+
+.file-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #8e2de2, #c471ed);
+  color: #fff;
+  padding: 16px 30px;
+  border: none;
+  border-radius: 40px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: background 0.3s, transform 0.2s;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #6A0DAD, #4B0082);
+  transform: translateY(-2px); /* subtle lift effect */
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .registration-modal {
+    max-width: 700px;        /* medium screens */
+    width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  .registration-modal {
+    max-width: 100%;         /* full width on mobile */
+    padding: 20px;
+  }
+  .form-row {
+    flex-direction: column;  /* stack inputs vertically */
+    gap: 15px;
+  }
+}

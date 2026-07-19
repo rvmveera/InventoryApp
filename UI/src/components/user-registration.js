@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-
+import "../css/register.css";
 
 const UserRegistration = ({ onSuccess }) => {
   const [form, setForm] = useState({
@@ -97,52 +97,67 @@ const handleSubmit = async (e) => {
 };
 
   return (    
-    <div>
-      <h2>User Registration</h2>
-      <form onSubmit={handleSubmit} autoComplete="off">
-<div className="form-container">
+    
+
+    <div className="registration-modal">
+  <h2>User Registration</h2>
+  <form onSubmit={handleSubmit} autoComplete="off">
+    <div className="form-container">
+
+      {/* Name */}
+      <div className="form-row">
         <input name="FirstName" placeholder="First Name" value={form.FirstName} onChange={handleChange} required />
         <input name="LastName" placeholder="Last Name" value={form.LastName} onChange={handleChange} required />
-        <input name="EmailId" type="email" placeholder="Email" value={form.EmailId} onChange={handleChange} required />
-        <input name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleChange} required />
-        <input name="Username" placeholder="Username" value={form.Username} onChange={handleChange} required />
+      </div>
+
+      {/* Contact */}
+      <input name="EmailId" type="email" placeholder="Email" value={form.EmailId} onChange={handleChange} required />
+      <input name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleChange} required />
+
+      {/* Account */}
+      <input name="Username" placeholder="Username" value={form.Username} onChange={handleChange} required />
+      <div className="form-row">
         <input name="Password" type="password" placeholder="Password" value={form.Password} onChange={handleChange} required />
         <input name="ConfirmPassword" type="password" placeholder="Confirm Password" value={form.ConfirmPassword} onChange={handleChange} required />
-        <input name="Address1" placeholder="Address Line 1" value={form.Address1} onChange={handleChange} required />
-        <input name="Address2" placeholder="Address line 2" value={form.Address2} onChange={handleChange} required />
-        <input name="Address3" placeholder="Address line 3" value={form.Address3} onChange={handleChange} required />
-        <select name="UserTypeId" value={form.UserTypeId} onChange={handleChange} required >
-          <option value="0">--Select user type--</option>
-          <option value="1">Admin</option>
-          <option value="2">Staff</option>
-          <option value="3">Manager</option>
-<option value="4">Customer</option>
-<option value="5">Vendor</option>
+      </div>
 
+      {/* Address */}
+      <input name="Address1" placeholder="Address Line 1" value={form.Address1} onChange={handleChange} required />
+      <input name="Address2" placeholder="Address Line 2" value={form.Address2} onChange={handleChange} required />
+      <input name="Address3" placeholder="Address Line 3" value={form.Address3} onChange={handleChange} required />
 
+      {/* User type */}
+      <select name="UserTypeId" value={form.UserTypeId} onChange={handleChange} required>
+        <option value="0">--Select user type--</option>
+        <option value="1">Admin</option>
+        <option value="2">Staff</option>
+        <option value="3">Manager</option>
+        <option value="4">Customer</option>
+        <option value="5">Vendor</option>
+      </select>
 
-        </select>
+      {/* Personal info */}
+      <input name="Aadhaar" placeholder="Aadhaar" value={form.Aadhaar} onChange={handleChange} required />
+      <input name="DateOfBirth" type="date" value={form.DateOfBirth} onChange={handleChange} required />
 
-        <input name="Aadhaar" placeholder="Aadhaar" value={form.Aadhaar} onChange={handleChange} required/>
-        <input name="DateOfBirth" type="date" value={form.DateOfBirth} onChange={handleChange} required />
+      <select name="Gender" value={form.Gender} onChange={handleChange} required>
+        <option value="0">--Gender--</option>
+        <option value="1">Male</option>
+        <option value="2">Female</option>
+        <option value="3">NA</option>
+      </select>
 
-        <select name="Gender" value={form.Gender} onChange={handleChange} required >
-          <option value="0">--Gender--</option>
-          <option value="1">Male</option>
-          <option value="2">Female</option>
-          <option value="3">NA</option>
-        </select>
+      {/* Optional */}
+      <input name="GST" placeholder="GST (optional)" value={form.GST} onChange={handleChange} />
+      <label className="file-label">Resume Upload (optional)</label>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
 
-        <input name="GST" placeholder="GST (optional)" value={form.GST} onChange={handleChange} />
-
-        <label>Resume Upload (optional)</label>
-     <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-
-
-</div>
-        <button type="submit">Register</button>
-      </form>
     </div>
+
+    <button type="submit" className="btn-primary">Register</button>
+  </form>
+</div>
+
     
   );
 };

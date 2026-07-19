@@ -55,22 +55,12 @@ html, body {
 .nav-contact { margin-left: 40px; font-size: 12px; }
 
 /* Account dropdown (top navbar) */
-.nav-top-right { margin-left: 20px; position: relative; }
-.nav-top-right .nav-link {
-  display: inline-flex;       /* keep text inline */
-  align-items: center;        /* vertically center */
-  white-space: nowrap;        /* prevent line break */
+.nav-top-right {
+  position: relative; /* anchor for absolute dropdown */
 }
-
-.nav-top-right .nav-link:hover { background: rgba(106,13,173,0.1); }
-
-/* ===============================
-   DROPDOWN (navbar account)
-=================================*/
-.dropdown-parent { position: relative; }
-.dropdown {
+.nav-top-right .dropdown {
   position: absolute;
-  top: 100%;
+  top: 100%;           /* directly below the button */
   right: 0;
   background: #fff;
   color: #333;
@@ -82,10 +72,57 @@ html, body {
   flex-direction: column;
   z-index: 1000;
 }
+
+.nav-top-right .dropdown-parent.open .dropdown {
+  display: flex;       /* show without affecting layout */
+}
+
+.nav-top-right .nav-link {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: 'Segoe UI', sans-serif;   /* clean modern font */
+  font-weight: 600;                      /* bolder text */
+  font-size: 14px;                       /* slightly larger */
+  color: #4B0082;                        /* deep violet */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-top-right .nav-link:hover {
+  background: rgba(106,13,173,0.1);
+  color: #6A0DAD;
+}
+
+/* ===============================
+   DROPDOWN (navbar account)
+=================================*/
+.dropdown-parent { position: relative; }
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+}
 .dropdown-parent.open .dropdown { display: flex; }
 .dropdown-list { display: flex; flex-direction: column; gap: 8px; }
 .dropdown-item { padding: 10px 15px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
-.dropdown-item:hover { background: #EEDBFF; color: #6A0DAD; }
+.dropdown-item:hover {
+  background: #EEDBFF;
+  color: #6A0DAD;
+}
 
 /* ===============================
    SIDEBAR (logged in only)
@@ -338,4 +375,16 @@ footer a:hover { text-decoration: underline; }
 }
 .nav-top-right .nav-link:hover {
   background: rgba(106,13,173,0.1);
+}
+/* Override modal background */
+.modal-content {
+  background-color: #fff !important;   /* solid white background */
+  opacity: 1 !important;               /* fully opaque */
+  border-radius: 8px;                  /* optional: rounded corners */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); /* optional: drop shadow */
+}
+
+/* Optional: darken the backdrop */
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.6) !important;
 }

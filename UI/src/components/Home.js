@@ -131,8 +131,16 @@ setShowReturnInvoice(false);
     <div className="dropdown">
       {!isLoggedIn ? (
         <div className="dropdown-list">
-          <span className="dropdown-item" onClick={() => setModal("login")}>Login</span>
-          <span className="dropdown-item" onClick={() => setModal("register")}>Register</span>
+          <span className="dropdown-item" onClick={() => {
+            setModal("login");
+            setAccountOpen(false);
+             } }>Login</span>
+          <span className="dropdown-item" onClick={() => 
+      {
+        setModal("register");
+        setAccountOpen(false);  
+      }
+      }>Register</span>
         </div>
       ) : (
         <div className="dropdown-list">
