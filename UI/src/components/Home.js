@@ -23,6 +23,7 @@ import table from '../images/table.jpg'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+
 function Home() {
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [vendorOpen, setVendorOpen] = useState(false);
@@ -61,6 +62,7 @@ const [showReturnInvoice, setShowReturnInvoice] = useState(false);
     setIsLoggedIn(true);
     setUsername(user.username || user);
     setModal(null);
+    setShowViewInventory(true);
   };
 
   const handleLogout = () => {
@@ -526,6 +528,7 @@ setShowReturnInvoice(false);
 
           {modal === "login" && (
             <LoginForm onLoginSuccess={handleLoginSuccess} />
+
           )}
 
           {modal === "register" && (

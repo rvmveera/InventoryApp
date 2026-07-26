@@ -1,19 +1,19 @@
 .registration-modal {
   background: #fff;
-  padding: 40px;
+  padding: 30px;                /* reduced padding */
   border-radius: 12px;
-  max-width: 900px;          /* expanded width */
-  width: 90%;                /* take most of the viewport */
-  margin: 40px auto;         /* center with spacing */
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  max-width: 900px;             /* expanded width */
+  width: 90%;                   /* take most of the viewport */
+  margin: 30px auto;            /* center with spacing */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   text-align: left;
   position: relative;
 }
 
 .registration-modal h2 {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   color: #6A0DAD;
-  font-size: 30px;           /* slightly larger heading */
+  font-size: 24px;              /* reduced heading size */
   font-weight: 700;
   text-align: center;
 }
@@ -21,20 +21,20 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 18px;                 /* more breathing space */
+  gap: 12px;                    /* tighter spacing */
 }
 
 .form-row {
   display: flex;
-  gap: 18px;
+  gap: 12px;
 }
 
 .form-container input,
 .form-container select {
-  padding: 14px 16px;
+  padding: 10px 12px;           /* smaller input height */
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: 6px;
+  font-size: 13px;              /* reduced font size */
   transition: border-color 0.3s, box-shadow 0.3s;
   width: 100%;
 }
@@ -42,51 +42,51 @@
 .form-container input:focus,
 .form-container select:focus {
   border-color: #6A0DAD;
-  box-shadow: 0 0 8px rgba(106,13,173,0.3);
+  box-shadow: 0 0 5px rgba(106,13,173,0.3);
   outline: none;
 }
 
 .file-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #4B0082;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .btn-primary {
   background: linear-gradient(to right, #8e2de2, #c471ed);
   color: #fff;
-  padding: 16px 30px;
+  padding: 12px 24px;           /* smaller button */
   border: none;
-  border-radius: 40px;
-  font-size: 17px;
+  border-radius: 30px;
+  font-size: 14px;              /* reduced font size */
   font-weight: bold;
   cursor: pointer;
-  margin-top: 25px;
+  margin-top: 18px;
   transition: background 0.3s, transform 0.2s;
   width: 100%;
 }
 
 .btn-primary:hover {
   background: linear-gradient(to right, #6A0DAD, #4B0082);
-  transform: translateY(-2px); /* subtle lift effect */
+  transform: translateY(-2px);
 }
 
 /* Responsive */
 @media (max-width: 992px) {
   .registration-modal {
-    max-width: 700px;        /* medium screens */
+    max-width: 700px;
     width: 95%;
   }
 }
 
 @media (max-width: 768px) {
   .registration-modal {
-    max-width: 100%;         /* full width on mobile */
+    max-width: 100%;
     padding: 20px;
   }
   .form-row {
-    flex-direction: column;  /* stack inputs vertically */
-    gap: 15px;
+    flex-direction: column;
+    gap: 10px;
   }
 }
