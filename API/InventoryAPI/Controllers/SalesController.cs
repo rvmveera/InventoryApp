@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using InventoryAPI.Data;
+﻿using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
 using InventoryAPI.Services;
@@ -127,6 +126,7 @@ namespace InventoryAPI.Controllers
                 }).ToList();
 
                 // 🔹 Bind details dataset
+                
                 report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", details));
                 string totalAmountInWords = NumberToWordsConverter.ConvertAmountToWords(header.EstimateTotalAmount);
 

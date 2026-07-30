@@ -1,6 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.InkML;
-using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;

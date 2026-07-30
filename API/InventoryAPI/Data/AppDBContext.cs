@@ -1,6 +1,6 @@
 ﻿using InventoryAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InventoryAPI.Data
 {
@@ -29,6 +29,7 @@ namespace InventoryAPI.Data
         public DbSet<tblEstimateDetails> EstimateDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder b)
         {
+            
             b.Entity<tblEstimateHeader>()
         .ToTable("tblEstimateHeader");   // ✅ map to actual table
 
