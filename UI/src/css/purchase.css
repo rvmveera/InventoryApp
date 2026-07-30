@@ -1,0 +1,95 @@
+/* Purchase Table Styling */
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 12px;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.purchase-table th,
+.purchase-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.purchase-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.purchase-table input {
+  width: 95%;
+  padding: 6px;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.purchase-table input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+}
+
+.purchase-table button {
+  padding: 6px 12px;
+  font-size: 11px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.purchase-table button:hover {
+  background-color: #c62828;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .purchase-table,
+  .purchase-table thead,
+  .purchase-table tbody,
+  .purchase-table th,
+  .purchase-table td,
+  .purchase-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .purchase-table thead {
+    display: none; /* hide header on small screens */
+  }
+
+  .purchase-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .purchase-table td {
+    text-align: left;
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .purchase-table td::before {
+    content: attr(data-label); /* show header label */
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #555;
+  }
+
+  .purchase-table input {
+    width: 100%;
+  }
+}

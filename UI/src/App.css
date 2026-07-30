@@ -1,0 +1,263 @@
+/* Reset body background */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fff;   /* plain background for the page */
+  overflow-x: hidden; /* prevent horizontal scroll */
+  box-sizing: border-box;
+}
+
+/* Banner / Ribbon */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: violet; /* violet ribbon */
+  
+  color: #333;
+  border-radius: 0 0 8px 8px; /* optional rounded bottom */
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 6px 20px; 
+}
+
+/* Logo */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-logo {
+  height: 70px;
+  max-width: 100%;
+  cursor: pointer;
+}
+.nav-logo:hover {
+  opacity: 0.85;
+}
+
+/* Links */
+.nav-link {
+  color: black;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+.nav-link:hover {
+  color: #00bcd4;
+}
+
+/* Right section */
+.nav-right {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Dropdown */
+.dropdown-parent {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border-radius: 4px;
+  min-width: 120px;
+  max-width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+.dropdown-item {
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+}
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Tab header */
+.tab-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  margin-top: 70px; /* push below fixed navbar */
+}
+.tab-header button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+.tab-header button.active {
+  background: violet;
+  color: #fff;
+  border-radius: 6px 6px 0 0;
+}
+.tab-content {
+  padding: 20px;
+}
+
+/* Modal */
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 6px;
+  width: 60%;
+  max-width: 800px;
+  min-width: unset;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Form grid */
+.form-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 20px;
+  margin-top: 20px;
+}
+.form-container input,
+.form-container select {
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-container input:focus,
+.form-container select:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+}
+.form-container label {
+  grid-column: span 2;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.form-container input[type="file"] {
+  grid-column: span 2;
+  padding: 6px;
+  border: none;
+}
+.form-container input[name^="Address"] {
+  grid-column: span 2;
+}
+
+/* Submit button */
+button[type="submit"] {
+  margin: 25px auto 0;
+  display: block;
+  padding: 10px 30px;
+  font-size: 16px;
+  background-color: #00bcd4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[type="submit"]:hover {
+  background-color: #0097a7;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+.close-btn:hover {
+  color: #e53935;
+}
+
+/* Responsive: Tablet */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+  }
+  .nav-right {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .form-container {
+    grid-template-columns: 1fr;
+  }
+  .form-container label,
+  .form-container input[type="file"],
+  .form-container input[name^="Address"] {
+    grid-column: span 1;
+  }
+  .modal-content {
+    width: 90%;
+    max-width: 600px;
+  }
+}
+
+/* Responsive: Mobile */
+@media (max-width: 480px) {
+  .nav-logo {
+    height: 50px;
+  }
+  .nav-link {
+    font-size: 14px;
+  }
+  .dropdown-item {
+    padding: 8px;
+    font-size: 14px;
+  }
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+/* ===============================
+   Carousel Custom Styling
+=================================*/
+.custom-carousel {
+  max-width: 800px;   /* ✅ limit width */
+  margin: 0 auto;     /* ✅ center horizontally */
+}
+
+.custom-carousel img {
+  height: 300px;      /* ✅ reduce height */
+  object-fit: cover;  /* ✅ crop nicely without distortion */
+  border-radius: 8px; /* ✅ rounded corners for polish */
+}

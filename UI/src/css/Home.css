@@ -1,0 +1,390 @@
+/* Import at the top of your CSS file */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+/* Freehand style for Welcome To */
+.freehand {
+  font-family: 'Pacifico', cursive;
+  font-size: 60px;          /* slightly larger */
+  color: black;           /* golden highlight */
+  margin-right: 10px;
+}
+
+/* ===============================
+   RESET
+=================================*/
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fa;
+  color: #333;
+}
+
+/* ===============================
+   TOP NAVBAR
+=================================*/
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  background: #fff;
+  color: #333;
+  z-index: 1000;
+  box-shadow: 0 3px 10px rgba(0,0,0,.1);
+}
+
+.nav-left { display: flex; align-items: center; gap: 15px; }
+.nav-logo { height: 60px; width: 60px; border-radius: 10px; cursor: pointer; }
+.nav-logo:hover { opacity: 0.85; }
+
+.company-info h2 { color: #6A0DAD; margin: 0; }
+.company-info p { font-size: 12px; margin: 0; }
+
+.nav-links { list-style: none; display: flex; gap: 30px; margin-left: auto; }
+.nav-links a { text-decoration: none; color: #333; font-weight: 600; }
+.nav-links a:hover { color: #6A0DAD; }
+
+.nav-contact { margin-left: 40px; font-size: 12px; }
+
+/* Account dropdown (top navbar) */
+.nav-top-right {
+  position: relative; /* anchor for absolute dropdown */
+}
+.nav-top-right .dropdown {
+  position: absolute;
+  top: 100%;           /* directly below the button */
+  right: 0;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.nav-top-right .dropdown-parent.open .dropdown {
+  display: flex;       /* show without affecting layout */
+}
+
+.nav-top-right .nav-link {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: 'Segoe UI', sans-serif;   /* clean modern font */
+  font-weight: 600;                      /* bolder text */
+  font-size: 14px;                       /* slightly larger */
+  color: #4B0082;                        /* deep violet */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-top-right .nav-link:hover {
+  background: rgba(106,13,173,0.1);
+  color: #6A0DAD;
+}
+
+/* ===============================
+   DROPDOWN (navbar account)
+=================================*/
+.dropdown-parent { position: relative; }
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+}
+.dropdown-parent.open .dropdown { display: flex; }
+.dropdown-list { display: flex; flex-direction: column; gap: 8px; }
+.dropdown-item { padding: 10px 15px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
+.dropdown-item:hover {
+  background: #EEDBFF;
+  color: #6A0DAD;
+}
+
+/* ===============================
+   SIDEBAR (logged in only)
+=================================*/
+.sidebar {
+  position: fixed;
+  top: 75px;
+  left: 0;
+  width: 230px;
+  height: calc(100vh - 75px);
+  background: linear-gradient(to bottom, #c471ed, #8e2de2);
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  z-index: 900;
+}
+
+.sidebar .nav-link {
+  color: #fff;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.sidebar .nav-link:hover { background: rgba(255,255,255,0.15); color: #ffd700; }
+
+/* Sidebar dropdowns hidden by default */
+.sidebar .dropdown {
+  display: none;
+  position: static;
+  background: transparent;
+  margin-left: 15px;
+  flex-direction: column;
+}
+
+/* Show dropdowns when parent is open */
+.sidebar .dropdown-parent.open .dropdown {
+  display: block;
+}
+
+.sidebar .dropdown-item {
+  color: #f1f1f1;
+  padding: 8px 20px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.sidebar .dropdown-item:hover { background: rgba(255,255,255,0.2); color: #ffd700; }
+
+/* ===============================
+   MAIN CONTENT
+=================================*/
+.main-content {
+  margin-left: 230px;
+  margin-top: 75px;
+  padding: 30px;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+.main-content.landing { margin-left: 0; margin-top: 75px; }
+
+
+
+/* HERO SECTION WITH CAROUSEL */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 10%;
+  background: linear-gradient(to left, #8e2de2, white); /* violet gradient */
+  color: black;
+  min-height: 500px;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-text {
+  flex: 1;
+  padding-right: 40px;
+  text-align: left;
+}
+
+.hero-text h1 { font-size: 60px; margin-bottom: 20px; }
+.hero-text p { font-size: 22px; margin-bottom: 30px; }
+.hero-buttons { display: flex; gap: 20px; }
+
+/* Carousel styles */
+.hero-carousel {
+  flex: 1.2;                 /* give carousel more width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Bootstrap carousel override */
+.custom-carousel {
+  width: 100%;
+  max-width: 600px;          /* larger width */
+  height: 400px;             /* larger height */
+}
+
+.custom-carousel img {
+  object-fit: cover;         /* keep aspect ratio */
+  height: 100%;
+  border-radius: 12px;
+}
+
+
+.carousel-track {
+  display: flex;
+  gap: 30px;              /* increase spacing between items */
+  animation: scrollCarousel 15s linear infinite; /* slower scroll for bigger items */
+}
+.carousel-item {
+  min-width: 250px;       /* increase width */
+  height: 250px;          /* increase height */
+  background: rgba(255,255,255,0.15);
+  border-radius: 16px;    /* slightly larger rounding */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 22px;        /* bigger text */
+  color: #fff;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* deeper shadow */
+}
+
+/* Animation for continuous scrolling */
+@keyframes scrollCarousel {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+
+
+
+/* ===============================
+   ABOUT
+=================================*/
+.about { padding: 80px 10%; text-align: center; }
+.about h2 { color: #6A0DAD; margin-bottom: 20px; font-size: 40px; }
+.benefits { list-style: none; padding: 0; margin-top: 30px; }
+.benefits li { margin-bottom: 12px; font-size: 18px; }
+
+/* ===============================
+   PRODUCTS
+=================================*/
+.products { padding: 80px 10%; background: white; }
+.products h2 { text-align: center; margin-bottom: 40px; color: #6A0DAD; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 30px; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,.1); padding: 20px; text-align: center; transition: transform 0.3s; }
+.card:hover { transform: translateY(-8px); }
+.card h3 { color: #4B0082; margin-bottom: 10px; }
+.card p { color: #555; }
+
+/* ===============================
+   FOOTER
+=================================*/
+footer { background: #4B0082; color: white; padding: 60px 10%; margin-top: 50px; }
+.footer-banner { text-align: center; margin-bottom: 40px; }
+.footer-banner h2 { margin-bottom: 15px; }
+.footer-banner .btn { background: #fff; color: #6A0DAD; }
+.footer { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 40px; }
+footer h3 { margin-bottom: 20px; }
+footer ul { list-style: none; padding: 0; }
+footer li { margin-bottom: 10px; }
+footer a { color: white; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+.bottom { text-align: center; margin-top: 40px; border-top: 1px solid rgba(255,255,255,.3); padding-top: 20px; font-size: 12px; }
+
+/* ===============================
+   RESPONSIVE
+=================================*/
+@media (max-width: 768px) {
+  .sidebar { width: 200px; }
+  .main-content { margin-left: 200px; }
+}
+@media (max-width: 480px) {
+  .sidebar { position: relative; width: 100%; height: auto; }
+  .main-content { margin-left: 0; }
+  .nav-logo { height: 50px; width: 50px; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .custom-carousel {
+    max-width: 500px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;  /* stack text and carousel vertically */
+    text-align: center;
+  }
+  .hero-text {
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+  .custom-carousel {
+    max-width: 100%;
+    height: 250px;
+  }
+}
+
+
+/* Sidebar dropdowns hidden by default */
+.sidebar .dropdown {
+  display: none;              /* hidden initially */
+  position: static;           /* no absolute positioning */
+  background: transparent;    /* no white box */
+  margin-left: 15px;
+  flex-direction: column;
+}
+
+/* Show dropdowns when parent is open */
+.sidebar .dropdown-parent.open .dropdown {
+  display: block;
+}
+
+.sidebar .dropdown-item {
+  color: #f1f1f1;
+  padding: 8px 20px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.sidebar .dropdown-item:hover {
+  background: rgba(255,255,255,0.2);
+  color: #ffd700;
+}
+.nav-top-right .nav-link {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+.nav-top-right .nav-link:hover {
+  background: rgba(106,13,173,0.1);
+}
+/* Override modal background */
+.modal-content {
+  background-color: #fff !important;   /* solid white background */
+  opacity: 1 !important;               /* fully opaque */
+  border-radius: 8px;                  /* optional: rounded corners */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); /* optional: drop shadow */
+}
+
+/* Optional: darken the backdrop */
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.6) !important;
+}

@@ -1,0 +1,88 @@
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: left;
+}
+
+/* Popup container */
+    .popup {
+      width: 65%;                 /* only 50% width */
+      background: linear-gradient(to bottom, violet, white);
+      border: 2px solid gold;     /* golden border */
+      height: 100vh;
+      box-sizing: border-box;
+      border-radius: 8px;
+       overflow-y: auto;
+    }
+
+    /* Form controls stacked vertically */
+    .popup input,
+    .popup button {
+      display: block;             /* each on new line */
+      width: 100%;                /* stretch across popup */
+      margin-bottom: 1px;        /* spacing between controls */
+      padding: 10px;
+      border: none;
+      border-bottom: 1px solid #333; /* single line style */
+      background: transparent;
+      outline: none;
+    }
+
+/* Close button */
+.closeBtn {
+  position: absolute;             /* now relative to .popup */
+  top: 10px;
+  left: 200px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+
+
+
+.form-container {
+  width: 100%;
+  border: 2px solid gold;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;   /* stack inputs vertically */
+  align-items: flex-start;  /* align children to the left */
+  justify-content: flex-start; /* start from top-left */
+
+
+}
+
+input, select {
+      padding: 2px;
+      font-size: 14px;
+     
+}
+
+.rounded-submit {
+  background-color: linear-gradient(to right, violet, gold); /* change to your accent color */
+ color: blueviolet;
+  border-radius: 8px; /* rounded rectangle (not pill) */
+  padding: 10px 20px;
+  font-size: 15px;
+ 
+}
+
+
+.form-container input,
+.form-container select {
+  width: 100%;              /* make them stretch full width */
+  padding: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+}
