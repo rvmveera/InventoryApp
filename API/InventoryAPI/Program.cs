@@ -63,12 +63,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Enable Swagger UI
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Swagger UI - for dev and prod
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 // Enable CORS before controllers
 app.UseCors("AllowReactApp");
