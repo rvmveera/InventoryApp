@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PurchaseDetails from "./purchasedetails"; // import your separate file
 
-
-
 const VendorPayments = () => {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState("");
@@ -16,8 +14,10 @@ const [paymentHistory, setPaymentHistory] = useState([]);
 const [showHistoryFor, setShowHistoryFor] = useState(null);
 const [purchaseDetails, setPurchaseDetails] = useState(null);
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const fetchPurchaseDetails = (purchaseId) => {
-  fetch("https://localhost:5001/api/VendorPayment/purchasedetails", {
+  fetch(`${API_BASE_URL}/VendorPayment/purchasedetails`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ purchaseId }),
@@ -30,7 +30,7 @@ const fetchPurchaseDetails = (purchaseId) => {
 
 // Function to fetch history
 const fetchPaymentHistory = (vendorPaymentId) => {
-  fetch("https://localhost:5001/api/VendorPayment/paymenthistory", {
+  fetch(`${API_BASE_URL}/VendorPayment/paymenthistory`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ vendorPaymentId }),
@@ -46,7 +46,7 @@ const fetchPaymentHistory = (vendorPaymentId) => {
 
   // Load vendors on mount
   useEffect(() => {
-    fetch("https://localhost:5001/api/Vendors")
+    fetch(`${API_BASE_URL}/Vendors`)
       .then((res) => res.json())
       .then((data) => setVendors(data))
       .catch((err) => console.error("Error fetching vendors:", err));
@@ -55,7 +55,7 @@ const fetchPaymentHistory = (vendorPaymentId) => {
 // Load bill details when vendor changes
  
 const fetchBillDetails = (vendorId) => {
-  fetch("https://localhost:5001/api/VendorPayment/billdetails", {
+  fetch(`${API_BASE_URL}/VendorPayment/billdetails`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ vendorId: parseInt(vendorId) }),
@@ -77,7 +77,7 @@ useEffect(() => {
 const handlePaymentSubmit = () => {
   if (!selectedPayment || !paymentAmount) return;
 
-  fetch("https://localhost:5001/api/VendorPayment/makepayment", {
+  fetch(`${API_BASE_URL}/VendorPayment/makepayment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

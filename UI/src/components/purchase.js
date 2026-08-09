@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/purchase.css"
 
-
-
 function PurchaseForm() {
   const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
@@ -13,6 +11,7 @@ const [isChecked, setIsChecked] = useState(false);
 const [goodsTypeId, setGoodsTypeId] = useState("");
  const [file, setFile] = useState(null);
 
+ const API_BASE_URL = process.env.REACT_APP_API_URL;
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -30,7 +29,7 @@ const [goodsTypeId, setGoodsTypeId] = useState("");
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://localhost:5001/api/Purchase/uploadPurchases", {
+      const response = await fetch(`${API_BASE_URL}/Purchase/uploadPurchases`, {
         method: "POST",
         body: formData,
       });
@@ -94,7 +93,7 @@ totalBillAmount : ""
 
   // Load vendors
   useEffect(() => {
-    fetch("https://localhost:5001/api/Vendors")
+    fetch(`${API_BASE_URL}/Vendors`)
       .then((res) => res.json())
       .then((data) => setVendors(data))
       .catch((err) => console.error("Error loading vendors:", err));
@@ -102,7 +101,7 @@ totalBillAmount : ""
 
   // Load consignee
   useEffect(() => {
-    fetch("https://localhost:5001/api/Consignee") // 🔹 adjust endpoint
+    fetch(`${API_BASE_URL}/Consignee`) // 🔹 adjust endpoint
       .then((res) => res.json())
       .then((data) => setConsignee(data))
       .catch((err) => console.error("Error loading consignee:", err));
@@ -111,7 +110,7 @@ totalBillAmount : ""
 
   const handleDownload = async () => {
     try {
-      const response = await fetch("https://localhost:5001/api/Purchase/downloadPurchaseTemplate", {
+      const response = await fetch(`${API_BASE_URL}/Purchase/downloadPurchaseTemplate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -150,7 +149,7 @@ totalBillAmount : ""
     if (vendor) {
       setHeader({ ...header, vendorId: vendor.vendorId });
       setSelectedVendor(vendor);
-      fetch(`https://localhost:5001/api/Vendors/GetVendorGroupType?vendorId=${vendorId}`)
+      fetch(`${API_BASE_URL}/Vendors/GetVendorGroupType?vendorId=${vendorId}`)
       .then(res => res.json())
       .then(data => {
         setGoodsTypes(data); // [{Id, GoodsType, GSTpercent}, ...]
@@ -292,7 +291,7 @@ totalBillAmount : header.totalBillAmount,
   console.log("Submitting payload:", payload);
 
   try {
-    const response = await fetch("https://localhost:5001/api/Purchase/save", {
+    const response = await fetch(`${API_BASE_URL}/Purchase/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)

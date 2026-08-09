@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../css/addvendor.css"; // ✅ import external stylesheet
 
 function AddVendorForm() {
+const API_BASE_URL = process.env.REACT_APP_API_URL; 
+
   const [formData, setFormData] = useState({
     vendorName: "",
     address1: "",
@@ -27,7 +29,9 @@ function AddVendorForm() {
   // Download template
   const handleDownloadTemplate = async () => {
     try {
-      const response = await fetch("https://localhost:5001/api/vendors/downloadvendortemplate");
+const apiurl = `${API_BASE_URL}/Vendors/downloadvendortemplate`;
+
+      const response = await fetch(apiurl);
       if (!response.ok) throw new Error("Failed to download template");
 
       const blob = await response.blob();
@@ -54,7 +58,7 @@ function AddVendorForm() {
     formData.append("file", uploadFile);
 
     try {
-      const response = await fetch("https://localhost:5001/api/vendors/uploadvendors", {
+      const response = await fetch(`${API_BASE_URL}/Vendors/uploadvendors`, {
         method: "POST",
         body: formData
       });
@@ -83,7 +87,7 @@ function AddVendorForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://localhost:5001/api/Vendors/addvendor", {
+      const response = await fetch(`${API_BASE_URL}/Vendors/addvendor`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

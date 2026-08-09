@@ -3,6 +3,8 @@ import Select from "react-select";
 import "../css/estimate.css";
 
 function Estimate() {
+const API_BASE_URL = process.env.REACT_APP_API_URL; 
+
   const initialDetails = [
     { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", amount: "" }
   ];
@@ -16,7 +18,7 @@ function Estimate() {
   // Fetch product options once
   const [productOptions, setProductOptions] = useState([]);
   useEffect(() => {
-    fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
+    fetch(`${API_BASE_URL}/Inventory/GetAvailableStock`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({})
@@ -84,7 +86,7 @@ function Estimate() {
         }))
       };
 
-      const response = await fetch("https://localhost:5001/api/Sales/CreateEstimate", {
+      const response = await fetch(`${API_BASE_URL}/Sales/CreateEstimate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -108,7 +110,7 @@ function Estimate() {
 
   const printEstimate = async () => {
     try {
-      const reportResponse = await fetch("https://localhost:5001/api/Sales/GetEstimationReport", {
+      const reportResponse = await fetch(`${API_BASE_URL}/Sales/GetEstimationReport`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ estimateNumber })

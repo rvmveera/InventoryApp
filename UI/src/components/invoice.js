@@ -14,9 +14,12 @@ function Invoice() {
 
   // Fetch product options once
   const [productOptions, setProductOptions] = useState([]);
+
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   // Fetch product options
 useEffect(() => {
-  fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
+  fetch(`${API_BASE_URL}/Inventory/GetAvailableStock`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -87,7 +90,7 @@ const handleDetailChange = (index, field, value) => {
   console.log("Submitting invoice:", payload);
 
   try {
-    const response = await fetch("https://localhost:5001/api/Sales/CreateInvoice", {
+    const response = await fetch(`${API_BASE_URL}/Sales/CreateInvoice`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -102,7 +105,7 @@ const handleDetailChange = (index, field, value) => {
     alert(`Invoice created successfully, Invoice Number: ${invNo}`);
 
     // Now call the report API
-    const reportResponse = await fetch("https://localhost:5001/api/Sales/GetInvoiceReport", {
+    const reportResponse = await fetch(`${API_BASE_URL}/Sales/GetInvoiceReport`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ invoiceNumber: invNo })

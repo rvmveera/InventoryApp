@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { createInventory, updateInventory } from "../services/inventory-service";
 
 function InventoryForm({ selectedItem, onSaved }) {
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+  
   const [form, setForm] = useState({
     invId: "",
     invName: "",
@@ -23,7 +25,7 @@ function InventoryForm({ selectedItem, onSaved }) {
 
   // Load existing items from WebAPI when component mounts
   useEffect(() => {
-    fetch("https://localhost:5001/api/Inventory")
+    fetch(`${API_BASE_URL}/Inventory`)
       .then((res) => res.json())
       .then((data) => setItems(data))
       .catch((err) => console.error("Error loading items:", err));

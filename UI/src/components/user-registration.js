@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import "../css/register.css";
 
 const UserRegistration = ({ onSuccess }) => {
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+  
   const [form, setForm] = useState({
 
     FirstName: "",
@@ -70,7 +72,7 @@ const handleSubmit = async (e) => {
 
 
   try {
-    const res = await fetch("https://localhost:5001/api/Users/register", {
+    const res = await fetch(`${API_BASE_URL}/Users/register`, {
       method: "POST",
       body: data
       // ⚠️ Do NOT set Content-Type manually; browser will set it with boundary

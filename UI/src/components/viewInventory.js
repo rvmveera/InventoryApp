@@ -6,10 +6,11 @@ const ViewInventory = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     // Call your API using POST
-    fetch("https://localhost:5001/api/Inventory/GetAvailableStock", {
+    fetch(`${API_BASE_URL}/Inventory/GetAvailableStock`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -13,11 +13,13 @@ function VendorGrid({ refreshTrigger }) {
   const [selectedGoodsTypes, setSelectedGoodsTypes] = useState([]);
   const [comments, setComments] = useState("");
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchVendors = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://localhost:5001/api/Vendors");
+        const response = await fetch(`${API_BASE_URL}/Vendors`);
         if (response.ok) {
           const data = await response.json();
           setVendors(data);
@@ -38,7 +40,7 @@ function VendorGrid({ refreshTrigger }) {
   useEffect(() => {
     const fetchGoodsTypes = async () => {
       try {
-        const response = await fetch("https://localhost:5001/api/GoodsType/GetAllGoodsType");
+        const response = await fetch(`${API_BASE_URL}/GoodsType/GetAllGoodsType`);
         if (response.ok) {
           const data = await response.json();
           const sorted = data.sort((a, b) => a.goodsType.localeCompare(b.goodsType));
@@ -65,7 +67,7 @@ function VendorGrid({ refreshTrigger }) {
     if (!window.confirm("Are you sure you want to delete this vendor?")) return;
 
     try {
-      const response = await fetch(`https://localhost:5001/api/Vendors/${vendorId}`, {
+      const response = await fetch(`${API_BASE_URL}/Vendors/${vendorId}`, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -79,31 +81,11 @@ function VendorGrid({ refreshTrigger }) {
     }
   };
 
-  /*const handleDetails = async (vendor) => {
-    setSelectedVendor(vendor);
-    try {
-      const response = await fetch(
-        `https://localhost:5001/api/Vendors/GetVendorGroupType?vendorId=${vendor.vendorId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setGroupTypes(data);
-      } else {
-        console.error("Failed to fetch group types");
-        setGroupTypes([]);
-      }
-    } catch (error) {
-      console.error("Error fetching group types:", error);
-      setGroupTypes([]);
-    }
-  };*/
-
-
   const handleDetails = async (vendor) => {
   setSelectedVendor(vendor);
   try {
     const response = await fetch(
-      `https://localhost:5001/api/Vendors/GetVendorGroupType?vendorId=${vendor.vendorId}`
+      `${API_BASE_URL}/Vendors/GetVendorGroupType?vendorId=${vendor.vendorId}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -128,31 +110,6 @@ function VendorGrid({ refreshTrigger }) {
     setSelectedVendor(null);
   };
 
-  /*const handleAddGroupType = async () => {
-    if (selectedGoodsTypes.length === 0 || !selectedVendor) return;
-
-    try {
-      const response = await fetch("https://localhost:5001/api/Vendors/addVendorGoodsType", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          vendorId: selectedVendor.vendorId,
-          goodsType: selectedGoodsTypes.map(g => g.value), // ✅ send array of values
-          comments: comments,
-        }),
-      });
-
-      if (response.ok) {
-        alert("Group types added");
-        setSelectedGoodsTypes([]);
-        setComments("");
-        handleDetails(selectedVendor);
-      }
-    } catch (error) {
-      console.error("Error while adding group types:", error);
-    }
-  };
-*/
 
 
 const handleAddGroupType = async () => {
@@ -166,7 +123,7 @@ const handleAddGroupType = async () => {
       comments: comments,
     }));
 
-    const response = await fetch("https://localhost:5001/api/Vendors/addVendorGoodsType", {
+    const response = await fetch(`${API_BASE_URL}/Vendors/addVendorGoodsType`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

@@ -2,11 +2,12 @@ import React, { useState } from "react";
 
 const AddInventoryPrice = () => {
   const [file, setFile] = useState(null);
+const API_BASE_URL = process.env.REACT_APP_API_URL; 
 
   // Download template
   const handleDownload = async () => {
     try {
-      const response = await fetch("https://localhost:5001/api/Inventory/export", {
+      const response = await fetch(`${API_BASE_URL}/Inventory/export`, {
         method: "POST", // since your export endpoint is POST
       });
 

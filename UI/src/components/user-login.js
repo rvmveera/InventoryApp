@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 function LoginForm({ onLoginSuccess }) {
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -19,7 +21,7 @@ function LoginForm({ onLoginSuccess }) {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://localhost:5001/api/Auth/login", {
+      const res = await fetch(`${API_BASE_URL}/Auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

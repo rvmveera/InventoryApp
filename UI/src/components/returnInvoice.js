@@ -6,12 +6,14 @@ function ReturnInvoice() {
   const [invoiceData, setInvoiceData] = useState(null);
   const [error, setError] = useState("");
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   const handleSearch = async () => {
     setError("");
     setInvoiceData(null);
 
     try {
-      const response = await fetch("https://localhost:5001/api/Sales/GetInvoiceDetails", {
+      const response = await fetch(`${API_BASE_URL}/Sales/GetInvoiceDetails`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ invoiceNumber: invoiceId })
@@ -28,7 +30,7 @@ function ReturnInvoice() {
   };
   const handleReturnInvoice = async () => {
     try {
-      const response = await fetch("https://localhost:5001/api/Sales/ReturnInvoice", {
+      const response = await fetch(`${API_BASE_URL}/Sales/ReturnInvoice`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ invoiceNumber: invoiceId })

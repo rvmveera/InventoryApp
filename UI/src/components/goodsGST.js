@@ -7,6 +7,8 @@ const GoodsGST = () => {
    
   });
 
+const API_BASE_URL = process.env.REACT_APP_API_URL; 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -19,7 +21,7 @@ const GoodsGST = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://localhost:5001/api/GoodsType/addGoodsGST", {
+      const response = await fetch(`${API_BASE_URL}/GoodsType/addGoodsGST`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
