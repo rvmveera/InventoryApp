@@ -1465,12 +1465,7 @@ GST: 33HAUPK2282R1ZQ</Value>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
+  
   <EmbeddedImages>
     <EmbeddedImage Name="logo">
       <MIMEType>image/jpeg</MIMEType>
