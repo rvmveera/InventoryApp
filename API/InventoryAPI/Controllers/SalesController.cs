@@ -85,7 +85,7 @@ namespace InventoryAPI.Controllers
         {
             try
             {
-                string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptEstimation.rdlc");
+                string reportPath = Path.Combine(AppContext.BaseDirectory, "Reports", "RptEstimation.rdlc");
 
                 LocalReport report = new LocalReport();
                 report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
@@ -126,7 +126,7 @@ namespace InventoryAPI.Controllers
                 }).ToList();
 
                 // 🔹 Bind details dataset
-                
+
                 report.DataSources.Add(new ReportDataSource("EstimateDetailsDataSet", details));
                 string totalAmountInWords = NumberToWordsConverter.ConvertAmountToWords(header.EstimateTotalAmount);
 
@@ -134,7 +134,7 @@ namespace InventoryAPI.Controllers
                 var parameters = new[]
                 {
         new ReportParameter("EstimateFor", header.EstimateFor ?? string.Empty),
-        new ReportParameter("EstimateDate", header.EstimateDate.ToString("dd-MMM-yyyy")),        
+        new ReportParameter("EstimateDate", header.EstimateDate.ToString("dd-MMM-yyyy")),
         new ReportParameter("EstimateNumber", header.EstimateNumber ?? string.Empty),
         new ReportParameter("EstimateTotalAmount", header.EstimateTotalAmount.ToString("N2")),
         new ReportParameter("TotalAmountInWords", totalAmountInWords)

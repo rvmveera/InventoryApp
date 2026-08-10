@@ -16,6 +16,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
     <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+
+  <Content Include="Reports\RptEstimation.rdlc">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+  </Content>
+
+
   </ItemGroup>
 
   <ItemGroup>
