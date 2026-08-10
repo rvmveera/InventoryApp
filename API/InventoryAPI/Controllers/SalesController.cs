@@ -147,14 +147,15 @@ namespace InventoryAPI.Controllers
                 byte[] pdfBytes = report.Render("PDF");
                 return File(pdfBytes, "application/pdf", $"{request.EstimateNumber}_Report.pdf");
             }
-
             catch (Exception ex)
             {
-
                 return StatusCode(500, new
                 {
                     message = "Error creating estimate",
                     error = ex.Message,
+                    innerError = ex.InnerException?.Message,
+                    innerInnerError = ex.InnerException?.InnerException?.Message,
+                    stackTrace = ex.StackTrace,
                     baseDirectory = AppContext.BaseDirectory,
                     reportPath = reportPath,
                     reportExists = System.IO.File.Exists(reportPath)
