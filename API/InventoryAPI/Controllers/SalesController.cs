@@ -83,9 +83,10 @@ namespace InventoryAPI.Controllers
         [HttpPost("GetEstimationReport")]
         public async Task<IActionResult> GetEstimationReport([FromBody] EstimationReportRequest request)
         {
+            string reportPath = "";
             try
             {
-                string reportPath = Path.Combine(AppContext.BaseDirectory, "Reports", "RptEstimation.rdlc");
+                reportPath = Path.Combine(AppContext.BaseDirectory, "Reports", "RptEstimation.rdlc");
 
                 LocalReport report = new LocalReport();
                 report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
@@ -149,10 +150,18 @@ namespace InventoryAPI.Controllers
 
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error creating estimate", error = ex.Message });
 
+                return StatusCode(500, new
+                {
+                    message = "Error creating estimate",
+                    error = ex.Message,
+                    baseDirectory = AppContext.BaseDirectory,
+                    reportPath = reportPath,
+                    reportExists = System.IO.File.Exists(reportPath)
+                });
             }
         }
+        
 
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice([FromBody] InvoiceDto invoiceDto)
