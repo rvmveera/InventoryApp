@@ -17,9 +17,9 @@
     <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
 
-  <Content Include="Reports\RptEstimation.rdlc">
+  <Content Include="Reports\**\*.rdlc">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
   </Content>
 
 
