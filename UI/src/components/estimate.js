@@ -109,25 +109,44 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
   };
 
   const printEstimate = async () => {
-    try {
-      const reportResponse = await fetch(`${API_BASE_URL}/Sales/GetEstimationReport`, {
+  try {
+    const reportResponse = await fetch(
+      `${API_BASE_URL}/Sales/GetEstimationReport`,
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ estimateNumber })
-      });
+      }
+    );
 
-      if (!reportResponse.ok) throw new Error("Failed to generate report");
-
-      const blob = await reportResponse.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      // 🔹 Open PDF in new tab for printing
-      window.open(url, "_blank");
-    } catch (error) {
-      console.error("Error printing estimate:", error);
-      alert("Error printing estimate. Please try again.");
+    if (!reportResponse.ok) {
+      throw new Error("Failed to generate report");
     }
-  };
+
+    // API is returning HTML
+    const html = await reportResponse.text();
+
+    // Create an HTML Blob
+    const blob = new Blob([html], {
+      type: "text/html"
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    // Open HTML report in a new tab
+    window.open(url, "_blank");
+
+    // Clean up the object URL later
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 60000);
+
+  } catch (error) {
+    console.error("Error opening estimate report:", error);
+    alert("Error opening estimate report. Please try again.");
+  }
+};
+
 
   return (
     <div className="estimate-container">
