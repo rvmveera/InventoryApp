@@ -144,8 +144,15 @@ namespace InventoryAPI.Controllers
                 report.SetParameters(parameters);
 
                 // 🔹 Render PDF
-                byte[] pdfBytes = report.Render("PDF");
-                return File(pdfBytes, "application/pdf", $"{request.EstimateNumber}_Report.pdf");
+                /* byte[] pdfBytes = report.Render("PDF");
+                 return File(pdfBytes, "application/pdf", $"{request.EstimateNumber}_Report.pdf");*/
+
+                byte[] htmlBytes = report.Render("HTML5");
+
+                return File(
+                    htmlBytes,
+                    "text/html"
+                );
             }
             catch (Exception ex)
             {
