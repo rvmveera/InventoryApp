@@ -8,6 +8,7 @@
         public DateTime InvoiceDate { get; set; }
         public int ConsigneeId { get; set; }
         public decimal InvoiceTotal { get; set; }
+        public string status { get; set; }
         public List<InvoiceDetailDto> Details { get; set; }
     }
     public class InvoiceDetailDto

@@ -205,7 +205,8 @@ namespace InventoryAPI.Controllers
                     InvoiceNumber = nextInvoiceNumber,
                     InvoiceDate = invoiceDto.InvoiceDate,
                     ConsigneeId = invoiceDto.ConsigneeId,
-                    InvoiceTotal = invoiceDto.InvoiceTotal
+                    InvoiceTotal = invoiceDto.InvoiceTotal,
+                    Status = invoiceDto.status
                 };
 
                 _context.InvoiceHeaders.Add(header);
@@ -265,21 +266,22 @@ namespace InventoryAPI.Controllers
             }
         }
 
-      
 
-      
+
+
         [HttpPost("GetInvoiceReport")]
         public async Task<IActionResult> GetInvoiceReport([FromBody] InvoiceReportRequest request)
         {
+            string reportPath = "";
             try
             {
-                string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RptInvoice.rdlc");
+                reportPath = Path.Combine(AppContext.BaseDirectory, "Reports", "RptInvoice.rdlc");
 
                 LocalReport report = new LocalReport();
                 report.LoadReportDefinition(System.IO.File.OpenRead(reportPath));
 
                 // 🔹 Fetch header + details from DB
-                var header =  await _context.InvoiceHeaders
+                var header = await _context.InvoiceHeaders
                     .FirstOrDefaultAsync(h => h.InvoiceNumber == request.InvoiceNumber);
 
                 if (header == null)
@@ -334,18 +336,28 @@ namespace InventoryAPI.Controllers
 
                 report.SetParameters(parameters);
 
-                // 🔹 Render PDF
-                byte[] pdfBytes = report.Render("PDF");
-                return File(pdfBytes, "application/pdf", $"{request.InvoiceNumber}_Report.pdf");
-            }
+                byte[] htmlBytes = report.Render("HTML5");
 
+                return File(
+                    htmlBytes,
+                    "text/html"
+                );
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error creating estimate", error = ex.Message });
-
+                return StatusCode(500, new
+                {
+                    message = "Error creating estimate",
+                    error = ex.Message,
+                    innerError = ex.InnerException?.Message,
+                    innerInnerError = ex.InnerException?.InnerException?.Message,
+                    stackTrace = ex.StackTrace,
+                    baseDirectory = AppContext.BaseDirectory,
+                    reportPath = reportPath,
+                    reportExists = System.IO.File.Exists(reportPath)
+                });
             }
         }
-
 
         [HttpPost("GetInvoiceDetails")]
         public async Task<IActionResult> GetInvoiceDetails([FromBody] InvoiceReportRequest request)
