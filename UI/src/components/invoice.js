@@ -135,6 +135,7 @@ const buildInvoicePayload = () => {
     invoiceDate: new Date(date).toISOString(),   // ensure ISO format
     consigneeId: 1,                              // set if you have consignee selection
     invoiceTotal: details.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0),
+    status : 'A',
     details: details.map(d => ({
       inventoryId: d.product?.value || 0,        // dropdown holds full option object
       hsnNumber: d.hsnNumber,
