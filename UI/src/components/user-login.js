@@ -3,10 +3,9 @@ import "../css/login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 function LoginForm({ onLoginSuccess }) {
 const API_BASE_URL = process.env.REACT_APP_API_URL;
-
+  
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -41,13 +40,10 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
       // ✅ Store JWT
       localStorage.setItem("token", result.token);
       localStorage.setItem("username", result.username);
-toast.success("Login successful 🎉", {
+ toast.success("Login successful 🎉", { position: "top-center" });
   
-  onClose: () => {
-    // close popup only after toast disappears
     if (onLoginSuccess) onLoginSuccess(result);
-  }
-});
+     //navigate("/viewInventory");
 
     } catch (err) {
   console.error("Login error:", err);
