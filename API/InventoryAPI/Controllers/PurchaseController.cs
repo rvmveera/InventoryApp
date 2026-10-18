@@ -65,12 +65,12 @@ namespace InventoryAPI.Controllers
                 var worksheet = workbook.Worksheets.Add("PurchaseTemplate");
 
                 // Step 2: Headers
-                worksheet.Cell(1, 1).Value = "vendorId - vendorName";
-                worksheet.Cell(1, 2).Value = "invoiceNo";
-                worksheet.Cell(1, 3).Value = "ewayBillNo";
-                worksheet.Cell(1, 4).Value = "invoiceDate";
-                worksheet.Cell(1, 5).Value = "deliveryNote";
-                worksheet.Cell(1, 6).Value = "termsOfPayment";
+                worksheet.Cell(1, 1).Value = "VENDOR ID - VENDOR NAME";
+                worksheet.Cell(1, 2).Value = "INVOICE NO";
+                worksheet.Cell(1, 3).Value = "EWAY BILL NO";
+                worksheet.Cell(1, 4).Value = "INVOICE DATE";
+                worksheet.Cell(1, 5).Value = "DELIVERY NOTE";
+                worksheet.Cell(1, 6).Value = "TERMS OF PAYMENT";
                 worksheet.Cell(1, 7).Value = "supplierRef";
                 worksheet.Cell(1, 8).Value = "otherReference";
                 worksheet.Cell(1, 9).Value = "consigneeId";
