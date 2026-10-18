@@ -71,36 +71,36 @@ namespace InventoryAPI.Controllers
                 worksheet.Cell(1, 4).Value = "INVOICE DATE";
                 worksheet.Cell(1, 5).Value = "DELIVERY NOTE";
                 worksheet.Cell(1, 6).Value = "TERMS OF PAYMENT";
-                worksheet.Cell(1, 7).Value = "supplierRef";
-                worksheet.Cell(1, 8).Value = "otherReference";
-                worksheet.Cell(1, 9).Value = "consigneeId";
-                worksheet.Cell(1, 10).Value = "buyerOrderNo";
-                worksheet.Cell(1, 11).Value = "buyerOrderDate";
-                worksheet.Cell(1, 12).Value = "despatchDocNo";
-                worksheet.Cell(1, 13).Value = "deliveryNoteDate";
-                worksheet.Cell(1, 14).Value = "destination";
-                worksheet.Cell(1, 15).Value = "buyerName";
-                worksheet.Cell(1, 16).Value = "buyerAddress";
-                worksheet.Cell(1, 17).Value = "buyerGST";
-                worksheet.Cell(1, 18).Value = "buyerState";
-                worksheet.Cell(1, 19).Value = "buyerCode";
-                worksheet.Cell(1, 20).Value = "buyerPlaceofsupply";
-                worksheet.Cell(1, 21).Value = "buyerContactName";
-                worksheet.Cell(1, 22).Value = "buyerEmail";
-                worksheet.Cell(1, 23).Value = "buyerMobileNo";
-                worksheet.Cell(1, 24).Value = "billOfLadingNo";
-                worksheet.Cell(1, 25).Value = "vehicleNo";
-                worksheet.Cell(1, 26).Value = "termsOfDelivery";
-                worksheet.Cell(1, 27).Value = "goodsTypeId - goodsType";
-                worksheet.Cell(1, 28).Value = "Description";
-                worksheet.Cell(1, 29).Value = "hsnSac";
-                worksheet.Cell(1, 30).Value = "quantity";
-                worksheet.Cell(1, 31).Value = "rate";
-                worksheet.Cell(1, 32).Value = "uomPer";
-                worksheet.Cell(1, 33).Value = "discountPercent";
-                worksheet.Cell(1, 34).Value = "amount";
+                worksheet.Cell(1, 7).Value = "SUPPLIER REF";
+                worksheet.Cell(1, 8).Value = "OTHER REFERENCE";
+                worksheet.Cell(1, 9).Value = "CONSIGNEE";
+                worksheet.Cell(1, 10).Value = "BUYER ORDER NO";
+                worksheet.Cell(1, 11).Value = "BUYER ORDER DATE";
+                worksheet.Cell(1, 12).Value = "DESPATCH DOC NO";
+                worksheet.Cell(1, 13).Value = "DELIVERY NOTE DATE";
+                worksheet.Cell(1, 14).Value = "DESTINATION";
+                worksheet.Cell(1, 15).Value = "BUYER NAME";
+                worksheet.Cell(1, 16).Value = "BUYER ADDRESS";
+                worksheet.Cell(1, 17).Value = "BUYER GST";
+                worksheet.Cell(1, 18).Value = "BUYER STATE";
+                worksheet.Cell(1, 19).Value = "BUYER CODE";
+                worksheet.Cell(1, 20).Value = "BUYER PLACE OF SUPPLY";
+                worksheet.Cell(1, 21).Value = "BUYER CONTACT NAME";
+                worksheet.Cell(1, 22).Value = "BUYER EMAIL";
+                worksheet.Cell(1, 23).Value = "BUYER MOBILE NO";
+                worksheet.Cell(1, 24).Value = "BILL OF LADING NO";
+                worksheet.Cell(1, 25).Value = "VEHICLE NO";
+                worksheet.Cell(1, 26).Value = "TERMS OF DELIVERY";
+                worksheet.Cell(1, 27).Value = "GOODS TYPE";
+                worksheet.Cell(1, 28).Value = "DESCRIPTION";
+                worksheet.Cell(1, 29).Value = "HSN SAC";
+                worksheet.Cell(1, 30).Value = "QUANTITY";
+                worksheet.Cell(1, 31).Value = "RATE";
+                worksheet.Cell(1, 32).Value = "UOM";
+                worksheet.Cell(1, 33).Value = "DISCOUNT (%)";
+                worksheet.Cell(1, 34).Value = "AMOUNT";
                 worksheet.Cell(1, 35).Value = "GST";
-                worksheet.Cell(1, 36).Value = "total";
+                worksheet.Cell(1, 36).Value = "TOTAL";
 
                 worksheet.Row(1).Style.Font.Bold = true;
                 worksheet.Row(1).Style.Fill.BackgroundColor = XLColor.LightGray;
@@ -156,8 +156,17 @@ namespace InventoryAPI.Controllers
                 // Step 6: GST auto-fill in col AI (35)
                 for (int r = 2; r <= 100; r++)
                 {
-                    worksheet.Cell(r, 35).FormulaA1 =
+                    /*worksheet.Cell(r, 35).FormulaA1 =
                         $"IFERROR(VLOOKUP($AA{r}, INDIRECT(\"Vendor\" & LEFT($A{r},FIND(\" \",$A{r})-1) & \"_Lookup\"), 2, FALSE), \"\")";
+                    */
+
+                    var gstCell = worksheet.Cell(r, 35); // Column AI (35th column)
+
+                    gstCell.FormulaA1 =
+                        $"IFERROR(VLOOKUP($AA{r}, INDIRECT(\"Vendor\" & LEFT($A{r},FIND(\" \",$A{r})-1) & \"_Lookup\"), 2, FALSE), \"\")";
+
+                    // Format to 2 decimal places
+                    gstCell.Style.NumberFormat.Format = "0.00";
 
                     // Step 7: Amount calculation in col AH (34)
                     worksheet.Cell(r, 34).FormulaA1 =
