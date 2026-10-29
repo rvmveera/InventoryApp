@@ -27,7 +27,7 @@ html, body {
    TOP NAVBAR
 =================================*/
 .navbar {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   right: 0;
@@ -113,7 +113,6 @@ html, body {
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
   display: none;
   flex-direction: column;
-  z-index: 1000;
   font-family: 'Segoe UI', sans-serif;
 }
 .dropdown-parent.open .dropdown { display: flex; }
@@ -195,11 +194,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 10%;
+  padding: 10px 8%;   /* reduced top/bottom padding */
   background: linear-gradient(to left, #8e2de2, white); /* violet gradient */
   color: black;
-  min-height: 500px;
+  min-height: 200px;  /* reduced height */
+  margin-top: -100px;   /* offset for navbar height */
 }
+
 
 .hero-content {
   display: flex;
