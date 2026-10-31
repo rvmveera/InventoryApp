@@ -132,7 +132,7 @@ html, body {
   left: 0;
   width: 230px;
   height: calc(100vh - 75px);
-  background: linear-gradient(to bottom, #c471ed, #8e2de2);
+  background: linear-gradient(to bottom, #c471ed, #5a0678);
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
