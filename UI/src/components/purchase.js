@@ -46,51 +46,53 @@ const [goodsTypeId, setGoodsTypeId] = useState("");
     }
   };
 
-  const [header, setHeader] = useState({
-    vendorId: "",
-    buyerName: "",
-    buyerAddress: "",
-    buyerGST: "",
-    buyerEmail: "",
-    buyerState: "",
-    buyerCode: "",
-    buyerPlaceofsupply: "",
-    buyerContactName: "",
-    buyerMobileNo: "",
-    invoiceNo : "",
-ewayBillNo: "",
-invoiceDate: "",
-deliveryNote: "",
-termsOfPayment: "",
-supplierRef: "",
-otherReference: "",
-buyerOrderNo: "",
-buyerOrderDate: "",
-despatchDocNo: "",
-deliveryNoteDate: "",
-despatchedThrough: "",
-destination: "",
-billOfLadingNo: "",
-vehicleNo: "",
-termsOfDelivery: "",
-totalBillAmount : ""
-  });
+const initialHeader = {
+  vendorId: "",
+  buyerName: "",
+  buyerAddress: "",
+  buyerGST: "",
+  buyerEmail: "",
+  buyerState: "",
+  buyerCode: "",
+  buyerPlaceofsupply: "",
+  buyerContactName: "",
+  buyerMobileNo: "",
+  invoiceNo: "",
+  ewayBillNo: "",
+  invoiceDate: "",
+  deliveryNote: "",
+  termsOfPayment: "",
+  supplierRef: "",
+  otherReference: "",
+  buyerOrderNo: "",
+  buyerOrderDate: "",
+  despatchDocNo: "",
+  deliveryNoteDate: "",
+  despatchedThrough: "",
+  destination: "",
+  billOfLadingNo: "",
+  vehicleNo: "",
+  termsOfDelivery: "",
+  totalBillAmount: ""
+};
 
-  const [details, setDetails] = useState([
-    {
-      goods_ServiceDesc: "",
-      hsnSac: "",
-      quantity: "",
-      rate: "",
-      uomPer: "",
-      discountPercent: "",
-      amount: "",
-      gst: "",
-      total: "",
-      goodsTypeId : ""
-    }
-  ]);
+const initialDetails = [
+  {
+    goods_ServiceDesc: "",
+    hsnSac: "",
+    quantity: "",
+    rate: "",
+    uomPer: "",
+    discountPercent: "",
+    amount: "",
+    gst: "",
+    total: "",
+    goodsTypeId: ""
+  }
+];
 
+const [header, setHeader] = useState(initialHeader);
+const [details, setDetails] = useState(initialDetails);
   // Load vendors
   useEffect(() => {
     fetch(`${API_BASE_URL}/Vendors`)
@@ -301,6 +303,18 @@ totalBillAmount : header.totalBillAmount,
       const data = await response.json();
       alert(`Purchase #${data.id} saved successfully!`);
       console.log("Saved purchase:", data);
+      // Clear all header fields
+    setHeader({ ...initialHeader });
+
+    // Clear all detail fields and retain one empty row
+    setDetails([...initialDetails]);
+
+    // Clear selected vendor
+  setSelectedVendor(null);
+
+  // Clear consignee
+  setConsignee(null)
+
     } else {
       const errorData = await response.json();
       console.error("Failed to save purchase:", errorData);
