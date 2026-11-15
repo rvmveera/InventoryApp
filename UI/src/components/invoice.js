@@ -9,7 +9,7 @@ function Invoice() {
 
   const [date, setDate] = useState("");
   const [details, setDetails] = useState([
-    { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", availableQty : "", taxAmount : "" }
+    { product: "", hsnNumber: "", quantity: "", unit: "", MRP: "", gst: "", amount: "", availableQty : "", taxAmount : "" }
   ]);
 
   // Fetch product options once
@@ -34,7 +34,8 @@ useEffect(() => {
         label: item.goods_ServiceDesc,    // product name
         gstPercent: item.gstPercent,
         availableQty: item.availableQty,
-        hsnNumber : item.hsnSac
+        hsnNumber : item.hsnSac,
+        MRP : item.mrp
       }));
       setProductOptions(mappedOptions);
     })
@@ -50,19 +51,22 @@ const handleDetailChange = (index, field, value) => {
   if (field === "product" && value) {
     newDetails[index].gst = value.gstPercent;
     newDetails[index].availableQty = value.availableQty;
-    newDetails[index].hsnNumber = value.hsnNumber
+    newDetails[index].hsnNumber = value.hsnNumber;
+    newDetails[index].MRP = value.MRP;
   }
 
   // Recalculate amount
   const qty = parseFloat(newDetails[index].quantity) || 0;
-  const price = parseFloat(newDetails[index].priceUnit) || 0;
+  const price = parseFloat(newDetails[index].MRP) || 0;
   const gstPercent = parseFloat(newDetails[index].gst) || 0;
 
   if (qty > 0 && price > 0) {
-    const baseAmount = qty * price;
-    const gstAmount = (baseAmount * gstPercent) / 100;
+    const netAmount = qty * price;
+
+    const baseRate = netAmount / (1+(gstPercent/100));
+    const gstAmount = netAmount - baseRate;
     newDetails[index].taxAmount = gstAmount;
-    newDetails[index].amount = (baseAmount + gstAmount).toFixed(2);
+    newDetails[index].amount = (netAmount).toFixed(2);
   } else {
     newDetails[index].amount = "";
     newDetails[index].taxAmount = "";
@@ -75,7 +79,7 @@ const handleDetailChange = (index, field, value) => {
   const addRow = () => {
     setDetails([
       ...details,
-      { product: "", hsnNumber: "", quantity: "", unit: "", priceUnit: "", gst: "", amount: "", taxAmount : "" }
+      { product: "", hsnNumber: "", quantity: "", unit: "", MRP: "", gst: "", amount: "", taxAmount : "" }
     ]);
   };
 
@@ -115,6 +119,8 @@ const handleDetailChange = (index, field, value) => {
       throw new Error(`Report Error: ${reportResponse.status}`);
     }
 
+
+
     // If API returns a PDF blob
     const blob = await reportResponse.blob();
     const url = window.URL.createObjectURL(blob);
@@ -141,7 +147,7 @@ const buildInvoicePayload = () => {
       hsnNumber: d.hsnNumber,
       quantity: parseFloat(d.quantity) || 0,
       unit: d.unit,
-      pricePerUnit: parseFloat(d.priceUnit) || 0,
+      pricePerUnit: parseFloat(d.MRP) || 0,
       gst: parseFloat(d.gst) || 0,      
       discount: 0,                               // add discount field if needed
       netAmount: parseFloat(d.amount) || 0,
@@ -172,7 +178,7 @@ const buildInvoicePayload = () => {
                  onChange={(e) => setbuyerAddress(e.target.value)}></textarea>
       </div>
 
-
+{/*
       <div className="form-group">
         <label>Invoice Number:</label>
         <input
@@ -181,7 +187,7 @@ const buildInvoicePayload = () => {
           onChange={(e) => setinvoiceNumber(e.target.value)}
         />
       </div>
-
+*/}
       <div className="form-group">
         <label>Invoice Date:</label>
         <input
@@ -201,7 +207,7 @@ const buildInvoicePayload = () => {
             <th>Available Qty</th>
             <th>Required Qty</th>
             <th>Unit</th>
-            <th>Price/Unit</th>
+            <th>MRP [Per Unit]</th>
             <th>GST %</th>
             <th>Amount</th>
             <th>Action</th>
@@ -260,17 +266,23 @@ const buildInvoicePayload = () => {
               <td>
                 <input
                   type="number"
-                  value={row.priceUnit}
+                  value={row.MRP}
                   onChange={(e) =>
-                    handleDetailChange(index, "priceUnit", e.target.value)
+                    handleDetailChange(index, "MRP", e.target.value)
+                  }
+                />
+              </td>
+              <td>               
+               <input
+                  type="number"
+                  value={row.gst}
+                  onChange={(e) =>
+                    handleDetailChange(index, "gst", e.target.value)
                   }
                 />
               </td>
               <td>
-                <input type="text" value={row.gst} readOnly />
-              </td>
-              <td>
-                <input type="text" value={row.amount} readOnly />
+                <input type="text" value={row.amount} />
               </td>
               <td>
                 <button className="remove-btn" onClick={() => removeRow(index)}>

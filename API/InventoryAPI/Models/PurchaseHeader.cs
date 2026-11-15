@@ -49,6 +49,8 @@
         public decimal Gst { get; set; }
         public decimal Total { get; set; }
         public int goodsTypeId { get; set; }
+
+        public decimal MRP { get; set; }
         public PurchaseHeader? PurchaseHeader { get; set; }
 
     }

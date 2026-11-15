@@ -52,6 +52,10 @@ public class InventoryController : ControllerBase
         var query = from im in _context.tblInventoryMaster
                     join gt in _context.tblGoodsTypeGST
                         on im.goodsTypeId equals gt.Id
+
+                    join ip in _context.tblInventoryPrice
+                        on im.id equals ip.inventoryId
+
                     where im.Status == "A"
                     select new InventoryDto
                     {
@@ -61,7 +65,8 @@ public class InventoryController : ControllerBase
                         Goods_ServiceDesc = im.goods_serviceDesc,
                         AvailableQty = im.availableQty ?? 0,
                         GSTPercent = gt.GSTpercent,
-                        hsnSac = im.hsnSac ?? ""
+                        hsnSac = im.hsnSac ?? "",
+                        MRP = Convert.ToDecimal(ip.MRP)
                     };
 
         var result = await query.ToListAsync();
@@ -85,7 +90,7 @@ public class InventoryController : ControllerBase
                         Id = tim.id,
                         GoodsType = tg.GoodsType,
                         GoodsServiceDesc = tim.goods_serviceDesc,
-                        price = tip != null ? tip.price : 0
+                        price = tip != null ? tip.MRP : 0
                     };
 
 
@@ -150,14 +155,14 @@ public class InventoryController : ControllerBase
 
             if (existing != null)
             {
-                existing.price = price; // Update
+                existing.MRP = price; // Update
             }
             else
             {
                 _context.tblInventoryPrice.Add(new tblInventoryPrice
                 {
                     inventoryId = inventoryId,
-                    price = price
+                    MRP = price
                 });
             }
         }

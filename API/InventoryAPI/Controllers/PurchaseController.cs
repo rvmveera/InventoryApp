@@ -33,7 +33,7 @@ namespace InventoryAPI.Controllers
                 BillAmount = purchaseHeader.totalBillAmount,  // or whichever field represents bill amount
                 OutstandingAmount = purchaseHeader.totalBillAmount, // initially equal to bill amount
                 PurchaseId = purchaseHeader.Id,           // link to the saved purchase
-                
+
             };
 
             _context.VendorPayments.Add(vendorPayment);

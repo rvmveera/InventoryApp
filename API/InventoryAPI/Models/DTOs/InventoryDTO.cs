@@ -9,6 +9,7 @@
         public int AvailableQty { get; set; }
         public decimal GSTPercent { get; set; }
         public string hsnSac { get; set; }
+        public decimal MRP { get; set; }
     }
 
     public class AvailableInventoryDto {

@@ -339,9 +339,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>EstimateDate</rd:DefaultName>
-            <Top>4.59909cm</Top>
+            <Top>4.49353cm</Top>
             <Left>11.1252cm</Left>
-            <Height>0.2825cm</Height>
+            <Height>0.62124cm</Height>
             <Width>6.2465cm</Width>
             <ZIndex>10</ZIndex>
             <Style>
@@ -390,7 +390,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>0.89633cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -566,7 +566,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Price Unit</Value>
+                                  <Value>Price Unit [Incl GST]</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -706,7 +706,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Amount</Value>
+                                  <Value>Amount [Incl GST]</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1406,7 +1406,7 @@
             <DataSetName>InvoiceDetailsDataSet</DataSetName>
             <Top>5.29116cm</Top>
             <Left>0.50019cm</Left>
-            <Height>1.8cm</Height>
+            <Height>2.09633cm</Height>
             <Width>17.41132cm</Width>
             <ZIndex>11</ZIndex>
             <Style>
@@ -1781,7 +1781,7 @@ GST: 33HAUPK2282R1ZQ</Value>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>
- 
+  
   <EmbeddedImages>
     <EmbeddedImage Name="logo">
       <MIMEType>image/jpeg</MIMEType>

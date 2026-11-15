@@ -155,7 +155,6 @@ setShowReturnInvoice(false);
 </div>
 
 
-
     </nav>
 
     {/* ================= SIDEBAR (only when logged in) ================= */}
@@ -352,9 +351,6 @@ setShowReturnInvoice(false);
 </div>
 
 )}
-
-
-
 
     {/* ================= MAIN CONTENT ================= */}
     <div className={`main-content ${!isLoggedIn ? "landing" : ""}`}>

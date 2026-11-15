@@ -82,6 +82,7 @@ const initialDetails = [
     hsnSac: "",
     quantity: "",
     rate: "",
+    mrp: "",
     uomPer: "",
     discountPercent: "",
     amount: "",
@@ -223,6 +224,7 @@ const handleDetailChange = (index, e) => {
         hsnSac: "",
         quantity: "",
         rate: "",
+        mrp:"",
         uomPer: "",
         discountPercent: "",
         amount: "",
@@ -281,6 +283,7 @@ totalBillAmount : header.totalBillAmount,
       hsnSac: d.hsnSac,
       quantity: Number(d.quantity),
       rate: Number(d.rate),
+      mrp : Number(d.mrp),
       uomPer: d.uomPer,
       discountPercent: Number(d.discountPercent) || 0,
       amount: Number(d.amount),
@@ -689,6 +692,7 @@ const getBillAmount = () => {
             <th>HSN/SAC</th>
             <th>Quantity</th>
             <th>Rate</th>
+            <th>MRP [Selling Price]</th>
             <th>UOM</th>
             <th>Discount %</th>
             <th>Amount</th>
@@ -720,6 +724,8 @@ const getBillAmount = () => {
               <td><input type="text" name="hsnSac" value={detail.hsnSac} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="quantity" value={detail.quantity} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="rate" value={detail.rate} onChange={(e) => handleDetailChange(index, e)} /></td>
+<td><input type="number" name="mrp" value={detail.mrp} onChange={(e) => handleDetailChange(index, e)} /></td>
+
               <td><input type="text" name="uomPer" value={detail.uomPer} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="discountPercent" value={detail.discountPercent} onChange={(e) => handleDetailChange(index, e)} /></td>
               <td><input type="number" name="amount" value={detail.amount} onChange={(e) => handleDetailChange(index, e)} readOnly/></td>

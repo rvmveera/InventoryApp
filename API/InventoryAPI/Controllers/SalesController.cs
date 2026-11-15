@@ -180,7 +180,6 @@ namespace InventoryAPI.Controllers
 
             try
             {
-
                 // Generate next invoice number
                 var lastInvoice = await _context.InvoiceHeaders
                     .OrderByDescending(h => h.Id)
@@ -223,10 +222,13 @@ namespace InventoryAPI.Controllers
                         HsnNumber = detailDto.HsnNumber,
                         Quantity = detailDto.Quantity,
                         Unit = detailDto.Unit,
-                        PricePerUnit = detailDto.PricePerUnit,
+                        //PricePerUnit = detailDto.PricePerUnit,
                         Gst = detailDto.Gst,
                         cgstPercent = detailDto.Gst / 2,
                         sgstPercent = detailDto.Gst / 2,
+
+                        PricePerUnit = detailDto.PricePerUnit,
+
                         Discount = detailDto.Discount,
                         NetAmount = detailDto.NetAmount,
                         taxAmount = detailDto.TaxAmount

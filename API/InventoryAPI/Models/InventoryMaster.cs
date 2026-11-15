@@ -12,6 +12,7 @@ namespace InventoryAPI.Models
         public string? comments { get; set; }
         public string? CreatedBy { get; set; }      // nvarchar(50) NULL
         public string? hsnSac { get; set; }
+       
      
     }
     public class MyDbContext : DbContext
@@ -26,7 +27,7 @@ namespace InventoryAPI.Models
     {
         public int Id { get; set; }
         public int inventoryId { get; set; }
-        public decimal price { get; set; }
+        public decimal MRP { get; set; }
     }
 
 }

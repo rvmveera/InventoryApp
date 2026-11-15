@@ -18,6 +18,8 @@
         public int Quantity { get; set; }
         public string Unit { get; set; }
         public decimal PricePerUnit { get; set; }
+
+        // In percent
         public decimal Gst { get; set; }
         public decimal Discount { get; set; }
         public decimal NetAmount { get; set; }
